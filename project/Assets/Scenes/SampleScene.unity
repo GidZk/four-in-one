@@ -124,6 +124,7 @@ GameObject:
   - component: {fileID: 363477916}
   - component: {fileID: 363477915}
   - component: {fileID: 363477914}
+  - component: {fileID: 363477918}
   m_Layer: 0
   m_Name: FishBody
   m_TagString: Untagged
@@ -205,6 +206,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -88.93}
+--- !u!114 &363477918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 363477913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ded43ed1f63e54bb0a4427ddae691b95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller: {fileID: 0}
 --- !u!1 &421477517
 GameObject:
   m_ObjectHideFlags: 0
