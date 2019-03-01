@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     //public Rigidbody rb;
     public float runSpeed = 40f;
     float horizontalMove = 0f;
+    float verticalMove = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -19,12 +20,13 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
+        verticalMove = Input.GetAxisRaw("Vertical") * runSpeed;
 
     }
 
     void FixedUpdate() //For physics
     {
-  controller.Move(horizontalMove * Time.fixedDeltaTime, false, false);
+  controller.Move(horizontalMove * Time.fixedDeltaTime, verticalMove * Time.fixedDeltaTime);
   //      rb.Move(horizontalMove * Time.fixedDeltaTime, false, false);
     }
 
