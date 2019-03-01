@@ -46,7 +46,7 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate() //For physics
     {
-  controller.Move(horizontalMove * Time.fixedDeltaTime, false, false);
+  controller.Move(horizontalMove * Time.fixedDeltaTime, verticalMove * Time.fixedDeltaTime);
   //      rb.Move(horizontalMove * Time.fixedDeltaTime, false, false);
     }
 
