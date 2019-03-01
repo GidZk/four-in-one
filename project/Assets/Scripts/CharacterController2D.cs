@@ -70,14 +70,13 @@ public class CharacterController2D : MonoBehaviour
         {
 
           
-            // Move the character by finding the target velocity
-            Vector3 targetVelocity = new Vector2(xMove * 10f, m_Rigidbody.velocity.y);
-            Vector3 targetVelocityY = new Vector2(yMove * 10f, m_Rigidbody.velocity.y);
+            // Move the character by finding the target velocity 
+            Vector3 targetVelocity = new Vector2(xMove * 10f, yMove * 10f);
+          
 
             // And then smoothing it out and applying it to the character
             m_Rigidbody.velocity = Vector3.SmoothDamp(m_Rigidbody.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
-            m_Rigidbody.velocity = Vector3.SmoothDamp(m_Rigidbody.velocity, targetVelocityY, ref m_Velocity, m_MovementSmoothing);
-
+         
             // If the input is moving the player right and the player is facing left...
             //  if (move > 0 && !m_FacingRight)
             //   {
@@ -98,7 +97,7 @@ public class CharacterController2D : MonoBehaviour
     private void Flip()
     {
         // Switch the way the player is labelled as facing.
-       // m_FacingRight = !m_FacingRight;
+        m_FacingRight = !m_FacingRight;
 
         // Multiply the player's x local scale by -1.
         Vector3 theScale = transform.localScale;
