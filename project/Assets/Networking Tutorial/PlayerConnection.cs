@@ -57,6 +57,9 @@ public class PlayerConnection : NetworkBehaviour
     [Command]
     void CmdMoveUnit()
     {
+
+        
+
         //Debug.Log("WHY WONT I JUST MOVE AS CLIENT");
         /*
         if (Input.GetKeyDown(KeyCode.UpArrow))
