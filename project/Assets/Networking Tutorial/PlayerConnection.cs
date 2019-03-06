@@ -29,7 +29,7 @@ public class PlayerConnection : NetworkBehaviour
     void Update()
     {
         // hasAuth = true im allowed to change stuff myself
-        if (hasAuthority == false)
+        if (hasAuthority == false || isLocalPlayer == false)
         { return; }
       
         CmdMoveUnit();
@@ -57,17 +57,17 @@ public class PlayerConnection : NetworkBehaviour
     [Command]
     void CmdMoveUnit()
     {
-        Debug.Log("WHY WONT I JUST MOVE AS CLIENT");
-
+        //Debug.Log("WHY WONT I JUST MOVE AS CLIENT");
+        /*
         if (Input.GetKeyDown(KeyCode.UpArrow))
-        { blobberUnit.transform.Translate(0,0.5f,0); }
+        { blobberUnit.transform.Translate(0,0.3f,0); }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         { blobberUnit.transform.Translate(0, -0.5f, 0); }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         { blobberUnit.transform.Translate(0.5f, 0, 0); }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         { blobberUnit.transform.Translate(-0.5f, 0, 0); }
-
+        */
     }
 
 
