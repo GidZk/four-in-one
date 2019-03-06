@@ -171,6 +171,7 @@ GameObject:
   - component: {fileID: 1749039746263336749}
   - component: {fileID: 2869978024216817599}
   - component: {fileID: 3366444334743433173}
+  - component: {fileID: 8220521715413138688}
   m_Layer: 0
   m_Name: Blobber
   m_TagString: Untagged
@@ -293,7 +294,7 @@ MonoBehaviour:
     i14: 0
     i15: 0
   m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &3366444334743433173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -316,3 +317,15 @@ MonoBehaviour:
   m_SnapThreshold: 5
   m_InterpolateRotation: 1
   m_InterpolateMovement: 1
+--- !u!114 &8220521715413138688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1749039746263336747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9f61508996b6eb4fa0781b6b8cb86c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

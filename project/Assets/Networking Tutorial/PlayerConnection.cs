@@ -12,7 +12,10 @@ public class PlayerConnection : NetworkBehaviour
     void Start() {
 
         if (isLocalPlayer == false)
-        {return;}
+        {
+            // This object belongs to another player.
+            return;
+        }
 
         Debug.Log("--PlayerObject:: Spawning a unit --");
         CmdSpawnUnit();
@@ -25,11 +28,16 @@ public class PlayerConnection : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isLocalPlayer == false)
-        {
-            return;
-        }
+        // hasAuth = true im allowed to change stuff myself
+        if (hasAuthority == false)
+        { return; }
+      
         CmdMoveUnit();
+      
+        // Debug.Log("hasAuthority = true");
+
+
+
 
 
 
@@ -40,16 +48,17 @@ public class PlayerConnection : NetworkBehaviour
     // ---------------- COMANDS -------------------
     [Command]
     void CmdSpawnUnit() {
-
+        //go.GetComponent<NetworkIdentity>().AssignClientAuthority(connectionToClient); we tell this go that connectionToClient has auth
         GameObject go = Instantiate(PlayerUnitPrefab);
+        NetworkServer.SpawnWithClientAuthority(go,connectionToClient);
         blobberUnit = go;
-        NetworkServer.Spawn(go);
-
     }
 
     [Command]
     void CmdMoveUnit()
     {
+        Debug.Log("WHY WONT I JUST MOVE AS CLIENT");
+
         if (Input.GetKeyDown(KeyCode.UpArrow))
         { blobberUnit.transform.Translate(0,0.5f,0); }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
