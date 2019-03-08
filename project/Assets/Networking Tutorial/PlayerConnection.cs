@@ -1,15 +1,43 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Experimental.UIElements;
 using UnityEngine.Networking;
+using UnityEngine.Networking.NetworkSystem;
 
 public class PlayerConnection : NetworkBehaviour
 // here goes the data for each attached object
 {
-    
+    class ControlMessage : MessageBase
+    {
+        public ControlMessage()
+        {
+        }
+
+        public ControlMessage(float value)
+        {
+            this.value = value;
+        }
+
+        public float value;
+    }
+
+    private const short ControlMsg = 1002;
+    private NetworkClient m_Client;
+
     public GameObject PlayerUnitPrefab;
+
     GameObject blobberUnit;
+
+    public void SendControlMsg(float Val)
+    {
+        m_Client.Send(ControlMsg, new ControlMessage(Val));
+    }
+
+
     // Start is called before the first frame update
-    void Start() {
+    void Start()
+    {
+        m_Client = NetworkManager.singleton.client;
+        NetworkServer.RegisterHandler(ControlMsg, OnServerRecvControlMsg);
 
         if (isLocalPlayer == false)
         {
@@ -20,9 +48,12 @@ public class PlayerConnection : NetworkBehaviour
         Debug.Log("--PlayerObject:: Spawning a unit --");
         CmdSpawnUnit();
         //Instantiate(PlayerUnitPrefab);
-
     }
 
+    private void OnServerRecvControlMsg(NetworkMessage netmsg)
+    {
+        Debug.Log("recieved: " + netmsg.ReadMessage<ControlMessage>().value);
+    }
 
 
     // Update is called once per frame
@@ -30,36 +61,30 @@ public class PlayerConnection : NetworkBehaviour
     {
         // hasAuth = true im allowed to change stuff myself
         if (hasAuthority == false || isLocalPlayer == false)
-        { return; }
-      
+        {
+            return;
+        }
+
+        if (Input.anyKey && !isServer)SendControlMsg(Random.value);
         CmdMoveUnit();
-      
+
         // Debug.Log("hasAuthority = true");
-
-
-
-
-
-
     }
-
 
 
     // ---------------- COMANDS -------------------
     [Command]
-    void CmdSpawnUnit() {
+    void CmdSpawnUnit()
+    {
         //go.GetComponent<NetworkIdentity>().AssignClientAuthority(connectionToClient); we tell this go that connectionToClient has auth
         GameObject go = Instantiate(PlayerUnitPrefab);
-        NetworkServer.SpawnWithClientAuthority(go,connectionToClient);
+        NetworkServer.SpawnWithClientAuthority(go, connectionToClient);
         blobberUnit = go;
     }
 
     [Command]
     void CmdMoveUnit()
     {
-
-        
-
         //Debug.Log("WHY WONT I JUST MOVE AS CLIENT");
         /*
         if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -72,6 +97,4 @@ public class PlayerConnection : NetworkBehaviour
         { blobberUnit.transform.Translate(-0.5f, 0, 0); }
         */
     }
-
-
 }
