@@ -13,13 +13,14 @@ public class PlayerUnit : NetworkBehaviour
     private Vector2 touchOrigin = -Vector2.one; //Used to store location of screen touch origin for mobile controls.
 
     private NetworkClient m_Client;
+    Rigidbody2D rigidbody;
 
-    void SendControlState(float value)
+
+
+    private void Start()
     {
+        rigidbody = GetComponent<Rigidbody2D>();
     }
-
-    
-
     // Update is called once per frame
     void Update()
     {
@@ -68,6 +69,7 @@ public class PlayerUnit : NetworkBehaviour
         if (Input.GetKey(KeyCode.RightArrow)) horizontal = 1;
         else if (Input.GetKey(KeyCode.LeftArrow)) horizontal = -1;
 
-        transform.Translate(horizontal * Time.deltaTime, vertical * Time.deltaTime, 0);
+        rigidbody.AddForce(new Vector2(horizontal, vertical));
+        //transform.Translate(horizontal * Time.deltaTime, vertical * Time.deltaTime, 0);
     }
 }
