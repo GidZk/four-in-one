@@ -20,12 +20,11 @@ public class PlayerConnection : NetworkBehaviour
         public float value;
     }
 
-    private const short ControlMsg = 1002;
+
     private NetworkClient m_Client;
-
     public GameObject PlayerUnitPrefab;
-
     GameObject blobberUnit;
+    private const short ControlMsg = 1002;
 
     public void SendControlMsg(float Val)
     {
