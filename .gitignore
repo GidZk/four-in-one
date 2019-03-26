@@ -1,3 +1,7 @@
 
 #DS_store recursively
 **/.DS_Store
+
+/builds
+
+**.idea
