@@ -18,18 +18,28 @@ public class playerController : MonoBehaviour {
     }
 
     // Update is called once per frame
-    //void Update(){
+    void Update(){
         //moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         //Move(hInput);
-      //   }
+        if(Input.touchCount > 0){
+            Touch touch = Input.GetTouch(0);
+            if(touch.phase == TouchPhase.Began){
+                Move(hInput, vInput);
+            }
+            else if(touch.phase == TouchPhase.Ended){
+                Debug.Log(hInput);
+                Move(0,0);
+            }
+                
+        }
+        
+
+    }        
 
     void FixedUpdate (){
         //uncomment for arrows instead
         //Move(Input.GetAxisRaw("Horizontal"));
-            
-        Move(hInput, vInput);
-         
-       
+        
     }
     
     public void Move ( float horizontalInput, float verticalInput){
@@ -38,11 +48,23 @@ public class playerController : MonoBehaviour {
         moveVelocity.x = horizontalInput * moveSpeed;
         moveVelocity.y  = verticalInput * moveSpeed;
         rb.velocity = moveVelocity;
+        /* 
+        if(Input.touchCount > 0){
+            Touch touch = Input.GetTouch(0);
+            if(touch.phase == TouchPhase.Ended){
+                Debug.Log(hInput);
+                moveVelocity.x = 0;
+                moveVelocity.y = 0;
+                rb.velocity = moveVelocity;
+
+            }
+        }*/    
 
     } 
 
     public void HorizontalMovement(float horizontalInput){
         hInput = horizontalInput;
+        
     }
     public void VerticalMovement(float VerticalInput){
         vInput = VerticalInput;
