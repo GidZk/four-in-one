@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public float runSpeed = 40f;
     float horizontalMove = 0f;
     float verticalMove = 0f;
+    public Vector2 touchOrigin = -Vector2.one;
 
     // Start is called before the first frame update
     void Start()
@@ -19,8 +20,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
-        verticalMove = Input.GetAxisRaw("Vertical") * runSpeed;
+      
 
     }
 
