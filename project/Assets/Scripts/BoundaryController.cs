@@ -14,7 +14,7 @@ public class BoundaryController: MonoBehaviour
         some pseudocode
         if (collider.tag =="NPC") {destroy()}
         if (collider.tag =="player) {bounce()}
-       
+       s
          */
         Debug.Log(" --Destroying object, object outside of boundary --");
         Destroy(collision.gameObject);
