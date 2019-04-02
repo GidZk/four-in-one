@@ -24,7 +24,7 @@ public class GameController : MonoBehaviour
 
         // Now we can actually spawn a bob object
         Debug.Log("Spawning enemy");
-        var go = Instantiate(enemy, new Vector3(30,Random.RandomRange(-7.0f,13.0f),0), Quaternion.identity);
+        var go = Instantiate(enemy, new Vector3(40, Random.Range(-13f,4f),0), Quaternion.identity);
 
   
         //Vector2 spawnPosition = new Vector2();
@@ -35,7 +35,7 @@ public class GameController : MonoBehaviour
     void Update()
     {
     
-            if (Random.value < 0.01)
+            if (Random.value < 0.07)
                 SpawnEnemy();
 
     }
