@@ -64,13 +64,14 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
             Debug.Log(" >>>> Port already in use");
     }
 
+
     public void OnReceivedBroadcast(string fromAddress, string data)
     {
         var ipv4 = fromAddress.Substring(7);
         manager.networkAddress = ipv4;
         var client = manager.StartClient();
 
-        if (client.isConnected)
+        if (manager.isNetworkActive)
         {
             Debug.Log(">>>> connected!");
             discovery.StopBroadcast();

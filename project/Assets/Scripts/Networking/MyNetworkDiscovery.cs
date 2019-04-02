@@ -12,8 +12,13 @@ public class MyNetworkDiscovery : NetworkDiscovery
         m_Listeners.Add(o);
     }
 
+    private bool hasRecievedBroadcast = false;
+
     public override void OnReceivedBroadcast(string fromAddress, string data)
     {
+        if (hasRecievedBroadcast) return;
+        hasRecievedBroadcast = true;
+
         foreach (var listener in m_Listeners)
         {
             listener.OnReceivedBroadcast(fromAddress, data);
