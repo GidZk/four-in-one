@@ -8,6 +8,7 @@ public class EnemyMovement : MonoBehaviour
     public float speed;
     public GameObject shark;
     public GameObject stone;
+    public GameObject alga;
     // Start is called before the first frame update
     void Start()
     {

@@ -8,6 +8,7 @@ public class GameController : MonoBehaviour
 
     public GameObject shark;
     public GameObject stone;
+    public GameObject alga;
 
     // Start is called before the first frame update
     void Start()
@@ -37,6 +38,16 @@ public class GameController : MonoBehaviour
         stone.transform.localScale = new Vector3(Random.Range(0.2f, 0.6f), Random.Range(0.2f, 0.8f), 0.9f);
 
     }
+    void SpawnAlga()
+    {
+
+        //spawning stones
+        var stillgo = Instantiate(alga, new Vector3(40, Random.Range(-13f, 4f), 0), Quaternion.identity);
+        alga.transform.localScale = new Vector3(Random.Range(0.2f, 0.6f), Random.Range(0.2f, 0.8f), 0.9f);
+
+    }
+
+
     // Update is called once per frame
     void Update()
     {
@@ -45,7 +56,8 @@ public class GameController : MonoBehaviour
                 SpawnShark();
             if (Random.value < 0.006)
                 SpawnStone();
-
+        if (Random.value < 0.006)
+            SpawnAlga();
     }
     
 }
