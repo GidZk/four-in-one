@@ -70,10 +70,14 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         manager.networkAddress = ipv4;
         var client = manager.StartClient();
 
-        if (!client.isConnected)
+        if (client.isConnected)
+        {
+            Debug.Log(">>>> connected!");
+            discovery.StopBroadcast();
+        }
+        else
         {
             Debug.Log(" >>>> Could not establish connection to host");
-            return;
         }
     }
 
@@ -82,6 +86,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
      */
     public void OnServerConnect(NetworkConnection conn)
     {
+        Debug.Log(">>>> Client joined");
         var cId = conn.connectionId;
         NetworkServer.SendToClient(cId, Messages.MessageGiveClientId, new IntegerMessage(cId));
     }
@@ -99,6 +104,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
      */
     public void OnClientConnect(NetworkConnection conn)
     {
+        Debug.Log(">>>> connected to server");
         Client().RegisterHandler(Messages.MessageGiveClientId, OnClientRcvGiveClientId);
     }
 
