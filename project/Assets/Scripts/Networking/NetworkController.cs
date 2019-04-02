@@ -41,6 +41,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         if (success)
         {
             discovery.StartAsServer();
+            manager.StartHost();
             m_State = State.Host;
         }
         else
@@ -70,6 +71,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         var ipv4 = fromAddress.Substring(7);
         manager.networkAddress = ipv4;
         var client = manager.StartClient();
+
 
         if (manager.isNetworkActive)
         {

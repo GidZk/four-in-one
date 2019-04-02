@@ -12,6 +12,13 @@ public class MyNetworkDiscovery : NetworkDiscovery
         m_Listeners.Add(o);
     }
 
+    private void OnEnable()
+    {
+        Initialize();
+        hasRecievedBroadcast = false;
+        StartAsClient();
+    }
+
     private bool hasRecievedBroadcast = false;
 
     public override void OnReceivedBroadcast(string fromAddress, string data)
@@ -23,6 +30,8 @@ public class MyNetworkDiscovery : NetworkDiscovery
         {
             listener.OnReceivedBroadcast(fromAddress, data);
         }
+
+        gameObject.SetActive(false);
     }
 }
 
