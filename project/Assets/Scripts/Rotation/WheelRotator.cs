@@ -6,8 +6,8 @@ public class WheelRotator : ObjectRotator
 {
     /*object to be rotated*/
     public GameObject obj;
-
     /*inserted radius in case we want to rotate something around another thing*/
+    public bool isTouch;
     private float radius;
     private Transform pivot;
     private bool isMouseDown;
@@ -20,6 +20,13 @@ public class WheelRotator : ObjectRotator
         transform.parent = pivot;
         transform.position += Vector3.up * radius;
         isMouseDown = false;
+
+        /*
+         if (istouch) {start other controller}
+         else {use these controllers}
+         */
+
+
     }
 
     void Update()
