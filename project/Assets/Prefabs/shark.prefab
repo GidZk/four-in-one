@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 4228733095899242426}
   - component: {fileID: 4915711597171554245}
   m_Layer: 0
-  m_Name: shark2
+  m_Name: shark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,8 +30,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1338293152497271818}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 21.89, y: -1.55, z: -0.1725561}
-  m_LocalScale: {x: 0.60119677, y: 0.42469004, z: 0.87677944}
+  m_LocalPosition: {x: 21.818, y: -1.498, z: -0.1725561}
+  m_LocalScale: {x: 0.6427683, y: 0.59879875, z: 0.95}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -98,6 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5
   shark: {fileID: 0}
+  stone: {fileID: 0}
 --- !u!114 &8188747420945402909
 MonoBehaviour:
   m_ObjectHideFlags: 0

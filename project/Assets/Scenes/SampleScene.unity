@@ -508,7 +508,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e5d892c4f742524fa9a9838e5aae7b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 1338293152497271818, guid: 0bce1ad5429ee31419242ae038c84751, type: 3}
+  shark: {fileID: 1338293152497271818, guid: 0bce1ad5429ee31419242ae038c84751, type: 3}
   stone: {fileID: 1385068942873735544, guid: d0426cfe796671846a9507479b38fa60, type: 3}
 --- !u!1 &1140034012
 GameObject:
