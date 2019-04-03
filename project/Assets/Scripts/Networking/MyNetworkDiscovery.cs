@@ -15,16 +15,16 @@ public class MyNetworkDiscovery : NetworkDiscovery
     private void OnEnable()
     {
         Initialize();
-        hasRecievedBroadcast = false;
+        m_HasRecievedBroadcast = false;
         StartAsClient();
     }
 
-    private bool hasRecievedBroadcast = false;
+    private bool m_HasRecievedBroadcast;
 
     public override void OnReceivedBroadcast(string fromAddress, string data)
     {
-        if (hasRecievedBroadcast) return;
-        hasRecievedBroadcast = true;
+        if (m_HasRecievedBroadcast) return;
+        m_HasRecievedBroadcast = true;
 
         foreach (var listener in m_Listeners)
         {
