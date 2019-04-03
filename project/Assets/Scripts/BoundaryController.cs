@@ -18,6 +18,7 @@ public class BoundaryController: MonoBehaviour
          */
         Debug.Log(" --Destroying object, object outside of boundary --");
         Destroy(collision.gameObject);
+        ScoreScript.scoreValue++;
 
     }
 
