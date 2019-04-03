@@ -23,7 +23,7 @@ public class PlayerCollision : MonoBehaviour
 
 
 
-
+/*
         Debug.Log("OnTriggerEnter() was called");
         if (other.tag == "Asteroid")
         {
@@ -34,8 +34,7 @@ public class PlayerCollision : MonoBehaviour
             Destroy(other.gameObject);
             GameObject.Find("Main Camera").animation.Play();
         }
-    }
+  */  }
 
 
-}
 }
