@@ -15,10 +15,10 @@ GameObject:
   - component: {fileID: 2612989359835956109}
   m_Layer: 0
   m_Name: alga
-  m_TagString: Untagged
+  m_TagString: alga
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &6903047145663543323
 Transform:
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 3110941543900868242}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 4.420144, y: -7.6794252, z: 0.1725561}
-  m_LocalScale: {x: 0.3821397, y: 0.7646591, z: 0.9}
+  m_LocalScale: {x: 0.5749989, y: 0.57909304, z: 0.9}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
