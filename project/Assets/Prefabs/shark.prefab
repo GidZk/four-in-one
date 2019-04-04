@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1297945555761484790}
   - component: {fileID: 4228733095899242426}
   - component: {fileID: 4915711597171554245}
+  - component: {fileID: 4664578385873551038}
   m_Layer: 0
   m_Name: shark
   m_TagString: Untagged
@@ -31,7 +32,7 @@ Transform:
   m_GameObject: {fileID: 1338293152497271818}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 21.818, y: -1.498, z: -0.1725561}
-  m_LocalScale: {x: 0.5186251, y: 0.31973666, z: 0.95}
+  m_LocalScale: {x: 0.4925233, y: 0.71680945, z: 0.95}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -315,3 +316,22 @@ PolygonCollider2D:
       - {x: -0.78749996, y: -2.94375}
       - {x: -0.67499995, y: -2.475}
       - {x: -0.56249994, y: -2.475}
+--- !u!95 &4664578385873551038
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1338293152497271818}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07d4f5266ba424168bc2f53c86e74efb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
