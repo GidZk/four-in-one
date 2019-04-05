@@ -90,14 +90,14 @@ public class playerController : MonoBehaviour
         
         if (coll.gameObject.tag == "alga")
         {
-            Debug.Log(" --a collision between player and alga. ");
+            Debug.Log($"{this} --a collision between player and alga. ");
             
             Destroy(coll.gameObject);
-
+            
             //Add 1 point each time the starfish(object that gives points) collides 
             // with the object this script is attached to
             ScoreScript.scoreValue++;
-
+            Debug.Log("score = " + ScoreScript.scoreValue);
         }
     }
 }

@@ -1438,6 +1438,26 @@ PrefabInstance:
       propertyPath: m_UseFullKinematicContacts
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8814253271354770604, guid: b9226e47a633f464daa52cedc3367bc5,
+        type: 3}
+      propertyPath: m_BodyType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8814253271354770604, guid: b9226e47a633f464daa52cedc3367bc5,
+        type: 3}
+      propertyPath: m_UseAutoMass
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8814253271354770604, guid: b9226e47a633f464daa52cedc3367bc5,
+        type: 3}
+      propertyPath: m_Mass
+      value: 19.521658
+      objectReference: {fileID: 0}
+    - target: {fileID: 8814253271354770604, guid: b9226e47a633f464daa52cedc3367bc5,
+        type: 3}
+      propertyPath: m_Constraints
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2104261777616831087, guid: b9226e47a633f464daa52cedc3367bc5, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: b9226e47a633f464daa52cedc3367bc5, type: 3}
