@@ -1159,12 +1159,12 @@ PrefabInstance:
     - target: {fileID: 1377129301697488977, guid: 46b097daf62b21c409354716e8730cc8,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 24.51
+      value: -7.3
       objectReference: {fileID: 0}
     - target: {fileID: 1377129301697488977, guid: 46b097daf62b21c409354716e8730cc8,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.35
+      value: -2.93
       objectReference: {fileID: 0}
     - target: {fileID: 1377129301697488977, guid: 46b097daf62b21c409354716e8730cc8,
         type: 3}
@@ -1211,6 +1211,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1377129301697488977, guid: 46b097daf62b21c409354716e8730cc8,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1377129301697488977, guid: 46b097daf62b21c409354716e8730cc8,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1259642492544224802, guid: 46b097daf62b21c409354716e8730cc8,
+        type: 3}
+      propertyPath: obj
+      value: 
+      objectReference: {fileID: 2099042040}
     m_RemovedComponents:
     - {fileID: 1377129301697488976, guid: 46b097daf62b21c409354716e8730cc8, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 46b097daf62b21c409354716e8730cc8, type: 3}
@@ -1403,6 +1418,12 @@ MonoBehaviour:
       m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
         Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   delegates: []
+--- !u!1 &2099042040 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1377129301697488974, guid: 46b097daf62b21c409354716e8730cc8,
+    type: 3}
+  m_PrefabInstance: {fileID: 1831102414}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2405253856294368497 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2405253856294368497, guid: b9226e47a633f464daa52cedc3367bc5,

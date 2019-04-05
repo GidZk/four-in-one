@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WheelRotator : ObjectRotator 
+public class WheelRotator : MonoBehaviour 
 {
     /*object to be rotated*/
     public GameObject obj;
@@ -21,10 +21,6 @@ public class WheelRotator : ObjectRotator
         transform.position += Vector3.up * radius;
         isMouseDown = false;
 
-        /*
-         if (istouch) {start other controller}
-         else {use these controllers}
-         */
 
 
     }
