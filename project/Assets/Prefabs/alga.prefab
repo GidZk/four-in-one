@@ -15,10 +15,10 @@ GameObject:
   - component: {fileID: 2612989359835956109}
   m_Layer: 0
   m_Name: alga
-  m_TagString: Untagged
+  m_TagString: alga
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &6903047145663543323
 Transform:
