@@ -92,7 +92,7 @@ namespace Networking
                 var relative = "Spawnable/" + file.Substring(i + 1);
                 var prefabPath = relative.Remove(relative.IndexOf('.'));
                 var prefab = Resources.Load(prefabPath) as GameObject;
-
+                Debug.Log($"Registering {prefabPath} as spawnable");
                 ClientScene.RegisterPrefab(prefab);
             }
         }
