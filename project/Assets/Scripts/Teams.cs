@@ -21,4 +21,17 @@ class TeamUtil
 
         return Color.white;
     }
+
+    // Hastily implemented because TryParse doesn't seem to work
+    public static Team FromString(String s)
+    {
+        switch (s.ToLower().Remove(s.IndexOf('\0')))
+        {
+            case "green": return Team.Green;
+            case "teal": return Team.Teal;
+            case "red": return Team.Red;
+        }
+
+        throw new Exception($"Could not parse {s}");
+    }
 }

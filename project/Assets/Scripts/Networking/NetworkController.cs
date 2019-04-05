@@ -44,6 +44,13 @@ namespace Networking
         public bool IsServer() => NetworkServer.active;
         public bool IsClient() => Client() != null && Client().isConnected;
 
+        public bool IsConnected()
+        {
+            if (Client() != null)
+                return Client().isConnected;
+            return false;
+        }
+
         private void Update()
         {
             EvaluateServerState();
@@ -101,7 +108,10 @@ namespace Networking
         //written in Update() because co-routines are weird with networking sometimes
         private void EvaluateServerState()
         {
-            if (StartHostTime >= 0 && Time.time > StartHostTime && !IsServer())
+            if (StartHostTime >= 0 &&
+                Time.time > StartHostTime
+                && !IsServer()
+                && !IsConnected())
             {
                 Debug.Log($" |||| Starting host at {Time.time}");
                 if (discovery.isClient)
@@ -152,6 +162,7 @@ namespace Networking
             discovery.broadcastData = team.ToString();
 
             var success = discovery.Initialize();
+            discovery.StartAsClient();
             if (success)
             {
                 // listen to broadcasts for 2 seconds, if none of team found, switch to host
@@ -174,7 +185,8 @@ namespace Networking
         public void OnReceivedBroadcast(string fromAddress, string data)
         {
             Debug.Log($" ==== BC from {fromAddress} ");
-            if (!(Enum.TryParse(data, out Team otherTeam) && otherTeam == Team))
+            var otherTeam = TeamUtil.FromString(data);
+            if (otherTeam != Team)
                 return;
 
 
