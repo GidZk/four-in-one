@@ -1684,8 +1684,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   discovery: {fileID: 241540341}
   manager: {fileID: 1124385373}
-  SelectCanvas: {fileID: 1187257688}
-  WaitCanvas: {fileID: 180706705}
+  selectCanvas: {fileID: 1187257688}
+  waitCanvas: {fileID: 180706705}
   memberDisplayController: {fileID: 625400402}
 --- !u!4 &1687519955
 Transform:

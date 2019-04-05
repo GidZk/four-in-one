@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
+using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.NetworkSystem;
+using Directory = System.IO.Directory;
 
 #pragma warning disable 618
 
@@ -12,44 +14,88 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     public MyNetworkDiscovery discovery;
     public MyNetworkManager manager;
 
-    public Canvas SelectCanvas;
-    public Canvas WaitCanvas;
-
+    // TODO move this away to some sort of UIController
+    public Canvas selectCanvas;
+    public Canvas waitCanvas;
     public MemberDisplayController memberDisplayController;
 
+    // Strictly for debugging, logic should NOT depend on this
     private State m_State = State.Idle;
 
-    private bool m_Localhost;
-
-    private int m_NetworkId;
-    private float m_StartHostTime = -1;
+    private bool UseLocalhost { get; set; }
+    private int NetworkId { get; set; }
+    private float StartHostTime { get; set; }
+    private Team Team { get; set; }
 
     private int m_MemberCount;
 
     public int MemberCount
     {
-        get { return m_MemberCount; }
-        set
+        get => m_MemberCount;
+        private set
         {
             m_MemberCount = value;
-            if (m_State == State.Host)
-            {
-                Debug.Log($"Sent member change message: {m_MemberCount}");
-                NetworkServer.SendToAll(Messages.MessageGiveMembersJoined, new IntegerMessage(m_MemberCount));
-            }
+            if (!NetworkServer.active) return;
+            Debug.Log($"Sent member change message: {m_MemberCount}");
+            NetworkServer.SendToAll(Messages.MessageGiveMembersJoined, new IntegerMessage(m_MemberCount));
         }
     }
 
+    public bool IsServer() => NetworkServer.active;
+    public bool IsClient() => Client() != null && Client().isConnected;
 
     private void Update()
     {
         EvaluateServerState();
+
+        // dummy function for testing that spawning/movement works
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (IsClient())
+            {
+                Client().Send(Messages.ControlMessage, new IntegerMessage(NetworkId));
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            if (IsServer())
+            {
+                var go = Instantiate(Resources.Load("Spawnable/dummyobj"),
+                    new Vector3(0, 0, 0),
+                    Quaternion.identity) as GameObject;
+                NetworkServer.Spawn(go);
+            }
+        }
     }
 
     private void Awake()
     {
         discovery.Register(this);
+        discovery.running = false;
         manager.Register(this);
+        InitHostHandlers();
+    }
+
+    /*
+     * Scrapes the Assets/Prefabs/Resources/Spawnable folder for prefabs and registers them
+     */
+    private void RegisterSpawnable()
+    {
+        var path = Application.dataPath + "/Prefabs/Resources/Spawnable";
+        var files = Directory.GetFiles(path);
+
+        foreach (var file in files)
+        {
+            if (!file.EndsWith(".prefab")) return;
+            char[] chars = new[] {'/', '\\'};
+            var i = file.LastIndexOfAny(chars);
+            var relative = "Spawnable/" + file.Substring(i + 1);
+            var prefabPath = relative.Remove(relative.IndexOf('.'));
+            var prefab = Resources.Load(prefabPath) as GameObject;
+
+            ClientScene.RegisterPrefab(prefab);
+        }
     }
 
     /* Block managing state switch from client to host after a delay
@@ -57,7 +103,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
      */
     private void EvaluateServerState()
     {
-        if (m_State == State.ClientSearching && Time.time > m_StartHostTime)
+        if (m_State == State.ClientSearching && Time.time > StartHostTime)
         {
             if (discovery.isClient)
             {
@@ -108,13 +154,14 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         }
 
         memberDisplayController.Color = TeamUtil.GetTeamColor(team);
+        Team = team;
         discovery.broadcastData = team.ToString();
 
         var success = discovery.Initialize();
         if (success)
         {
             // listen to broadcasts for 2 seconds, if none of team found, switch to host
-            m_StartHostTime = Time.time + 2f;
+            StartHostTime = Time.time + 2f;
             discovery.StartAsClient();
             m_State = State.ClientSearching;
         }
@@ -124,49 +171,18 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         }
     }
 
-    public void OnHostButtonPressed()
-    {
-        if (discovery.isClient || discovery.isServer)
-        {
-            discovery.StopBroadcast();
-        }
-
-        var success = discovery.Initialize();
-        if (success)
-        {
-            discovery.StartAsServer();
-            manager.StartHost();
-            m_State = State.Host;
-        }
-        else
-            Debug.Log(" >>>> Port already in use");
-    }
-
-    public void OnJoinButtonPressed()
-    {
-        if (discovery.isClient || discovery.isServer)
-        {
-            discovery.StopBroadcast();
-        }
-
-        var success = discovery.Initialize();
-        if (success)
-        {
-            discovery.StartAsClient();
-            m_State = State.ClientSearching;
-        }
-        else
-            Debug.Log(" >>>> Port already in use");
-    }
-
     public void OnToggleLocalHostButton()
     {
-        m_Localhost = !m_Localhost;
-        Debug.Log($"Toggle localhost, now {m_Localhost} ");
+        UseLocalhost = !UseLocalhost;
+        Debug.Log($"Toggle localhost, now {UseLocalhost} ");
     }
 
     public void OnReceivedBroadcast(string fromAddress, string data)
     {
+        if (!(Enum.TryParse(data, out Team otherTeam) && otherTeam == Team))
+            return;
+
+
         var ipv4 = fromAddress.Substring(7);
         manager.networkAddress = ipv4;
         var client = manager.StartClient();
@@ -210,21 +226,15 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     {
         Debug.Log(">>>> connected to server");
         InitClientHandlers();
-        SelectCanvas.gameObject.SetActive(false);
-        WaitCanvas.gameObject.SetActive(true);
-        memberDisplayController.SetNumberJoined(0);
+        RegisterSpawnable();
+        selectCanvas.gameObject.SetActive(false);
+        waitCanvas.gameObject.SetActive(true);
     }
 
-    private void InitClientHandlers()
-    {
-        Client().RegisterHandler(Messages.MessageGiveClientId, OnClientRcvGiveClientId);
-        Client().RegisterHandler(Messages.MessageGiveMembersJoined, OnClientRcvMembersJoined);
-    }
 
     /**
      * Called ont he client when it disconnects from a server
      */
-
     public void OnClientDisconnect(NetworkConnection conn)
     {
         // TODO
@@ -233,19 +243,39 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     /**
      * Called when connecting to a server to give the client an id
      */
-    private void OnClientRcvGiveClientId(NetworkMessage netmsg)
+    private void OnClientRcvGiveClientId(NetworkMessage message)
     {
-        m_NetworkId = netmsg.ReadMessage<IntegerMessage>().value;
-        Debug.Log($"Received network ID {m_NetworkId}");
+        NetworkId = message.ReadMessage<IntegerMessage>().value;
+        Debug.Log($" <<<< Received network ID {NetworkId}");
     }
 
     /**
      * Called on each server whenever the number of members in the team change
      */
-    private void OnClientRcvMembersJoined(NetworkMessage netmsg)
+    private void OnClientRcvMembersJoined(NetworkMessage message)
     {
-        var n = netmsg.ReadMessage<IntegerMessage>().value;
-        Debug.Log($"Recieved member number change {n}");
+        var n = message.ReadMessage<IntegerMessage>().value;
+        Debug.Log($" <<<< Received member number change {n}");
         memberDisplayController.SetNumberJoined(n);
+    }
+
+    private void OnServerRcvControlMessage(NetworkMessage message)
+    {
+        var n = message.ReadMessage<IntegerMessage>().value;
+        Debug.Log($" <<<<     Received control message containing {n}");
+    }
+
+    /*
+     * Registers the message handling that is to be received on  the clients' sidee
+     */
+    private void InitClientHandlers()
+    {
+        Client().RegisterHandler(Messages.MessageGiveClientId, OnClientRcvGiveClientId);
+        Client().RegisterHandler(Messages.MessageGiveMembersJoined, OnClientRcvMembersJoined);
+    }
+
+    private void InitHostHandlers()
+    {
+        NetworkServer.RegisterHandler(Messages.ControlMessage, OnServerRcvControlMessage);
     }
 }

@@ -14,10 +14,6 @@ public class MemberDisplayController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.anyKeyDown)
-        {
-            SetNumberJoined(a++ % 5);
-        }
     }
 
     private void Awake()
