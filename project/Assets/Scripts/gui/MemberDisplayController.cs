@@ -23,7 +23,7 @@ public class MemberDisplayController : MonoBehaviour
             im.preserveAspect = true;
         }
 
-        SetNumberJoined(0);
+        SetNumberJoined(1);
     }
 
     public Color Color = UnityEngine.Color.clear;

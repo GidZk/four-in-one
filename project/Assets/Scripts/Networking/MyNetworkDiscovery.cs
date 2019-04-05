@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+#pragma warning disable 618
+
 public class MyNetworkDiscovery : NetworkDiscovery
 {
     private readonly List<BroadcastListener> m_Listeners = new List<BroadcastListener>();

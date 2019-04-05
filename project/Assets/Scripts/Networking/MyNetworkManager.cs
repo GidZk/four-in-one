@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+
+#pragma warning disable 618
+
+
 public class MyNetworkManager : NetworkManager
 {
     private readonly List<ManagerListener> m_Listeners = new List<ManagerListener>();
