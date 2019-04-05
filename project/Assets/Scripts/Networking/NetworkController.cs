@@ -64,7 +64,7 @@ namespace Networking
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.KeypadEnter))
+            if (Input.GetKeyDown(KeyCode.S))
             {
                 if (IsServer())
                 {
@@ -85,7 +85,7 @@ namespace Networking
             InitHostHandlers();
         }
 
-        //Scrapes the Assets/Prefabs/Resources/Spawnable folder for prefabs and registers them
+        // Scrapes the Assets/Prefabs/Resources/Spawnable folder for prefabs and registers them
         private void RegisterSpawnable()
         {
             var path = Application.dataPath + "/Prefabs/Resources/Spawnable";
@@ -94,11 +94,13 @@ namespace Networking
             foreach (var file in files)
             {
                 if (!file.EndsWith(".prefab")) return;
-                char[] chars = new[] {'/', '\\'};
+
+                char[] chars = {'/', '\\'};
                 var i = file.LastIndexOfAny(chars);
                 var relative = "Spawnable/" + file.Substring(i + 1);
                 var prefabPath = relative.Remove(relative.IndexOf('.'));
                 var prefab = Resources.Load(prefabPath) as GameObject;
+
                 Debug.Log($"Registering {prefabPath} as spawnable");
                 ClientScene.RegisterPrefab(prefab);
             }
@@ -166,7 +168,7 @@ namespace Networking
             if (success)
             {
                 // listen to broadcasts for 2 seconds, if none of team found, switch to host
-                StartHostTime = Time.time + 2f;
+                StartHostTime = Time.time + 2;
                 Debug.Log($"setting startHostTime = {StartHostTime}");
                 m_State = State.ClientSearching;
             }
@@ -189,15 +191,13 @@ namespace Networking
             if (otherTeam != Team)
                 return;
 
-
             var ipv4 = fromAddress.Substring(7);
             manager.networkAddress = ipv4;
             var client = manager.StartClient();
 
-
             if (manager.isNetworkActive)
             {
-                Debug.Log(">>>> connected!");
+                Debug.Log(" >>>> connected!");
                 discovery.StopBroadcast();
             }
             else
@@ -276,7 +276,7 @@ namespace Networking
             Debug.Log($" <<<<     Received control message containing {n}");
         }
 
-        // Registers the message handling that is to be received on  the clients' sidee
+        // Registers the message handling that is to be received on  the clients' side
         private void InitClientHandlers()
         {
             Client().RegisterHandler(Messages.MessageGiveClientId, OnClientRcvGiveClientId);
