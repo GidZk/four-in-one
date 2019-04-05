@@ -18,7 +18,7 @@ public class playerController : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update(){
+   /* void Update(){
         if(Input.touchCount > 0){
             Touch touch = Input.GetTouch(0);
             if(touch.phase == TouchPhase.Began){
@@ -33,11 +33,11 @@ public class playerController : MonoBehaviour {
         //moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         //Move(hInput);
     }        
-
+    */
     void FixedUpdate (){
         
         //uncomment for arrows instead
-        //Move(Input.GetAxisRaw("Horizontal"));
+        Move(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         
     }
     
@@ -67,5 +67,25 @@ public class playerController : MonoBehaviour {
     }
     public void VerticalMovement(float VerticalInput){
         vInput = VerticalInput;
+    }
+
+
+
+    // Invoked on collision
+  void OnCollisionEnter2D(Collision2D coll)
+    {
+
+
+        if (coll.gameObject.tag == "alga")
+        {
+            Debug.Log($"{this} --a collision between player and alga. ");
+
+            Destroy(coll.gameObject);
+
+            //Add 1 point each time the starfish(object that gives points) collides
+            // with the object this script is attached to
+            ScoreScript.scoreValue++;
+            Debug.Log("score = " + ScoreScript.scoreValue);
+        }
     }
 }
