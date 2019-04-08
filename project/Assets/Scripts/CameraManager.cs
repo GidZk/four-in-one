@@ -6,6 +6,17 @@ public class CameraManager : MonoBehaviour
 {
     public Camera[] cams;
 
+    public int CurrentCamera;
+    private int m_lastCamera;
+
+    private void Update()
+    {
+        if (m_lastCamera == CurrentCamera) return;
+        if (CurrentCamera < 0 || CurrentCamera > 3)
+            CurrentCamera = m_lastCamera;
+        SetCamera(CurrentCamera);
+    }
+
     private void Awake()
     {
         SetCamera(0);
@@ -19,6 +30,7 @@ public class CameraManager : MonoBehaviour
             return;
         }
 
+        m_lastCamera = n;
         foreach (var cam in cams)
         {
             cam.enabled = false;
