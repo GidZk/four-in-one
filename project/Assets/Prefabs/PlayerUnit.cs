@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.PlayerLoop;
 using UnityEngine.Networking;
+#pragma warning disable 618
 
 // A PlayerUnit is a unit controlled by a player
 // This could be a character in an FPS, a zergling in a RTS
