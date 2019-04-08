@@ -25,3 +25,5 @@
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
+
+project/Assembly-CSharp.csproj.DotSettings
