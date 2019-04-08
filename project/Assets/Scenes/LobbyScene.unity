@@ -682,14 +682,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 475228969}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1301386320, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: 33a922cca85183b41bfe18566001ac02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!114 &475228971
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -731,7 +726,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!224 &475228973
 RectTransform:
@@ -2192,6 +2187,8 @@ MonoBehaviour:
   selectCanvas: {fileID: 1187257688}
   waitCanvas: {fileID: 180706705}
   memberDisplayController: {fileID: 625400402}
+  spawnable:
+  - {fileID: 2384502420739889548, guid: a6c656be62fadec4a8ddbc91eb2560e4, type: 3}
 --- !u!4 &1687519955
 Transform:
   m_ObjectHideFlags: 0
