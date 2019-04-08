@@ -5,9 +5,10 @@ using UnityEngine.Networking;
 public class Messages
 {
     public const short Base = MsgType.Highest;
-    public const short MessageGiveClientId = Base + 1;
-    public const short MessageGiveMembersJoined = Base + 2;
-    public const short ControlMessage = Base + 3;
+    public const short ClientId = Base + 1;
+    public const short MemberCount = Base + 2;
+    public const short Control = Base + 3;
+    public const short StartGame = Base + 4;
 }
 
 public class ControlMessage : MessageBase

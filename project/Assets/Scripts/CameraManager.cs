@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CameraManager : MonoBehaviour
 {
@@ -19,10 +21,12 @@ public class CameraManager : MonoBehaviour
 
     private void Awake()
     {
-        SetCamera(0);
+        var nc = FindObjectOfType(typeof(NetworkController)) as NetworkController;
+        Debug.Log($"Set camera {nc.NetworkId}");
+        SetCamera(nc.NetworkId);
     }
 
-    private void SetCamera(int n)
+    public void SetCamera(int n)
     {
         if (n < 0 || n > 3)
         {
