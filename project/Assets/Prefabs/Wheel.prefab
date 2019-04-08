@@ -110,5 +110,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1377129301697488974}
-  isTouch: 0
-  radius: 0
+  radius: 1
+  speedLimit: 8

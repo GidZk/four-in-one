@@ -7,8 +7,9 @@ public class MouseRotator : MonoBehaviour
     public GameObject target;
     /*inserted radius in case we want to rotate something around another thing*/
     public float radius;
-    private Transform pivot;
+    public float speedLimit;
 
+    private Transform pivot;
     private bool isMouseDown;
     private float prevTheta;
     private float theta;
@@ -42,14 +43,16 @@ public class MouseRotator : MonoBehaviour
 
     private void calculateRotParams() {
         Vector3 objectToMouse = Camera.main.WorldToScreenPoint(target.transform.position) - Input.mousePosition;
-        //  double theta = Mathf.Atan(orbVector.x / orbVector.y) * (180 / Mathf.PI);
-        theta = (Mathf.Atan2((objectToMouse.y), objectToMouse.x) * Mathf.Rad2Deg) + 180;
-        if (Mathf.Abs(theta - prevTheta) > 4)
-        {
-            dTheta = 4;
+        if (Input.GetTouch(0).phase == TouchPhase.Began){
+            prevTheta = (Mathf.Atan2((objectToMouse.y), objectToMouse.x) * Mathf.Rad2Deg) + 180;
         }
-        else
-        {
+
+        theta = (Mathf.Atan2((objectToMouse.y), objectToMouse.x) * Mathf.Rad2Deg) + 180;
+
+        if (Mathf.Abs(theta - prevTheta) > speedLimit){
+            dTheta = speedLimit;
+        }
+        else{
             dTheta = theta - prevTheta;
         }
 
@@ -61,7 +64,7 @@ public class MouseRotator : MonoBehaviour
     private void OnMouseDown()
     {
         Vector3 objectToMouse = Camera.main.WorldToScreenPoint(target.transform.position) - Input.mousePosition;
-        this.prevTheta = (Mathf.Atan2((objectToMouse.y), objectToMouse.x) * Mathf.Rad2Deg) + 180;
+        prevTheta = (Mathf.Atan2((objectToMouse.y), objectToMouse.x) * Mathf.Rad2Deg) + 180;
         isMouseDown = true;
 
     }
