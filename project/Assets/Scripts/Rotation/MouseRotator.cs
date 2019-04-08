@@ -2,14 +2,14 @@
 
 public class MouseRotator : MonoBehaviour
 {
-    /*object to be rotated*/
-    public GameObject obj;
-    /*inserted radius in case we want to rotate something around another thing*/
-    public bool isTouch;
-    private float radius;
-    private Transform pivot;
-    private bool isMouseDown;
 
+    /*object to be rotated*/
+    public GameObject target;
+    /*inserted radius in case we want to rotate something around another thing*/
+    public float radius;
+    private Transform pivot;
+
+    private bool isMouseDown;
     private float prevTheta;
     private float theta;
     private float dTheta;
@@ -18,9 +18,9 @@ public class MouseRotator : MonoBehaviour
 
     void Start()
     {
-        prevTheta = 0;
+        
         radius = 1;
-        pivot = obj.transform;
+        pivot = target.transform;
         transform.parent = pivot;
         transform.position += Vector3.up * radius;
         isMouseDown = false;
@@ -31,47 +31,48 @@ public class MouseRotator : MonoBehaviour
 
     void Update()
     {
-        if (isMouseDown)
+        if (isMouseDown || Input.touchCount > 0) 
         {
+            theta = calculateRotation();
+            pivot.position = target.transform.position;
+            pivot.rotation = Quaternion.AngleAxis(theta , Vector3.forward);
 
-
-            Vector3 objectToMouse = Camera.main.WorldToScreenPoint(obj.transform.position) - Input.mousePosition;
-
-             //  double theta = Mathf.Atan(orbVector.x / orbVector.y) * (180 / Mathf.PI);
-
-
-      
-
-            theta = (Mathf.Atan2((objectToMouse.y), objectToMouse.x)* Mathf.Rad2Deg) + 180;
-
-            dTheta = theta - prevTheta;
-            prevTheta = theta;
-            accTheta += dTheta;
-
-
-
-
-            Debug.Log("Rotations:: Theta: " + (theta));
-            //Debug.Log("MouseRotator:: Delta Theta: " + dTheta);
-            //Debug.Log("MouseRotator:: AccTheta :" + accTheta);
-            //Debug.Log("MouseRotator:: Rotations :" +(accTheta / 360f));
-            pivot.position = obj.transform.position;
-            pivot.rotation = Quaternion.AngleAxis(theta - 90, Vector3.forward);
         }
 
     }
 
 
+
+
+    private void calculateRotParams() {
+        Vector3 objectToMouse = Camera.main.WorldToScreenPoint(target.transform.position) - Input.mousePosition;
+        //  double theta = Mathf.Atan(orbVector.x / orbVector.y) * (180 / Mathf.PI);
+        theta = (Mathf.Atan2((objectToMouse.y), objectToMouse.x) * Mathf.Rad2Deg) + 180;
+        if (Mathf.Abs(theta - prevTheta) > 4)
+        {
+            dTheta = 4;
+        }
+        else
+        {
+            dTheta = theta - prevTheta;
+        }
+
+        prevTheta = theta;
+        accTheta += Mathf.Abs(dTheta);
+
+        return theta;
+    }
+
     private void OnMouseDown()
     {
+        Vector3 objectToMouse = Camera.main.WorldToScreenPoint(target.transform.position) - Input.mousePosition;
+        this.prevTheta = (Mathf.Atan2((objectToMouse.y), objectToMouse.x) * Mathf.Rad2Deg) + 180;
         isMouseDown = true;
 
     }
 
     private void OnMouseUp()
     {
-
         isMouseDown = false;
-
     }
 }

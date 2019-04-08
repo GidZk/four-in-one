@@ -109,5 +109,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34cf6a58335094b9abd8e684d1a8475a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obj: {fileID: 0}
+  target: {fileID: 1377129301697488974}
   isTouch: 0
+  radius: 0
