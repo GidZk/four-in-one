@@ -26,7 +26,7 @@
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
 
-project/Assembly-CSharp.csproj.DotSettings
+**/Assembly-CSharp.csproj.DotSettings
 
 [Ll]ibrary/
 [Tt]emp/
