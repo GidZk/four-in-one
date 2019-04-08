@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -7,11 +8,11 @@ using Directory = System.IO.Directory;
 
 #pragma warning disable 618
 
-public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListener, InputListener
+public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListener, InputListener, InputInterface
 {
     public MyNetworkDiscovery discovery;
     public MyNetworkManager manager;
-    public InputListener player;
+    public HashSet<InputListener> inputListeners;
 
     // TODO move this away to some sort of UIController
     public Canvas selectCanvas;
@@ -81,6 +82,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         discovery.Register(this);
         discovery.StopBroadcast();
         manager.Register(this);
+        inputListeners = new HashSet<InputListener>();
         InitHostHandlers();
     }
 
@@ -143,7 +145,6 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         Debug.Log(" >>>> Manager missing client");
         return null;
     }
-
 
     public void OnTeamButtonPressed(TeamGameObject obj) => JoinTeam(obj.team);
 
@@ -278,16 +279,32 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         switch (type)
         {
             case ControlType.VERTICAL:
-                player.OnVerticalMovementInput(val);
+                foreach (var l in inputListeners)
+                {
+                    l.OnVerticalMovementInput(val);
+                }
+
                 break;
             case ControlType.HORIZONTAL:
-                player.OnHorizontalMovementInput(val);
+                foreach (var l in inputListeners)
+                {
+                    l.OnVerticalMovementInput(val);
+                }
+
                 break;
             case ControlType.CANNON_ANGLE:
-                player.OnCannonAngleInput(val);
+                foreach (var l in inputListeners)
+                {
+                    l.OnVerticalMovementInput(val);
+                }
+
                 break;
             case ControlType.CANNON_LAUNCH:
-                player.OnCannonLaunchInput(val);
+                foreach (var l in inputListeners)
+                {
+                    l.OnVerticalMovementInput(val);
+                }
+
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -301,13 +318,13 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         Client().RegisterHandler(Messages.MessageGiveMembersJoined, OnClientRcvMembersJoined);
     }
 
+    // Registers the message handling that is to be received on the host's side
     private void InitHostHandlers()
     {
         NetworkServer.RegisterHandler(Messages.ControlMessage, OnServerRcvControlMessage);
     }
 
     // Input Management
-
     public void OnVerticalMovementInput(float value)
     {
         if (IsServer())
@@ -335,4 +352,8 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
             Debug.Log("NetworkController should not be input listener while being host");
         Client().Send(Messages.ControlMessage, new ControlMessage(value, ControlType.CANNON_LAUNCH));
     }
+
+    public void Register(InputListener il) => inputListeners.Add(il);
+
+    public bool Unregister(InputListener il) => inputListeners.Remove(il);
 }
