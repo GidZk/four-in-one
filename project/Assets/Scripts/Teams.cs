@@ -24,7 +24,7 @@ class TeamUtil
 
     public static Team FromString(String s)
     {
-        if (Enum.TryParse(s, true, out Team team))
+        if (Enum.TryParse(s, true, out Teamx team))
         {
             return team;
         }
