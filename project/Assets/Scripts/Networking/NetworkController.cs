@@ -12,21 +12,23 @@ using Directory = System.IO.Directory;
 
 public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListener, InputListener, InputInterface
 {
-    public Text LogText;
+    // TODO delete dis
+    public Text _logText;
 
-    public void Log(String s, Color c)
+    private void Log(string s, Color c)
     {
-        LogText.text = s + "\n" + LogText.text;
-        String colorCode = (int) (c.r * 0xFF) +
-                           (int) (c.g * 0xFF) +
-                           ((int) (c.b * 0xFF)).ToString();
-        Debug.Log($"<color=#{colorCode}>" + s + "</color");
+        _logText.text = s + "\n" + _logText.text;
+
+        String colorCode = "#" + ((int) (c.r * 0xFF)).ToString("X2")
+                               + ((int) (c.g * 0xFF)).ToString("X2")
+                               + ((int) (c.b * 0xFF)).ToString("X2");
+        Debug.Log($"<color={colorCode}>" + s + "</color>");
     }
 
-    private void Log(String s)
+    private void Log(string s)
     {
-        var prev = LogText.text;
-        LogText.text = s + "\n" + prev;
+        var prev = _logText.text;
+        _logText.text = s + "\n" + prev;
         Debug.Log(s);
     }
 
@@ -125,7 +127,8 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         if (StartHostTime >= 0 &&
             Time.time > StartHostTime &&
             !IsServer() &&
-            !IsConnected())
+            !IsConnected() &&
+            !UseLocalhost)
         {
             Log($" |||| Starting host at {Time.time}");
 
@@ -148,6 +151,12 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 
     public void OnTeamButtonPressed(TeamGameObject obj) => JoinTeam(obj.team);
 
+    public void OnToggleLocalhost()
+    {
+        UseLocalhost = !UseLocalhost;
+        Log($"localhost: {UseLocalhost}");
+    }
+
     public void OnReceivedBroadcast(string fromAddress, string data)
     {
         Log($" ==== BC from {fromAddress} ");
@@ -155,18 +164,24 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         if (otherTeam != Team)
             return;
 
-        var ipv4 = fromAddress.Substring(7);
+        var ipv4 = "localhost";
+        if (fromAddress != "localhost")
+            ipv4 = fromAddress.Substring(7);
+
         manager.networkAddress = ipv4;
         var client = manager.StartClient();
 
-        if (manager.isNetworkActive)
+        Log($"Attempting connect to {ipv4}");
+
+        if (client.isConnected)
         {
-            Log(" >>>> connected!");
-            discovery.StopBroadcast();
+            Log(" >>>> connected!", Color.green);
+            if (discovery.running)
+                discovery.StopBroadcast();
         }
         else
         {
-            Log(" >>>> Could not establish connection to host");
+            Log(" >>>> Could not establish connection to host", Color.yellow);
         }
     }
 
@@ -176,13 +191,21 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
      * */
     private void JoinTeam(Team team)
     {
+        memberDisplayController.Color = TeamUtil.GetTeamColor(team);
+        Team = team;
+
+        if (UseLocalhost)
+        {
+            Log("Using localhost, sending faux broadcast");
+            OnReceivedBroadcast("localhost", team.ToString());
+            return;
+        }
+
         Log($"Starting to join team {team}");
         if (discovery.running)
             // TODO make sure this stops properly
             Log("Tried to change team when discovery was running");
 
-        memberDisplayController.Color = TeamUtil.GetTeamColor(team);
-        Team = team;
         discovery.broadcastData = team.ToString();
 
         var success = discovery.Initialize();
@@ -196,7 +219,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         }
         else
         {
-            Log("Failed to init network discovery");
+            Log("Failed to init network discovery", Color.red);
         }
     }
 
@@ -251,28 +274,28 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         Log($" <<<< Received control message containing {val} of type {type}");
         switch (type)
         {
-            case ControlType.VERTICAL:
+            case ControlType.Vertical:
                 foreach (var l in inputListeners)
                 {
                     l.OnVerticalMovementInput(val);
                 }
 
                 break;
-            case ControlType.HORIZONTAL:
+            case ControlType.Horizontal:
                 foreach (var l in inputListeners)
                 {
                     l.OnVerticalMovementInput(val);
                 }
 
                 break;
-            case ControlType.CANNON_ANGLE:
+            case ControlType.CannonAngle:
                 foreach (var l in inputListeners)
                 {
                     l.OnVerticalMovementInput(val);
                 }
 
                 break;
-            case ControlType.CANNON_LAUNCH:
+            case ControlType.CannonLaunch:
                 foreach (var l in inputListeners)
                 {
                     l.OnVerticalMovementInput(val);
@@ -357,28 +380,28 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     {
         if (IsServer())
             Log("NetworkController should not be input listener while being host", Color.yellow);
-        Client().Send(Messages.Control, new ControlMessage(value, ControlType.VERTICAL));
+        Client().Send(Messages.Control, new ControlMessage(value, ControlType.Vertical));
     }
 
     public void OnHorizontalMovementInput(float value)
     {
         if (IsServer())
             Log("NetworkController should not be input listener while being host", Color.yellow);
-        Client().Send(Messages.Control, new ControlMessage(value, ControlType.HORIZONTAL));
+        Client().Send(Messages.Control, new ControlMessage(value, ControlType.Horizontal));
     }
 
     public void OnCannonAngleInput(float value)
     {
         if (IsServer())
             Log("NetworkController should not be input listener while being host", Color.yellow);
-        Client().Send(Messages.Control, new ControlMessage(value, ControlType.CANNON_ANGLE));
+        Client().Send(Messages.Control, new ControlMessage(value, ControlType.CannonAngle));
     }
 
     public void OnCannonLaunchInput(float value)
     {
         if (IsServer())
             Log("NetworkController should not be input listener while being host", Color.yellow);
-        Client().Send(Messages.Control, new ControlMessage(value, ControlType.CANNON_LAUNCH));
+        Client().Send(Messages.Control, new ControlMessage(value, ControlType.CannonLaunch));
     }
 
     public void Register(InputListener il) => inputListeners.Add(il);

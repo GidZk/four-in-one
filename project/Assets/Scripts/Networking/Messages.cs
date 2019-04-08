@@ -29,8 +29,8 @@ public class ControlMessage : MessageBase
 
 public enum ControlType
 {
-    VERTICAL,
-    HORIZONTAL,
-    CANNON_ANGLE,
-    CANNON_LAUNCH
+    Vertical,
+    Horizontal,
+    CannonAngle,
+    CannonLaunch
 }
