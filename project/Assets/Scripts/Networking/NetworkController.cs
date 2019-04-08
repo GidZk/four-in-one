@@ -8,6 +8,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Directory = System.IO.Directory;
 
+// ReSharper disable All
+
 #pragma warning disable 618
 
 public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListener, InputListener, InputInterface
@@ -41,16 +43,10 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     public Canvas waitCanvas;
     public MemberDisplayController memberDisplayController;
 
-    // Strictly for debugging, logic should NOT depend on this
-#pragma warning disable 414
-    private State m_State = State.Idle;
-#pragma warning restore 414
-
-    private bool UseLocalhost { get; set; }
+    public bool UseLocalhost { get; private set; }
     public int NetworkId { get; private set; }
-    private float StartHostTime { get; set; }
+    private bool StartHost { get; set; }
     private Team Team { get; set; }
-
     private int m_MemberCount;
 
     public int MemberCount
@@ -60,34 +56,22 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         {
             m_MemberCount = value;
             if (!NetworkServer.active) return;
-            Log($"Sent member change message: {m_MemberCount}", Color.blue);
+            Log($"Sent member change message: {m_MemberCount}", Color.magenta);
             NetworkServer.SendToAll(Messages.MemberCount, new IntegerMessage(m_MemberCount));
         }
     }
 
     public bool IsServer() => NetworkServer.active;
     public bool IsClient() => Client() != null && Client().isConnected;
-
-    public bool IsConnected()
-    {
-        if (Client() != null)
-            return Client().isConnected;
-        return false;
-    }
+    public bool IsConnected() => IsClient();
 
     private void Update()
     {
         EvaluateServerState();
-
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            NetworkServer.SendToAll(Messages.StartGame, new EmptyMessage());
-        }
     }
 
     private void Awake()
     {
-        StartHostTime = -1;
         discovery.Register(this);
         discovery.StopBroadcast();
         manager.Register(this);
@@ -99,6 +83,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     // Scrapes the Assets/Prefabs/Resources/Spawnable folder for prefabs and registers them
     private void RegisterSpawnable()
     {
+        // TODO fix dis
         return;
         var path = Application.dataPath + "/Prefabs/Resources/Spawnable";
         var files = Directory.GetFiles(path);
@@ -124,19 +109,16 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
      */
     private void EvaluateServerState()
     {
-        if (StartHostTime >= 0 &&
-            Time.time > StartHostTime &&
+        if (StartHost &&
             !IsServer() &&
             !IsConnected() &&
             !UseLocalhost)
         {
-            Log($" |||| Starting host at {Time.time}");
-
+            Log($"Starting host", Color.green);
             if (discovery.isClient) discovery.StopBroadcast();
-
             discovery.StartAsServer();
-            m_State = State.Host;
             manager.StartHost();
+            StartHost = false;
         }
     }
 
@@ -145,7 +127,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     {
         if (manager != null)
             return manager.client;
-        Log(" >>>> Manager missing client");
+        Log("Manager missing client", Color.yellow);
         return null;
     }
 
@@ -159,7 +141,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 
     public void OnReceivedBroadcast(string fromAddress, string data)
     {
-        Log($" ==== BC from {fromAddress} ");
+        Log($"BC from {fromAddress}", Color.cyan);
         var otherTeam = TeamUtil.FromString(data);
         if (otherTeam != Team)
             return;
@@ -175,13 +157,13 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 
         if (client.isConnected)
         {
-            Log(" >>>> connected!", Color.green);
+            Log("Connected!", Color.green);
             if (discovery.running)
                 discovery.StopBroadcast();
         }
         else
         {
-            Log(" >>>> Could not establish connection to host", Color.yellow);
+            Log("Could not establish connection to host", Color.yellow);
         }
     }
 
@@ -204,7 +186,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         Log($"Starting to join team {team}");
         if (discovery.running)
             // TODO make sure this stops properly
-            Log("Tried to change team when discovery was running");
+            Log("Tried to change team when discovery was running", Color.yellow);
 
         discovery.broadcastData = team.ToString();
 
@@ -213,9 +195,8 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         if (success)
         {
             // listen to broadcasts for 2 seconds, if none of team found, switch to host
-            StartHostTime = Time.time + 2;
-            Log($"setting startHostTime = {StartHostTime}");
-            m_State = State.ClientSearching;
+            Log($"starting host in 2 seconds");
+            Task.Delay(2000).ContinueWith(t => StartHost = true);
         }
         else
         {
@@ -227,7 +208,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 
     public void OnServerConnect(NetworkConnection conn)
     {
-        Log(">>>> Client joined");
+        Log("Client joined", Color.cyan);
         var cId = conn.connectionId;
         MemberCount++;
 
@@ -271,7 +252,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         var msg = message.ReadMessage<ControlMessage>();
         var type = msg.Type;
         var val = msg.Value;
-        Log($" <<<< Received control message containing {val} of type {type}");
+        Log($" Received control message containing {val} of type {type}", Color.cyan);
         switch (type)
         {
             case ControlType.Vertical:
@@ -311,7 +292,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 
     public void OnClientConnect(NetworkConnection conn)
     {
-        Log(">>>> connected to server");
+        Log("Connected to server", Color.green);
         InitClientHandlers();
         RegisterSpawnable();
         selectCanvas.gameObject.SetActive(false);
@@ -321,24 +302,25 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     public void OnClientDisconnect(NetworkConnection conn)
     {
         // TODO
+        Log("Disconnected from server", Color.red);
     }
 
     private void OnClientRcvGiveClientId(NetworkMessage message)
     {
         NetworkId = message.ReadMessage<IntegerMessage>().value;
-        Log($" <<<< Received network ID {NetworkId}");
+        Log($" Received network ID {NetworkId}", Color.cyan);
     }
 
     private void OnClientRcvMembersJoined(NetworkMessage message)
     {
         var n = message.ReadMessage<IntegerMessage>().value;
-        Log($" <<<< Received member number change {n}");
+        Log($"Received member number change {n}", Color.cyan);
         memberDisplayController.SetNumberJoined(n);
     }
 
     private void OnClientRcvStartGame(NetworkMessage netmsg)
     {
-        Log("Received start message");
+        Log("Received start message", Color.cyan);
         StartGame();
     }
 
