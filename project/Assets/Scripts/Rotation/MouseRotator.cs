@@ -18,25 +18,21 @@ public class MouseRotator : MonoBehaviour
 
     void Start()
     {
-        
         radius = 1;
         pivot = target.transform;
         transform.parent = pivot;
         transform.position += Vector3.up * radius;
         isMouseDown = false;
 
-
-
     }
 
     void Update()
     {
-        if (isMouseDown || Input.touchCount > 0) 
+        if (isMouseDown || Input.touchCount > 0)
         {
-            theta = calculateRotation();
+            calculateRotParams();
             pivot.position = target.transform.position;
             pivot.rotation = Quaternion.AngleAxis(theta , Vector3.forward);
-
         }
 
     }
@@ -60,7 +56,6 @@ public class MouseRotator : MonoBehaviour
         prevTheta = theta;
         accTheta += Mathf.Abs(dTheta);
 
-        return theta;
     }
 
     private void OnMouseDown()
