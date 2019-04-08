@@ -22,14 +22,11 @@ class TeamUtil
         return Color.white;
     }
 
-    // Hastily implemented because TryParse doesn't seem to work
     public static Team FromString(String s)
     {
-        switch (s.ToLower().Remove(s.IndexOf('\0')))
+        if (Enum.TryParse(s, true, out Team team))
         {
-            case "green": return Team.Green;
-            case "teal": return Team.Teal;
-            case "red": return Team.Red;
+            return team;
         }
 
         throw new Exception($"Could not parse {s}");
