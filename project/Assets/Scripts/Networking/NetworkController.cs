@@ -84,7 +84,6 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     private void RegisterSpawnable()
     {
         // TODO fix dis
-        return;
         var path = Application.dataPath + "/Prefabs/Resources/Spawnable";
         var files = Directory.GetFiles(path);
 
