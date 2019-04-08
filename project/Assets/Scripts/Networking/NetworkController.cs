@@ -36,7 +36,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 
     public MyNetworkDiscovery discovery;
     public MyNetworkManager manager;
-    public HashSet<InputListener> inputListeners;
+    private HashSet<InputListener> inputListeners;
 
     // TODO move this away to some sort of UIController
     public Canvas selectCanvas;
@@ -48,6 +48,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     private bool StartHost { get; set; }
     private Team Team { get; set; }
     private int m_MemberCount;
+    public List<GameObject> spawnable;
 
     public int MemberCount
     {
@@ -68,6 +69,17 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     private void Update()
     {
         EvaluateServerState();
+        if (Input.GetKeyDown(KeyCode.S) && IsServer())
+        {
+            GameObject go = Instantiate(Resources.Load("spawnable/dummyobj")) as GameObject;
+            go.transform.position = Vector3.zero;
+            NetworkServer.Spawn(go);
+        }
+
+        if (Input.GetKeyDown(KeyCode.D) && IsServer())
+        {
+            OnLobbyFilled();
+        }
     }
 
     private void Awake()
@@ -77,30 +89,42 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         manager.Register(this);
         inputListeners = new HashSet<InputListener>();
         InitHostHandlers();
+        RegisterSpawnable();
         DontDestroyOnLoad(this);
     }
 
     // Scrapes the Assets/Prefabs/Resources/Spawnable folder for prefabs and registers them
     private void RegisterSpawnable()
     {
-        // TODO fix dis
-        return;
-        var path = Application.dataPath + "/Prefabs/Resources/Spawnable";
-        var files = Directory.GetFiles(path);
-
-        foreach (var file in files)
+        foreach (var o in spawnable)
         {
-            if (!file.EndsWith(".prefab")) return;
+            if (o == null)
+            {
+                Log("null object in spawnable", Color.yellow);
+                continue;
+            }
 
-            char[] chars = {'/', '\\'};
-            var i = file.LastIndexOfAny(chars);
-            var relative = "Spawnable/" + file.Substring(i + 1);
-            var prefabPath = relative.Remove(relative.IndexOf('.'));
-            var prefab = Resources.Load(prefabPath) as GameObject;
-
-            Log($"Registering {prefabPath} as spawnable", Color.green);
-            ClientScene.RegisterPrefab(prefab);
+            Log($"Registering {o} as spawnable", new Color(128, 34, 80));
+            ClientScene.RegisterPrefab(o);
         }
+
+//        // TODO fix dis
+//        var path = Application.dataPath + "/Prefabs/Resources/Spawnable";
+//        var files = Directory.GetFiles(path);
+//
+//        foreach (var file in files)
+//        {
+//            if (!file.EndsWith(".prefab")) return;
+//
+//            char[] chars = {'/', '\\'};
+//            var i = file.LastIndexOfAny(chars);
+//            var relative = "Spawnable/" + file.Substring(i + 1);
+//            var prefabPath = relative.Remove(relative.IndexOf('.'));
+//            var prefab = Resources.Load(prefabPath) as GameObject;
+//
+//            Log($"Registering {prefabPath} as spawnable", Color.green);
+//            ClientScene.RegisterPrefab(prefab);
+//        }
     }
 
     /**
@@ -294,7 +318,6 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     {
         Log("Connected to server", Color.green);
         InitClientHandlers();
-        RegisterSpawnable();
         selectCanvas.gameObject.SetActive(false);
         waitCanvas.gameObject.SetActive(true);
     }

@@ -8,17 +8,6 @@ public class CameraManager : MonoBehaviour
 {
     public Camera[] cams;
 
-    public int CurrentCamera;
-    private int m_lastCamera;
-
-    private void Update()
-    {
-        if (m_lastCamera == CurrentCamera) return;
-        if (CurrentCamera < 0 || CurrentCamera > 3)
-            CurrentCamera = CurrentCamera % 4;
-        SetCamera(CurrentCamera);
-    }
-
     private void Awake()
     {
         var nc = FindObjectOfType(typeof(NetworkController)) as NetworkController;
@@ -26,6 +15,7 @@ public class CameraManager : MonoBehaviour
         {
             Debug.Log("No network manager");
             SetCamera(0);
+            Application.Quit();
             return;
         }
 
@@ -43,7 +33,6 @@ public class CameraManager : MonoBehaviour
 
         Debug.Log($"Set camera to {n}");
 
-        m_lastCamera = n;
         foreach (var cam in cams)
         {
             cam.enabled = false;
