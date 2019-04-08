@@ -59,6 +59,12 @@ public class MouseRotator : MonoBehaviour
         prevTheta = theta;
         accTheta += Mathf.Abs(dTheta);
 
+
+        //Debug.Log("WheelRotator:: Theta: " + (theta));
+        //Debug.Log("WheelRotator:: Delta Theta: " + dTheta);
+        //Debug.Log("WheelRotator:: AccTheta :" + accTheta);
+        Debug.Log("WheelRotator:: Rotations :" + (Mathf.Floor(accTheta / 360f)));
+
     }
 
     private void OnMouseDown()
