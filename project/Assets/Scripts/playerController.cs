@@ -6,7 +6,7 @@ using UnityEngine;
 public class playerController : MonoBehaviour {
 
     public float moveSpeed;
-    private Rigidbody rb;
+    private Rigidbody2D rb;
     private Vector2 moveInput;
     private Vector2 moveVelocity;
     private float hInput = 0;
@@ -16,7 +16,7 @@ public class playerController : MonoBehaviour {
     // Start is called before the first frame update
 
     void Start(){
-        rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -89,8 +89,8 @@ public class playerController : MonoBehaviour {
             //Add 1 point each time the starfish(object that gives points) collides
 
             // with the object this script is attached to
-            ScoreScript.scoreValue++;
-            Debug.Log("score = " + ScoreScript.scoreValue);
+            AddScore.scoreValue++;
+            Debug.Log("score = " + AddScore.scoreValue);
         }
     }
 }
