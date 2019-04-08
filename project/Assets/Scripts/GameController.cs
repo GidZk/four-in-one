@@ -22,7 +22,7 @@ public class GameController : MonoBehaviour
 
         //clickPosition.z = 0;
 
-        // Now we can actually spawn a bob object
+        // Now we can actually spawn a shark object
         Debug.Log("Spawning shark");
         var go = Instantiate(shark, new Vector3(40, Random.Range(-13f,4f),0), Quaternion.identity);
         shark.transform.localScale = new Vector3(Random.Range(0.3f, 0.8f), Random.Range(0.3f, 0.8f), 0.95f);
@@ -56,8 +56,8 @@ public class GameController : MonoBehaviour
                 SpawnShark();
             if (Random.value < 0.006)
                 SpawnStone();
-        if (Random.value < 0.006)
-            SpawnAlga();
+            if (Random.value < 0.006)
+                SpawnAlga();
     }
     
 }

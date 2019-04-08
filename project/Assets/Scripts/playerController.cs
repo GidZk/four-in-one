@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class playerController : MonoBehaviour {
 
     public float moveSpeed;
-    private Rigidbody rb;
+    private Rigidbody2D rb;
     private Vector2 moveInput;
     private Vector2 moveVelocity;
     private float hInput = 0;
@@ -13,8 +14,9 @@ public class playerController : MonoBehaviour {
 
 
     // Start is called before the first frame update
+
     void Start(){
-        rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -46,6 +48,7 @@ public class playerController : MonoBehaviour {
         Vector2 moveVelocity = rb.velocity;
         moveVelocity.x = horizontalInput * moveSpeed;
         moveVelocity.y  = verticalInput * moveSpeed;
+
         rb.velocity = moveVelocity;
         /* 
         if(Input.touchCount > 0){
@@ -55,6 +58,7 @@ public class playerController : MonoBehaviour {
                 moveVelocity.x = 0;
                 moveVelocity.y = 0;
                 rb.velocity = moveVelocity;
+
 
             }
         }*/    
@@ -83,9 +87,10 @@ public class playerController : MonoBehaviour {
             Destroy(coll.gameObject);
 
             //Add 1 point each time the starfish(object that gives points) collides
+
             // with the object this script is attached to
-            ScoreScript.scoreValue++;
-            Debug.Log("score = " + ScoreScript.scoreValue);
+            AddScore.scoreValue++;
+            Debug.Log("score = " + AddScore.scoreValue);
         }
     }
 }

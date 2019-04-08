@@ -1,7 +1,7 @@
 ﻿
 using UnityEngine;
 
-public class BoundaryController: MonoBehaviour
+public class BoundaryController : MonoBehaviour
 {
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -18,12 +18,8 @@ public class BoundaryController: MonoBehaviour
          */
         Debug.Log(" --Destroying object, object outside of boundary --");
         Destroy(collision.gameObject);
+       
 
     }
-
-
-
-
-
 }
 
