@@ -29,7 +29,7 @@
             void Update()
             {
                 if (isMouseDown || Input.touchCount > 0){
-                    if (isFinished(calc.accumulatedAngle,  maxRotations) && isTerminating) {
+                    if (isFinished(calc.accumulatedAngle,maxRotations) && isTerminating) {
                         OnReset();
                     }
                     // not sure which camera to use
@@ -45,6 +45,8 @@
                 }
             }
 
+
+    // --------- private methods -------------
             private void OnReset()
             {
                 calc.Reset();
