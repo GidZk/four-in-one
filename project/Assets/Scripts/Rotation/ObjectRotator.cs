@@ -1,87 +1,122 @@
-﻿        using UnityEngine;
-    //TODO refine this code by extending this ojbect and move functionality
-        public class ObjectRotator : MonoBehaviour
+﻿using UnityEngine;
+//TODO refine this code by extending this ojbect and move functionality
+public class ObjectRotator : MonoBehaviour
+{
+
+    //public GameObject centerObject;
+
+    public bool isTerminating;
+    public bool isTouch;
+    public int rotationSpeedLimit;
+    public int maxRotations;
+    
+
+    private float theta { get; set; }
+    private float prevTheta { get; set; }
+    private float accumulatedAngle { get; set; }
+    private float ratio { get; set; }
+
+  
+
+    private bool isMouseDown;
+
+    void Start()
+    {
+        transform.position += Vector3.up;
+        isMouseDown = false;
+    
+    }
+
+    void Update()
+    {
+        if (isMouseDown || Input.touchCount > 0)
         {
-            /*object to be rotated*/
-            public GameObject target;
-
-            public bool isTerminating;
-            public bool isTouch;
-            public int rotationSpeedLimit;
-            public int  maxRotations;
-            public float radius;
-
-            private Transform pivot;
-            private RotationCalculator calc;
-            private bool isMouseDown;
-
-            void Start()
+            if (isFinished(accumulatedAngle, maxRotations) && isTerminating)
             {
+                OnReset();
+            }
+            // not sure which camera to use
+            Vector3 objectToMouse = Camera.main.WorldToScreenPoint(transform.position) - Input.mousePosition;
+            theta = CalculateRotationAngle(objectToMouse);
 
-                radius = 1;
-                pivot = target.transform;
-                transform.parent = pivot;
-                transform.position += Vector3.up * radius;
-                isMouseDown = false;
-                calc = new RotationCalculator( maxRotations);
+            if (isTerminating)
+            {
+                accumulatedAngle += Mathf.Abs(CalculateDeltaTheta(objectToMouse, theta, rotationSpeedLimit));
+                ratio = accumulatedAngle / (maxRotations * 360);
             }
 
-            void Update()
-            {
-                if (isMouseDown || Input.touchCount > 0){
-                    if (isFinished(calc.accumulatedAngle,maxRotations) && isTerminating) {
-                        OnReset();
-                    }
-                    // not sure which camera to use
-                    Vector3 objectToMouse = Camera.main.WorldToScreenPoint(target.transform.position) - Input.mousePosition;
-                    calc.CalculateRotationAngle(objectToMouse);
-                    
-                    if (isTerminating) {
-                        calc.CalcAndSetFields(objectToMouse, rotationSpeedLimit);
-                    }
+            transform.position = transform.position;
+            transform.Rotate(Vector3.forward, (theta - prevTheta));
 
-                    pivot.position = target.transform.position;
-                    pivot.rotation = Quaternion.AngleAxis(calc.theta , Vector3.forward);
-                }
-            }
+            prevTheta = theta;
+        }
+    }
+
+    private void OnMouseDown()
+    {
+        Vector3 objectToMouse = Camera.main.WorldToScreenPoint(transform.position) - Input.mousePosition;
+        prevTheta = (Mathf.Atan2((objectToMouse.y), objectToMouse.x) * Mathf.Rad2Deg) + 180;
+        isMouseDown = true;
+
+    }
+
+
+    private void OnMouseUp()
+    {
+        isMouseDown = false;
+    }
+
+    public Vector3 GetEulerAngles()
+    {
+        return transform.eulerAngles;
+    }
 
 
     // --------- private methods -------------
-            private void OnReset()
-            {
-                calc.Reset();
-                //TODO call other classes to tell roation complete
-            }
 
 
-
-            private bool isFinished(float accumulatedTheta, int terminatingRotations) {
-               return  (Mathf.Floor(accumulatedTheta / 360f) > terminatingRotations);
-            }
-
-
-            // to be able to debug with mouse
-            private void OnMouseDown()
-                {
-                    Vector3 objectToMouse = Camera.main.WorldToScreenPoint(target.transform.position) - Input.mousePosition;
-                    calc.prevTheta = (Mathf.Atan2((objectToMouse.y), objectToMouse.x) * Mathf.Rad2Deg) + 180;
-                    isMouseDown = true;
-
-                }
-
-
-            private void OnMouseUp()
-            {
-                isMouseDown = false;
-            }
-
-
-
-            private void DebugLogValues()
-            {
-                Debug.Log("ObjectRotator:: Theta: " + (calc.theta));
-                Debug.Log("ObjectRotator::      :" + calc.GetRotations());
-                Debug.Log("ObjectRotator:: Ratio :" + calc.ratio);
-            }
-
+    private float CalculateDeltaTheta(Vector3 objectToMouse, float theta, int speedLimit)
+    {
+        if (Mathf.Abs(theta - prevTheta) > speedLimit)
+        {
+            return speedLimit;
         }
+        return (theta - prevTheta);
+    }
+
+
+    private float CalculateRotationAngle(Vector3 objectToMouse)
+    {
+        return (Mathf.Atan2((objectToMouse.y), objectToMouse.x) * Mathf.Rad2Deg) + 180;
+    }
+
+    private void OnReset()
+    {
+        accumulatedAngle = 0;
+        //TODO call other classes to tell roation complete
+    }
+
+    private bool isFinished(float accumulatedTheta, int terminatingRotations)
+    {
+        return (Mathf.Floor(accumulatedTheta / 360f) >= terminatingRotations);
+    }
+
+
+    private float GetNOfRotations()
+    {
+        return Mathf.Floor(accumulatedAngle / 360);
+    }
+
+
+    // to be able to debug with mouse
+
+
+
+    private void DebugLogValues()
+    {
+        //Debug.Log("ObjectRotator:: Theta: " + (theta));
+        Debug.Log("ObjectRotator::      :" + GetNOfRotations());
+        Debug.Log("ObjectRotator:: Ratio :" + ratio);
+    }
+
+}
