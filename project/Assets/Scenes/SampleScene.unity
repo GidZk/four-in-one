@@ -1244,11 +1244,26 @@ PrefabInstance:
     - target: {fileID: 7994346040598928315, guid: 46b097daf62b21c409354716e8730cc8,
         type: 3}
       propertyPath: isTouch
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7994346040598928315, guid: 46b097daf62b21c409354716e8730cc8,
         type: 3}
       propertyPath: nRotationsToFinish
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7994346040598928315, guid: 46b097daf62b21c409354716e8730cc8,
+        type: 3}
+      propertyPath: nOfRotations
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7994346040598928315, guid: 46b097daf62b21c409354716e8730cc8,
+        type: 3}
+      propertyPath: rotationSpeedLimit
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7994346040598928315, guid: 46b097daf62b21c409354716e8730cc8,
+        type: 3}
+      propertyPath: maxRotations
       value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents:
