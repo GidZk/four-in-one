@@ -80,7 +80,7 @@ public class playerController : MonoBehaviour {
     {
 
 
-        if (coll.gameObject.tag == "alga")
+        if (coll.gameObject.tag == "crabplast")
         {
             Debug.Log($"{this} --a collision between player and alga. ");
 
