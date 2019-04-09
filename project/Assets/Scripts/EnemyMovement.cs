@@ -41,12 +41,12 @@ public class EnemyMovement : MonoBehaviour
         }
 
         // if (BoundaryController.  object.objectcollide Equals(true))
-        if (transform.position.y > 4 && gameObject == shark)
+        if (transform.position.y > 29 && gameObject == shark)
         {
             sharkUp = false;
         }
 
-        if (transform.position.y < -13 && gameObject == shark)
+        if (transform.position.y < -29 && gameObject == shark)
         {
             sharkUp = true;
         }
