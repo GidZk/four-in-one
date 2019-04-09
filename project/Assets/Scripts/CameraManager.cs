@@ -15,7 +15,6 @@ public class CameraManager : MonoBehaviour
         {
             Debug.Log("No network manager");
             SetCamera(0);
-            Application.Quit();
             return;
         }
 
