@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - NPC
+  - alga
   layers:
   - Default
   - TransparentFX
@@ -18,7 +19,7 @@ TagManager:
   - midground
   - forground
   - ui
-  - 
+  - shadow
   - 
   - 
   - 
@@ -39,11 +40,14 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Default
-    uniqueID: 0
-    locked: 0
   - name: Background
     uniqueID: 708902841
+    locked: 0
+  - name: shadow
+    uniqueID: 313286199
+    locked: 0
+  - name: Default
+    uniqueID: 0
     locked: 0
   - name: midground
     uniqueID: 3513416019

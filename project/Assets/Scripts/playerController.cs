@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class playerController : MonoBehaviour {
 
     public float moveSpeed;
-    private Rigidbody rb;
+    private Rigidbody2D rb;
     private Vector2 moveInput;
     private Vector2 moveVelocity;
     private float hInput = 0;
@@ -13,12 +14,13 @@ public class playerController : MonoBehaviour {
 
 
     // Start is called before the first frame update
+
     void Start(){
-        rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
-    void Update(){
+   /* void Update(){
         if(Input.touchCount > 0){
             Touch touch = Input.GetTouch(0);
             if(touch.phase == TouchPhase.Began){
@@ -33,11 +35,11 @@ public class playerController : MonoBehaviour {
         //moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         //Move(hInput);
     }        
-
+    */
     void FixedUpdate (){
         
         //uncomment for arrows instead
-        //Move(Input.GetAxisRaw("Horizontal"));
+        Move(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         
     }
     
@@ -46,6 +48,7 @@ public class playerController : MonoBehaviour {
         Vector2 moveVelocity = rb.velocity;
         moveVelocity.x = horizontalInput * moveSpeed;
         moveVelocity.y  = verticalInput * moveSpeed;
+
         rb.velocity = moveVelocity;
         /* 
         if(Input.touchCount > 0){
@@ -55,6 +58,7 @@ public class playerController : MonoBehaviour {
                 moveVelocity.x = 0;
                 moveVelocity.y = 0;
                 rb.velocity = moveVelocity;
+
 
             }
         }*/    
@@ -67,5 +71,26 @@ public class playerController : MonoBehaviour {
     }
     public void VerticalMovement(float VerticalInput){
         vInput = VerticalInput;
+    }
+
+
+
+    // Invoked on collision
+  void OnCollisionEnter2D(Collision2D coll)
+    {
+
+
+        if (coll.gameObject.tag == "alga")
+        {
+            Debug.Log($"{this} --a collision between player and alga. ");
+
+            Destroy(coll.gameObject);
+
+            //Add 1 point each time the starfish(object that gives points) collides
+
+            // with the object this script is attached to
+            AddScore.scoreValue++;
+            Debug.Log("score = " + AddScore.scoreValue);
+        }
     }
 }
