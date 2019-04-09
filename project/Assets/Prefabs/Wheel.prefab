@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1377129301697488977}
   - component: {fileID: 1377129301697488975}
+  - component: {fileID: 7994346040598928315}
   - component: {fileID: 5703756484658950940}
-  - component: {fileID: 1259642492544224802}
   m_Layer: 0
   m_Name: Wheel
   m_TagString: Untagged
@@ -81,6 +81,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &7994346040598928315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377129301697488974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34cf6a58335094b9abd8e684d1a8475a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  radius: 1
+  speedLimit: 0
+  isTerminating: 0
+  isTouch: 0
+  nRotationsToFinish: 0
 --- !u!58 &5703756484658950940
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -97,21 +115,3 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 4.37
---- !u!114 &1259642492544224802
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1377129301697488974}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34cf6a58335094b9abd8e684d1a8475a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 1377129301697488974}
-  radius: 1
-  speedLimit: 8
-  isTerminating: 0
-  isTouch: 0
-  nRotationsToFinish: 0
