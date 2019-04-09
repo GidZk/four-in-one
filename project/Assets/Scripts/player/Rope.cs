@@ -1,0 +1,98 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System.Linq;
+
+public class Rope : MonoBehaviour {
+    
+public GameObject ropeHingeAnchor;
+public Transform crosshair;
+public SpriteRenderer crosshairSprite;
+public playerController playerController;
+private Vector2 playerPosition;
+private Rigidbody2D ropeHingeAnchorRb;
+private SpriteRenderer ropeHingeAnchorSprite;
+public LineRenderer ropeRenderer;
+private float ropeMaxCastDistance = 20f;
+private Vector3 aimDirection;
+public float fireForce;
+public Transform[] points;
+private bool isFired = false;
+
+
+
+void Awake(){
+    
+    playerPosition = transform.position;
+    ropeHingeAnchorRb = ropeHingeAnchor.GetComponent<Rigidbody2D>();
+    ropeHingeAnchorSprite = ropeHingeAnchor.GetComponent<SpriteRenderer>();
+}
+
+void Update(){
+    
+    var worldMousePosition =
+        Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0f));
+    var facingDirection = worldMousePosition - transform.position;
+    var aimAngle = Mathf.Atan2(facingDirection.y, facingDirection.x);
+    if (aimAngle < 0f){
+        aimAngle = Mathf.PI * 2 + aimAngle;
+    }
+    aimDirection = Quaternion.Euler(0, 0, aimAngle * Mathf.Rad2Deg) * Vector2.right;
+    playerPosition = transform.position;
+    
+    if (!isFired){
+	SetCrosshairPosition(aimAngle);
+    }
+    else {
+	crosshairSprite.enabled = false;
+
+    for (int i = 0; i < points.Length; ++i){ 
+            ropeRenderer.SetPosition(i, points[i].position);
+	    }
+    }
+
+    
+
+}
+// calculates crosshair position
+private void SetCrosshairPosition(float aimAngle){
+    if (!crosshairSprite.enabled)
+    {
+        crosshairSprite.enabled = true;
+    }
+
+    var x = transform.position.x + 3f * Mathf.Cos(aimAngle);
+    var y = transform.position.y + 3f * Mathf.Sin(aimAngle);
+
+    var crossHairPosition = new Vector3(x, y, 0);
+    crosshair.transform.position = crossHairPosition;
+}
+//fires the anchor
+public void Fire(){
+        ropeRenderer.enabled = true;
+        ropeHingeAnchorSprite.enabled = true;
+        ropeHingeAnchorRb.position = playerPosition;
+        
+        
+        Vector2 fireVector = new Vector2();
+        fireVector.x = aimDirection.x * fireForce;
+        fireVector.y = aimDirection.y * fireForce;
+        ropeHingeAnchorRb.velocity = fireVector;
+        isFired = true;
+}
+//Halts the rope
+public void ResetRope(){
+
+    isFired = false;
+    ropeHingeAnchorRb.velocity = new Vector2(0,0);
+    ropeRenderer.positionCount = 2;
+    ropeRenderer.SetPosition(0, transform.position);
+    ropeRenderer.SetPosition(1, transform.position);
+    ropeHingeAnchorSprite.enabled = false;
+}
+
+    // Start is called before the first frame update
+    void Start(){
+    }
+
+}
