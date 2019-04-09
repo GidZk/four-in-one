@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 3110941543900868242}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 4.420144, y: -7.6794252, z: 0.1725561}
-  m_LocalScale: {x: 0.23882729, y: 0.46920526, z: 0.9}
+  m_LocalScale: {x: 0.30990624, y: 0.6053414, z: 0.9}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -386,4 +386,4 @@ MonoBehaviour:
   speed: 4.2
   shark: {fileID: 0}
   stone: {fileID: 0}
-  alga: {fileID: 3110941543900868242}
+  crabplast: {fileID: 3110941543900868242}
