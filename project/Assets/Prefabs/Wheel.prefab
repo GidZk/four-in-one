@@ -112,3 +112,6 @@ MonoBehaviour:
   target: {fileID: 1377129301697488974}
   radius: 1
   speedLimit: 8
+  isTerminating: 0
+  isTouch: 0
+  nRotationsToFinish: 0
