@@ -7,6 +7,8 @@ TagManager:
   - NPC
   - crabplast
   - alga
+  - CameraManager
+  - DebugText
   layers:
   - Default
   - TransparentFX

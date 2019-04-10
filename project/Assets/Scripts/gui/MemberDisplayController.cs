@@ -12,10 +12,6 @@ public class MemberDisplayController : MonoBehaviour
 
     private int a = 0;
 
-    private void Update()
-    {
-    }
-
     private void Awake()
     {
         foreach (var im in members)

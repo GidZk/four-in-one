@@ -4,30 +4,51 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.NetworkSystem;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Directory = System.IO.Directory;
+
+// ReSharper disable All
 
 #pragma warning disable 618
 
 public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListener, InputListener, InputInterface
 {
+    // TODO delete dis
+    public Text _logText;
+
+    private void Log(string s, Color c)
+    {
+        _logText.text = s + "\n" + _logText.text;
+
+        String colorCode = "#" + ((int) (c.r * 0xFF)).ToString("X2")
+                               + ((int) (c.g * 0xFF)).ToString("X2")
+                               + ((int) (c.b * 0xFF)).ToString("X2");
+        Debug.Log($"<color={colorCode}>" + s + "</color>");
+    }
+
+    private void Log(string s)
+    {
+        var prev = _logText.text;
+        _logText.text = s + "\n" + prev;
+        Debug.Log(s);
+    }
+
     public MyNetworkDiscovery discovery;
     public MyNetworkManager manager;
-    public HashSet<InputListener> inputListeners;
+    private HashSet<InputListener> inputListeners;
 
     // TODO move this away to some sort of UIController
     public Canvas selectCanvas;
     public Canvas waitCanvas;
     public MemberDisplayController memberDisplayController;
 
-    // Strictly for debugging, logic should NOT depend on this
-    private State m_State = State.Idle;
-
-    private bool UseLocalhost { get; set; }
-    private int NetworkId { get; set; }
-    private float StartHostTime { get; set; }
+    public bool UseLocalhost { get; private set; }
+    public int NetworkId { get; private set; }
+    private bool StartHost { get; set; }
     private Team Team { get; set; }
-
     private int m_MemberCount;
+    public List<GameObject> spawnable;
 
     public int MemberCount
     {
@@ -36,105 +57,93 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         {
             m_MemberCount = value;
             if (!NetworkServer.active) return;
-            Debug.Log($"Sent member change message: {m_MemberCount}");
-            NetworkServer.SendToAll(Messages.MessageGiveMembersJoined, new IntegerMessage(m_MemberCount));
+            Log($"Sent member change message: {m_MemberCount}", Color.magenta);
+            NetworkServer.SendToAll(Messages.MemberCount, new IntegerMessage(m_MemberCount));
         }
     }
 
     public bool IsServer() => NetworkServer.active;
     public bool IsClient() => Client() != null && Client().isConnected;
-
-    public bool IsConnected()
-    {
-        if (Client() != null)
-            return Client().isConnected;
-        return false;
-    }
+    public bool IsConnected() => IsClient();
 
     private void Update()
     {
         EvaluateServerState();
-
-        // dummy function for testing that spawning/movement works
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.S) && IsServer())
         {
-            if (IsClient())
-            {
-                Client().Send(Messages.ControlMessage, new IntegerMessage(NetworkId));
-            }
+            GameObject go = Instantiate(Resources.Load("spawnable/dummyobj")) as GameObject;
+            go.transform.position = Vector3.zero;
+            NetworkServer.Spawn(go);
         }
 
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.D) && IsServer())
         {
-            if (IsServer())
-            {
-                var go = Instantiate(Resources.Load("Spawnable/dummyobj"),
-                    new Vector3(0, 0, 0),
-                    Quaternion.identity) as GameObject;
-                NetworkServer.Spawn(go);
-            }
+            OnLobbyFilled();
         }
     }
 
     private void Awake()
     {
-        StartHostTime = -1;
         discovery.Register(this);
         discovery.StopBroadcast();
         manager.Register(this);
         inputListeners = new HashSet<InputListener>();
         InitHostHandlers();
+        RegisterSpawnable();
+        DontDestroyOnLoad(this);
     }
 
     // Scrapes the Assets/Prefabs/Resources/Spawnable folder for prefabs and registers them
     private void RegisterSpawnable()
     {
-        var path = Application.dataPath + "/Prefabs/Resources/Spawnable";
-        var files = Directory.GetFiles(path);
-
-        foreach (var file in files)
+        foreach (var o in spawnable)
         {
-            if (!file.EndsWith(".prefab")) return;
-
-            char[] chars = {'/', '\\'};
-            var i = file.LastIndexOfAny(chars);
-            var relative = "Spawnable/" + file.Substring(i + 1);
-            var prefabPath = relative.Remove(relative.IndexOf('.'));
-            var prefab = Resources.Load(prefabPath) as GameObject;
-
-            Debug.Log($"Registering {prefabPath} as spawnable");
-            ClientScene.RegisterPrefab(prefab);
-        }
-    }
-
-    //Block managing state switch from client to host after a delay
-    //written in Update() because co-routines are weird with networking sometimes
-    private void EvaluateServerState()
-    {
-        if (StartHostTime >= 0 &&
-            Time.time > StartHostTime
-            && !IsServer()
-            && !IsConnected())
-        {
-            Debug.Log($" |||| Starting host at {Time.time}");
-            if (discovery.isClient)
+            if (o == null)
             {
-                discovery.StopBroadcast();
+                Log("null object in spawnable", Color.yellow);
+                continue;
             }
 
-            discovery.StartAsServer();
-            m_State = State.Host;
-            manager.StartHost();
+            Log($"Registering {o} as spawnable", new Color(128, 34, 80));
+            ClientScene.RegisterPrefab(o);
         }
+
+//        // TODO fix dis
+//        var path = Application.dataPath + "/Prefabs/Resources/Spawnable";
+//        var files = Directory.GetFiles(path);
+//
+//        foreach (var file in files)
+//        {
+//            if (!file.EndsWith(".prefab")) return;
+//
+//            char[] chars = {'/', '\\'};
+//            var i = file.LastIndexOfAny(chars);
+//            var relative = "Spawnable/" + file.Substring(i + 1);
+//            var prefabPath = relative.Remove(relative.IndexOf('.'));
+//            var prefab = Resources.Load(prefabPath) as GameObject;
+//
+//            Log($"Registering {prefabPath} as spawnable", Color.green);
+//            ClientScene.RegisterPrefab(prefab);
+//        }
     }
 
-
-    enum State
+    /**
+     * Block managing state switch from client to host after a delay
+     * written in Update() because co-routines are weird with networking sometimes
+     */
+    private void EvaluateServerState()
     {
-        Idle,
-        Host,
-        ClientSearching,
-        ClientOnServer
+        if (StartHost &&
+            !IsServer() &&
+            !IsConnected() &&
+            !UseLocalhost)
+        {
+            Log($"Starting host", Color.green);
+            if (discovery.isClient) discovery.StopBroadcast();
+            discovery.StartAsServer();
+            manager.StartHost();
+            StartHost = false;
+        }
     }
 
     //The client object currently active
@@ -142,25 +151,67 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     {
         if (manager != null)
             return manager.client;
-        Debug.Log(" >>>> Manager missing client");
+        Log("Manager missing client", Color.yellow);
         return null;
     }
 
     public void OnTeamButtonPressed(TeamGameObject obj) => JoinTeam(obj.team);
 
-    // Attempts to join the specified team
-    // If no host is found within 2 seconds, start hosting itself
+    public void OnToggleLocalhost()
+    {
+        UseLocalhost = !UseLocalhost;
+        Log($"localhost: {UseLocalhost}");
+    }
+
+    public void OnReceivedBroadcast(string fromAddress, string data)
+    {
+        Log($"BC from {fromAddress}", Color.cyan);
+        var otherTeam = TeamUtil.FromString(data);
+        if (otherTeam != Team)
+            return;
+
+        var ipv4 = "localhost";
+        if (fromAddress != "localhost")
+            ipv4 = fromAddress.Substring(7);
+
+        manager.networkAddress = ipv4;
+        var client = manager.StartClient();
+
+        Log($"Attempting connect to {ipv4}");
+
+        if (client.isConnected)
+        {
+            Log("Connected!", Color.green);
+            if (discovery.running)
+                discovery.StopBroadcast();
+        }
+        else
+        {
+            Log("Could not establish connection to host", Color.yellow);
+        }
+    }
+
+    /**
+     * Attempts to join the specified team
+     * If no host is found within 2 seconds, start hosting itself
+     * */
     private void JoinTeam(Team team)
     {
-        Debug.Log($"Starting to join team {team}");
-        if (discovery.running)
-        {
-            // TODO make sure this stops properly
-            Debug.Log("Tried to change team when discovery was running");
-        }
-
         memberDisplayController.Color = TeamUtil.GetTeamColor(team);
         Team = team;
+
+        if (UseLocalhost)
+        {
+            Log("Using localhost, sending faux broadcast");
+            OnReceivedBroadcast("localhost", team.ToString());
+            return;
+        }
+
+        Log($"Starting to join team {team}");
+        if (discovery.running)
+            // TODO make sure this stops properly
+            Log("Tried to change team when discovery was running", Color.yellow);
+
         discovery.broadcastData = team.ToString();
 
         var success = discovery.Initialize();
@@ -168,106 +219,56 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         if (success)
         {
             // listen to broadcasts for 2 seconds, if none of team found, switch to host
-            StartHostTime = Time.time + 2;
-            Debug.Log($"setting startHostTime = {StartHostTime}");
-            m_State = State.ClientSearching;
+            Log($"starting host in 2 seconds");
+            Task.Delay(2000).ContinueWith(t => StartHost = true);
         }
         else
         {
-            Debug.Log("Failed to init network discovery");
+            Log("Failed to init network discovery", Color.red);
         }
     }
 
-    public void OnToggleLocalHostButton()
-    {
-        UseLocalhost = !UseLocalhost;
-        Debug.Log($"Toggle localhost, now {UseLocalhost} ");
-    }
+    // ### Server triggers ###
 
-    public void OnReceivedBroadcast(string fromAddress, string data)
-    {
-        Debug.Log($" ==== BC from {fromAddress} ");
-        var otherTeam = TeamUtil.FromString(data);
-        if (otherTeam != Team)
-            return;
-
-        var ipv4 = fromAddress.Substring(7);
-        manager.networkAddress = ipv4;
-        var client = manager.StartClient();
-
-        if (manager.isNetworkActive)
-        {
-            Debug.Log(" >>>> connected!");
-            discovery.StopBroadcast();
-        }
-        else
-        {
-            Debug.Log(" >>>> Could not establish connection to host");
-        }
-    }
-
-    // Called on the server when a client connects to the server
     public void OnServerConnect(NetworkConnection conn)
     {
-        Debug.Log(">>>> Client joined");
+        Log("Client joined", Color.cyan);
         var cId = conn.connectionId;
         MemberCount++;
 
         if (conn.address.Equals("localClient"))
         {
-            Debug.Log("Identified connecting to self");
+            Log("Identified connecting to self");
             Task.Delay(10).ContinueWith(t =>
             {
                 NetworkServer.SendToClient(cId,
-                    Messages.MessageGiveClientId,
+                    Messages.ClientId,
                     new IntegerMessage(cId));
             });
         }
         else
         {
             NetworkServer.SendToClient(cId,
-                Messages.MessageGiveClientId,
+                Messages.ClientId,
                 new IntegerMessage(cId));
+        }
+
+        if (MemberCount > 4)
+        {
+            Log($"More than 4 connected ({MemberCount})", Color.red);
+            throw new Exception($"More than 4 connected ({MemberCount})");
+        }
+
+        if (MemberCount == 4)
+        {
+            OnLobbyFilled();
         }
     }
 
-    // Called on the server when a client disconnects from the server
     public void OnServerDisconnect(NetworkConnection conn)
     {
         // TODO
         MemberCount--;
-    }
-
-    // Called on the client when it connects to a server
-    public void OnClientConnect(NetworkConnection conn)
-    {
-        Debug.Log(">>>> connected to server");
-        InitClientHandlers();
-        RegisterSpawnable();
-        selectCanvas.gameObject.SetActive(false);
-        waitCanvas.gameObject.SetActive(true);
-    }
-
-
-    // Called ont he client when it disconnects from a server
-    public void OnClientDisconnect(NetworkConnection conn)
-    {
-        // TODO
-    }
-
-    // Called when connecting to a server to give the client an id
-    private void OnClientRcvGiveClientId(NetworkMessage message)
-    {
-        NetworkId = message.ReadMessage<IntegerMessage>().value;
-        Debug.Log($" <<<< Received network ID {NetworkId}");
-    }
-
-    // Called on each server whenever the number of members in the team change
-    private void OnClientRcvMembersJoined(NetworkMessage message)
-    {
-        var n = message.ReadMessage<IntegerMessage>().value;
-        Debug.Log($" <<<< Received member number change {n}");
-        memberDisplayController.SetNumberJoined(n);
     }
 
     private void OnServerRcvControlMessage(NetworkMessage message)
@@ -275,31 +276,31 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         var msg = message.ReadMessage<ControlMessage>();
         var type = msg.Type;
         var val = msg.Value;
-        Debug.Log($" <<<< Received control message containing {val} of type {type}");
+        Log($" Received control message containing {val} of type {type}", Color.cyan);
         switch (type)
         {
-            case ControlType.VERTICAL:
+            case ControlType.Vertical:
                 foreach (var l in inputListeners)
                 {
                     l.OnVerticalMovementInput(val);
                 }
 
                 break;
-            case ControlType.HORIZONTAL:
+            case ControlType.Horizontal:
                 foreach (var l in inputListeners)
                 {
                     l.OnVerticalMovementInput(val);
                 }
 
                 break;
-            case ControlType.CANNON_ANGLE:
+            case ControlType.CannonAngle:
                 foreach (var l in inputListeners)
                 {
                     l.OnVerticalMovementInput(val);
                 }
 
                 break;
-            case ControlType.CANNON_LAUNCH:
+            case ControlType.CannonLaunch:
                 foreach (var l in inputListeners)
                 {
                     l.OnVerticalMovementInput(val);
@@ -311,49 +312,112 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         }
     }
 
+    // ### Client triggers ###
+
+    public void OnClientConnect(NetworkConnection conn)
+    {
+        Log("Connected to server", Color.green);
+        InitClientHandlers();
+        selectCanvas.gameObject.SetActive(false);
+        waitCanvas.gameObject.SetActive(true);
+    }
+
+    public void OnClientDisconnect(NetworkConnection conn)
+    {
+        // TODO
+        Log("Disconnected from server", Color.red);
+    }
+
+    private void OnClientRcvGiveClientId(NetworkMessage message)
+    {
+        NetworkId = message.ReadMessage<IntegerMessage>().value;
+        Log($" Received network ID {NetworkId}", Color.cyan);
+    }
+
+    private void OnClientRcvMembersJoined(NetworkMessage message)
+    {
+        var n = message.ReadMessage<IntegerMessage>().value;
+        Log($"Received member number change {n}", Color.cyan);
+        memberDisplayController.SetNumberJoined(n);
+    }
+
+    private void OnClientRcvStartGame(NetworkMessage netmsg)
+    {
+        Log("Received start message", Color.cyan);
+        StartGame();
+    }
+
+
+    // ### Misc ###
+
+    private void OnLobbyFilled()
+    {
+        if (SceneManager.GetActiveScene() != SceneManager.GetSceneByName("LobbyScene"))
+        {
+            Log("OnLobbyFilled called from outside lobby!");
+            return;
+        }
+
+        discovery.StopBroadcast();
+
+        NetworkServer.SendToAll(Messages.StartGame, new EmptyMessage());
+    }
+
     // Registers the message handling that is to be received on  the clients' side
     private void InitClientHandlers()
     {
-        Client().RegisterHandler(Messages.MessageGiveClientId, OnClientRcvGiveClientId);
-        Client().RegisterHandler(Messages.MessageGiveMembersJoined, OnClientRcvMembersJoined);
+        Client().RegisterHandler(Messages.ClientId, OnClientRcvGiveClientId);
+        Client().RegisterHandler(Messages.MemberCount, OnClientRcvMembersJoined);
+        Client().RegisterHandler(Messages.StartGame, OnClientRcvStartGame);
     }
 
     // Registers the message handling that is to be received on the host's side
     private void InitHostHandlers()
     {
-        NetworkServer.RegisterHandler(Messages.ControlMessage, OnServerRcvControlMessage);
+        NetworkServer.RegisterHandler(Messages.Control, OnServerRcvControlMessage);
     }
 
-    // Input Management
+    private void StartGame() => SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
+
+    // ### Input Management ###
+
     public void OnVerticalMovementInput(float value)
     {
         if (IsServer())
-            Debug.Log("NetworkController should not be input listener while being host");
-        Client().Send(Messages.ControlMessage, new ControlMessage(value, ControlType.VERTICAL));
+            Log("NetworkController should not be input listener while being host", Color.yellow);
+        Client().Send(Messages.Control, new ControlMessage(value, ControlType.Vertical));
     }
 
     public void OnHorizontalMovementInput(float value)
     {
         if (IsServer())
-            Debug.Log("NetworkController should not be input listener while being host");
-        Client().Send(Messages.ControlMessage, new ControlMessage(value, ControlType.HORIZONTAL));
+            Log("NetworkController should not be input listener while being host", Color.yellow);
+        Client().Send(Messages.Control, new ControlMessage(value, ControlType.Horizontal));
     }
 
     public void OnCannonAngleInput(float value)
     {
         if (IsServer())
-            Debug.Log("NetworkController should not be input listener while being host");
-        Client().Send(Messages.ControlMessage, new ControlMessage(value, ControlType.CANNON_ANGLE));
+            Log("NetworkController should not be input listener while being host", Color.yellow);
+        Client().Send(Messages.Control, new ControlMessage(value, ControlType.CannonAngle));
     }
 
     public void OnCannonLaunchInput(float value)
     {
         if (IsServer())
-            Debug.Log("NetworkController should not be input listener while being host");
-        Client().Send(Messages.ControlMessage, new ControlMessage(value, ControlType.CANNON_LAUNCH));
+            Log("NetworkController should not be input listener while being host", Color.yellow);
+        Client().Send(Messages.Control, new ControlMessage(value, ControlType.CannonLaunch));
     }
 
     public void Register(InputListener il) => inputListeners.Add(il);
 
     public bool Unregister(InputListener il) => inputListeners.Remove(il);
+}
+
+enum State
+{
+    Idle,
+    Host,
+    ClientSearching,
+    ClientOnServer
 }

@@ -3,6 +3,8 @@ using UnityEngine.Experimental.UIElements;
 using UnityEngine.Networking;
 using UnityEngine.Networking.NetworkSystem;
 
+#pragma warning disable 618
+
 public class PlayerConnection : NetworkBehaviour
 // here goes the data for each attached object
 {
@@ -64,7 +66,7 @@ public class PlayerConnection : NetworkBehaviour
             return;
         }
 
-        if (Input.anyKey && !isServer)SendControlMsg(Random.value);
+        if (Input.anyKey && !isServer) SendControlMsg(Random.value);
         CmdMoveUnit();
 
         // Debug.Log("hasAuthority = true");
