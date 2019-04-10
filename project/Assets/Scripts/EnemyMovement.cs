@@ -27,7 +27,7 @@ public class EnemyMovement : MonoBehaviour
     private void FixedUpdate()
     {
 
-        transform.Translate(Vector2.left * Time.deltaTime * speed);
+        transform.Translate(Vector2.left * Time.deltaTime * speed, Space.World);
 
 
         if (sharkUp == true && gameObject == shark )
