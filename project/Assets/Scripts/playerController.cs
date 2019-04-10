@@ -90,6 +90,9 @@ public class playerController : MonoBehaviour {
 
             // with the object this script is attached to
             AddScore.scoreValue++;
+
+            //add time to the timebar when catching crab
+            Timer.timeLeft++;
             Debug.Log("score = " + AddScore.scoreValue);
         }
     }
