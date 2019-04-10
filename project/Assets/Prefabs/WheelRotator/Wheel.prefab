@@ -94,10 +94,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  isTerminating: 0
+  isTerminating: 1
   isTouch: 0
-  rotationSpeedLimit: 0
-  maxRotations: 0
+  rotationSpeedLimit: 4
+  maxRotations: 4
   radius: 1
 --- !u!58 &7777883567779530658
 CircleCollider2D:
