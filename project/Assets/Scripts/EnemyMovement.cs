@@ -8,8 +8,9 @@ public class EnemyMovement : MonoBehaviour
     public float speed;
     public GameObject shark;
     public GameObject stone;
-    public GameObject alga;
-    private bool up = true;
+    public GameObject crabplast;
+    private bool sharkUp = true;
+    private bool crabUp = true;
 
     // Start is called before the first frame update
     void Start()
@@ -29,26 +30,52 @@ public class EnemyMovement : MonoBehaviour
         transform.Translate(Vector2.left * Time.deltaTime * speed);
 
 
-        if (up == true && gameObject == shark )
+        if (sharkUp == true && gameObject == shark )
         {
             shark.transform.Translate(Vector2.up * Time.deltaTime * speed);
         }
 
-        if (up == false && gameObject == shark )
+        if (sharkUp == false && gameObject == shark )
         {
             shark.transform.Translate(Vector2.down * Time.deltaTime * speed);
         }
 
         // if (BoundaryController.  object.objectcollide Equals(true))
-        if (transform.position.y > 4 && gameObject == shark)
+        if (transform.position.y > 29 && gameObject == shark)
         {
-            up = false;
+            sharkUp = false;
         }
 
-        if (transform.position.y < -13 && gameObject == shark)
+        if (transform.position.y < -29 && gameObject == shark)
         {
-            up = true;
+            sharkUp = true;
         }
+
+        if (Random.value < 0.06 && gameObject == crabplast)
+        {
+            if (crabUp == true)
+            {
+                crabUp = false;
+            }
+
+            else 
+            {
+                crabUp = true;
+            }
+
+
+        }
+
+        if (crabUp == true && gameObject == crabplast)
+        {
+            crabplast.transform.Translate(Vector2.up * Time.deltaTime * speed);
+        }
+
+        if (crabUp == false && gameObject == crabplast)
+        {
+            crabplast.transform.Translate(Vector2.down * Time.deltaTime * speed);
+        }
+
 
 
     }

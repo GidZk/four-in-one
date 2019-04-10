@@ -4,8 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - NPC
   - alga
+  - crabplast
   layers:
   - Default
   - TransparentFX
@@ -15,11 +15,11 @@ TagManager:
   - UI
   - 
   - 
-  - background
-  - midground
-  - forground
-  - ui
-  - Rope
+  - 
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 
@@ -42,16 +42,4 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: Background
-    uniqueID: 708902841
-    locked: 0
-  - name: midground
-    uniqueID: 3513416019
-    locked: 0
-  - name: forground
-    uniqueID: 4263059413
-    locked: 0
-  - name: ui
-    uniqueID: 3921692601
     locked: 0
