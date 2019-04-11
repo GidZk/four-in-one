@@ -75,6 +75,6 @@ public class GameController : MonoBehaviour
 
 
 
-    private class 
+  //  private class 
     
 }

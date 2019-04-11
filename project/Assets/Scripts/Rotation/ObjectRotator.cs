@@ -33,7 +33,7 @@ public class ObjectRotator : NetworkBehaviour
 
         if (isMouseDown)
         {
-            NetworkClient.Send(Messages.Control,new ControlMessage(Messages.Control,ControlType.CannonAngle));
+        //    NetworkClient.Send(Messages.Control,new ControlMessage(Messages.Control,ControlType.CannonAngle));
 
 
         }
