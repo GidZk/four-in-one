@@ -20,7 +20,7 @@ public class playerController : MonoBehaviour {
     }
 
     // Update is called once per frame
-   /* void Update(){
+    void Update(){
         if(Input.touchCount > 0){
             Touch touch = Input.GetTouch(0);
             if(touch.phase == TouchPhase.Began){
@@ -35,7 +35,7 @@ public class playerController : MonoBehaviour {
         //moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         //Move(hInput);
     }        
-    */
+    
     void FixedUpdate (){
         
         //uncomment for arrows instead
@@ -50,6 +50,7 @@ public class playerController : MonoBehaviour {
         moveVelocity.y  = verticalInput * moveSpeed;
 
         rb.velocity = moveVelocity;
+        Debug.Log(rb.velocity);
         /* 
         if(Input.touchCount > 0){
             Touch touch = Input.GetTouch(0);
