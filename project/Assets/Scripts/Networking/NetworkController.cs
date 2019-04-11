@@ -16,6 +16,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 {
     // TODO delete dis
     public Text _logText;
+    public string logger;
 
     private void Log(string s, Color c)
     {
@@ -65,10 +66,15 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     public bool IsServer() => NetworkServer.active;
     public bool IsClient() => Client() != null && Client().isConnected;
     public bool IsConnected() => IsClient();
-
     private void Update()
     {
         EvaluateServerState();
+        if (Input.GetKey(KeyCode.Space))
+        {
+            OnCannonAngleInput(5f);
+        }
+
+        
         if (Input.GetKeyDown(KeyCode.S) && IsServer())
         {
             GameObject go = Instantiate(Resources.Load("spawnable/dummyobj")) as GameObject;
@@ -91,6 +97,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         InitHostHandlers();
         RegisterSpawnable();
         DontDestroyOnLoad(this);
+        logger = "hello from the other siiiide";
     }
 
     // Scrapes the Assets/Prefabs/Resources/Spawnable folder for prefabs and registers them
@@ -147,7 +154,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     }
 
     //The client object currently active
-    private NetworkClient Client()
+    public NetworkClient Client()
     {
         if (manager != null)
             return manager.client;
@@ -271,6 +278,8 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         MemberCount--;
     }
 
+
+    /*Callback registred on the server by host to be executed server side */
     private void OnServerRcvControlMessage(NetworkMessage message)
     {
         var msg = message.ReadMessage<ControlMessage>();
@@ -404,8 +413,10 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 
     public void OnCannonLaunchInput(float value)
     {
+    
         if (IsServer())
             Log("NetworkController should not be input listener while being host", Color.yellow);
+
         Client().Send(Messages.Control, new ControlMessage(value, ControlType.CannonLaunch));
     }
 

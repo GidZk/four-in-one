@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 //TODO refine this code by extending this ojbect and move functionality
-public class ObjectRotator : NetworkBehaviour
+public class ObjectRotator : MonoBehaviour 
 {
-
-    //public GameObject centerObject;
+    private NetworkController nwController;
 
     public bool isTerminating;
     public bool isTouch;
@@ -16,31 +15,33 @@ public class ObjectRotator : NetworkBehaviour
     private float prevTheta { get; set; }
     private float accumulatedAngle { get; set; }
     private float ratio { get; set; }
-
-  
-
     private bool isMouseDown;
 
-    void Start()
+    private void Awake()
     {
+        nwController = GameObject.FindWithTag("NetworkController").GetComponent<NetworkController>();
+    }
+
+    void Start()
+    {    
         transform.position += Vector3.up;
         isMouseDown = false;
-    
+        
+        Debug.Log(nwController.logger);
+
     }
 
     void Update()
     {
 
-        if (isMouseDown)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-        //    NetworkClient.Send(Messages.Control,new ControlMessage(Messages.Control,ControlType.CannonAngle));
-
-
+            
         }
-
-
+        
         if (isMouseDown || Input.touchCount > 0)
         {
+           
             if (isFinished(accumulatedAngle, maxRotations) && isTerminating)
             {
                 OnReset();
@@ -48,17 +49,17 @@ public class ObjectRotator : NetworkBehaviour
             // not sure which camera to use
             Vector3 objectToMouse = Camera.main.WorldToScreenPoint(transform.position) - Input.mousePosition;
             theta = CalculateRotationAngle(objectToMouse);
-
+            transform.Rotate(Vector3.forward, (theta - prevTheta));
+            prevTheta = theta;
+           
             if (isTerminating)
             {
                 accumulatedAngle += Mathf.Abs(CalculateDeltaTheta(objectToMouse, theta, rotationSpeedLimit));
                 ratio = accumulatedAngle / (maxRotations * 360);
-            }
-
-            transform.position = transform.position;
-            transform.Rotate(Vector3.forward, (theta - prevTheta));
-
-            prevTheta = theta;
+            }     
+            
+            nwController.OnCannonAngleInput(GetEulerAngles());
+            
         }
     }
 
@@ -75,9 +76,14 @@ public class ObjectRotator : NetworkBehaviour
         isMouseDown = false;
     }
 
-    public Vector3 GetEulerAngles()
+    private float GetEulerAngles()
     {
-        return transform.eulerAngles;
+        return transform.eulerAngles.z;
+    }
+    
+    public Vector3 GetDirectionVector()
+    {
+        return transform.forward;
     }
 
 
@@ -127,5 +133,6 @@ public class ObjectRotator : NetworkBehaviour
         Debug.Log("ObjectRotator::      :" + GetNOfRotations());
         Debug.Log("ObjectRotator:: Ratio :" + ratio);
     }
+
 
 }

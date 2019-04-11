@@ -9,6 +9,7 @@ TagManager:
   - alga
   - CameraManager
   - DebugText
+  - NetworkController
   layers:
   - Default
   - TransparentFX

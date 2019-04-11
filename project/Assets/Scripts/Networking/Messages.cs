@@ -2,7 +2,7 @@ using UnityEngine.Networking;
 
 #pragma warning disable 618
 
-public class Messages
+public static class Messages
 {
     public const short Base = MsgType.Highest;
     public const short ClientId = Base + 1;
