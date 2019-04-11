@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 //TODO refine this code by extending this ojbect and move functionality
-public class ObjectRotator : MonoBehaviour
+public class ObjectRotator : NetworkBehaviour
 {
 
     //public GameObject centerObject;
@@ -29,6 +30,15 @@ public class ObjectRotator : MonoBehaviour
 
     void Update()
     {
+
+        if (isMouseDown)
+        {
+        //    NetworkClient.Send(Messages.Control,new ControlMessage(Messages.Control,ControlType.CannonAngle));
+
+
+        }
+
+
         if (isMouseDown || Input.touchCount > 0)
         {
             if (isFinished(accumulatedAngle, maxRotations) && isTerminating)
@@ -57,7 +67,6 @@ public class ObjectRotator : MonoBehaviour
         Vector3 objectToMouse = Camera.main.WorldToScreenPoint(transform.position) - Input.mousePosition;
         prevTheta = (Mathf.Atan2((objectToMouse.y), objectToMouse.x) * Mathf.Rad2Deg) + 180;
         isMouseDown = true;
-
     }
 
 
