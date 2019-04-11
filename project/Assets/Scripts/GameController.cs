@@ -26,7 +26,9 @@ public class GameController : MonoBehaviour
         // Now we can actually spawn a shark object
         Debug.Log("Spawning shark");
         var go = Instantiate(shark, new Vector3(44, Random.Range(-29f,29f),0), Quaternion.identity);
-        shark.transform.localScale = new Vector3(Random.Range(0.3f, 0.8f), Random.Range(0.3f, 0.8f), 0.95f);
+        float scaling = Random.Range(2f, 3f);
+        shark.transform.localScale = new Vector3(scaling, scaling, 0.9f);
+
 
 
     }
