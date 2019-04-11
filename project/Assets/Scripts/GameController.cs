@@ -22,7 +22,7 @@ public class GameController : MonoBehaviour
         //Vector3 clickPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         //clickPosition.z = 0;
-
+    
         // Now we can actually spawn a shark object
         Debug.Log("Spawning shark");
         var go = Instantiate(shark, new Vector3(44, Random.Range(-29f,29f),0), Quaternion.identity);
@@ -35,19 +35,25 @@ public class GameController : MonoBehaviour
     {
 
         //spawning stones
+        
         var stillgo = Instantiate(stone, new Vector3(44, Random.Range(-29f, 29f), 0), Quaternion.Euler(new Vector3(0, 0, (Random.Range(0f, 90f)))));
-        stone.transform.localScale = new Vector3(Random.Range(0.2f, 0.6f), Random.Range(0.2f, 0.8f), 0.9f);
+        float scaling = Random.Range(0.2f, 0.9f);
+        stone.transform.localScale = new Vector3(scaling, scaling, 0.9f);
 
     }
     void SpawnCrab()
     {
 
         //spawning crab
-        var stillgo = Instantiate(crab, new Vector3(44, Random.Range(-29f, 29f), 0), Quaternion.Euler(new Vector3(0, 0, (180* (Random.Range(0, 2))))));
+
+      
+        var rotation = Quaternion.Euler(new Vector3(0, 0, (180 * (Random.Range(0, 2)))));
+        var stillgo = Instantiate(crab, new Vector3(44, Random.Range(-29f, 29f), 0), rotation);
         //        SpriteRenderer. = true
         //   var stillgo = Instantiate(crab, new Vector3(44, Random.Range(-29f, 29f), 0), Quaternion.Euler(new Vector3(0, 0, (Random.Range(0f, 90f)))));
         // crab.transform.Rotate(Vector3.forward * 100);
-        crab.transform.localScale = new Vector3(Random.Range(0.2f, 0.6f), Random.Range(0.2f, 0.8f), 0.9f);
+        float scaling = Random.Range(0.2f, 0.8f);
+        crab.transform.localScale = new Vector3(scaling, scaling, 0.9f);
         // crab.transform.localRotation = Quaternion.Euler(0, 0, 90);
         //crab.transform.rotation = Quaternion.AngleAxis(90, Vector3.forward);
         //crab.inp
@@ -65,5 +71,10 @@ public class GameController : MonoBehaviour
             if (Random.value < 0.006)
                 SpawnCrab();
     }
+
+
+
+
+    private class 
     
 }
