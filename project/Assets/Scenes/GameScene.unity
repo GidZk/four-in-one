@@ -1285,7 +1285,7 @@ Animator:
   m_GameObject: {fileID: 1025610769}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 262cdd192a3b9475f98879e193a47183, type: 2}
+  m_Controller: {fileID: 9100000, guid: 6e08b09c019bb45febfe438b4935db50, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -2154,12 +2154,12 @@ PrefabInstance:
     - target: {fileID: 5060184424988907152, guid: b9226e47a633f464daa52cedc3367bc5,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.3596802
+      value: 7.647
       objectReference: {fileID: 0}
     - target: {fileID: 5060184424988907152, guid: b9226e47a633f464daa52cedc3367bc5,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -5.195099
+      value: -3.924
       objectReference: {fileID: 0}
     - target: {fileID: 5060184424988907152, guid: b9226e47a633f464daa52cedc3367bc5,
         type: 3}
@@ -2209,17 +2209,17 @@ PrefabInstance:
     - target: {fileID: 5060184424988907152, guid: b9226e47a633f464daa52cedc3367bc5,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 1.2921399
       objectReference: {fileID: 0}
     - target: {fileID: 5060184424988907152, guid: b9226e47a633f464daa52cedc3367bc5,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 1.2921399
       objectReference: {fileID: 0}
     - target: {fileID: 5060184424988907152, guid: b9226e47a633f464daa52cedc3367bc5,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.5
+      value: 1.2921399
       objectReference: {fileID: 0}
     - target: {fileID: 8624764959283779085, guid: b9226e47a633f464daa52cedc3367bc5,
         type: 3}
