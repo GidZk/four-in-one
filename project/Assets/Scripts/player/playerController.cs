@@ -79,8 +79,6 @@ public class playerController : MonoBehaviour {
     // Invoked on collision
   void OnCollisionEnter2D(Collision2D coll)
     {
-
-
         if (coll.gameObject.tag == "crabplast")
         {
             Debug.Log($"{this} --a collision between player and alga. ");
