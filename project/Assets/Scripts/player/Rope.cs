@@ -51,8 +51,6 @@ void Update(){
 	    }
     }
 
-    
-
 }
 // calculates crosshair position
 private void SetCrosshairPosition(float aimAngle){
@@ -60,7 +58,6 @@ private void SetCrosshairPosition(float aimAngle){
     {
         crosshairSprite.enabled = true;
     }
-
     var x = transform.position.x + 3f * Mathf.Cos(aimAngle);
     var y = transform.position.y + 3f * Mathf.Sin(aimAngle);
 
@@ -72,7 +69,6 @@ public void Fire(){
         ropeRenderer.enabled = true;
         ropeHingeAnchorSprite.enabled = true;
         ropeHingeAnchorRb.position = playerPosition;
-        
         
         Vector2 fireVector = new Vector2();
         fireVector.x = aimDirection.x * fireForce;
