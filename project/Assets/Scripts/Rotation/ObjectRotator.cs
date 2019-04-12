@@ -10,7 +10,7 @@ public class ObjectRotator : MonoBehaviour
     public int rotationSpeedLimit;
     public int maxRotations;
     
-
+    
     private float theta { get; set; }
     private float prevTheta { get; set; }
     private float accumulatedAngle { get; set; }
@@ -19,7 +19,8 @@ public class ObjectRotator : MonoBehaviour
 
     private void Awake()
     {
-           nwController = GameObject.FindWithTag("NetworkController").GetComponent<NetworkController>();
+        nwController = NetworkAssets.GetController();
+        
     }
 
     void Start()

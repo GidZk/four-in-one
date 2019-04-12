@@ -17,6 +17,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 {
     // TODO delete dis
     public Text _logText;
+    private GameObject playerRef;
     private GameState gameState;
 
     private void Log(string s, Color c)
