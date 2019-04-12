@@ -27,7 +27,7 @@ public class ObjectRotator : MonoBehaviour
         transform.position += Vector3.up;
         isMouseDown = false;
         
-        Debug.Log(nwController.logger);
+        //Debug.Log(nwController.logger);
 
     }
 
@@ -46,6 +46,7 @@ public class ObjectRotator : MonoBehaviour
             Vector3 objectToMouse = Camera.main.WorldToScreenPoint(transform.position) - Input.mousePosition;
             theta = CalculateRotationAngle(objectToMouse);
             transform.Rotate(Vector3.forward, (theta - prevTheta));
+            Debug.Log("angle :" + transform.eulerAngles.z  * Mathf.Deg2Rad);
             prevTheta = theta;
            
             if (isTerminating)
@@ -74,13 +75,14 @@ public class ObjectRotator : MonoBehaviour
 
     public float GetEulerAngles()
     {
+        
         return transform.eulerAngles.z;
     }
 
 
     public float GetRadianAngles()
     {
-        return transform.eulerAngles.z * Mathf.Deg2Rad;
+        return transform.eulerAngles.z  * Mathf.Deg2Rad;
     }
 
     public Vector3 GetDirectionVector()

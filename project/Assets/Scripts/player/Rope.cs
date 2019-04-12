@@ -45,7 +45,7 @@ void Update(){
         aimAngle = Mathf.PI * 2 + aimAngle;
     }
     
-    Debug.Log("AimAngle:: "+ aimAngle);
+   // Debug.Log("AimAngle:: "+ aimAngle);
     //aimDirection = Quaternion.Euler(0, 0, aimAngle * Mathf.Rad2Deg) * Vector2.right;
     playerPosition = transform.position;
     
@@ -53,12 +53,13 @@ void Update(){
     
     if (!isFired)
     {
-    
 	SetCrosshairPosition(aimWheel.GetRadianAngles());    
     }
     else {
 	crosshairSprite.enabled = false;
 
+	
+	
     for (int i = 0; i < points.Length; ++i){ 
             ropeRenderer.SetPosition(i, points[i].position);
 	    }
@@ -68,7 +69,7 @@ void Update(){
 // calculates crosshair position
 private void SetCrosshairPosition(float aimAngle){
     
-    Debug.Log("Rope:: " + aimAngle);
+    //Debug.Log("Rope:: " + aimAngle);
     
     if (!crosshairSprite.enabled)
     {
