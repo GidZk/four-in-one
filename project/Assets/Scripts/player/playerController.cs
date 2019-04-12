@@ -59,8 +59,6 @@ public class playerController : MonoBehaviour {
                 moveVelocity.x = 0;
                 moveVelocity.y = 0;
                 rb.velocity = moveVelocity;
-
-
             }
         }*/    
 

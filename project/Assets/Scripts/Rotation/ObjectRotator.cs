@@ -19,7 +19,7 @@ public class ObjectRotator : MonoBehaviour
 
     private void Awake()
     {
-        nwController = GameObject.FindWithTag("NetworkController").GetComponent<NetworkController>();
+      //      nwController = GameObject.FindWithTag("NetworkController").GetComponent<NetworkController>();
     }
 
     void Start()
@@ -34,10 +34,6 @@ public class ObjectRotator : MonoBehaviour
     void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            
-        }
         
         if (isMouseDown || Input.touchCount > 0)
         {
@@ -58,7 +54,7 @@ public class ObjectRotator : MonoBehaviour
                 ratio = accumulatedAngle / (maxRotations * 360);
             }     
             
-            nwController.OnCannonAngleInput(GetEulerAngles());
+            //nwController.OnCannonAngleInput(GetEulerAngles());
             
         }
     }
@@ -76,11 +72,17 @@ public class ObjectRotator : MonoBehaviour
         isMouseDown = false;
     }
 
-    private float GetEulerAngles()
+    public float GetEulerAngles()
     {
         return transform.eulerAngles.z;
     }
-    
+
+
+    public float GetRadianAngles()
+    {
+        return transform.eulerAngles.z * Mathf.Deg2Rad;
+    }
+
     public Vector3 GetDirectionVector()
     {
         return transform.forward;
@@ -100,7 +102,7 @@ public class ObjectRotator : MonoBehaviour
     }
 
 
-    private float CalculateRotationAngle(Vector3 objectToMouse)
+     private float CalculateRotationAngle(Vector3 objectToMouse)
     {
         return (Mathf.Atan2((objectToMouse.y), objectToMouse.x) * Mathf.Rad2Deg) + 180;
     }

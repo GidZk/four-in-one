@@ -709,12 +709,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c86dc0f676c74264a850cdc9bc5d5bc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ropeRenderer: {fileID: 2096999536881306291}
   ropeHingeAnchor: {fileID: 2096999535367854366}
   crosshair: {fileID: 2096999536553920179}
   crosshairSprite: {fileID: 2096999536553920178}
   playerController: {fileID: 4358117009079790165}
-  ropeRenderer: {fileID: 2096999536881306291}
   fireForce: 2
+  crossController: {fileID: 2364407202780951028, guid: 93aa4100e921e48219c8b5761adc49d9,
+    type: 3}
   points:
   - {fileID: 2096999536881306289}
   - {fileID: 2096999535367854367}

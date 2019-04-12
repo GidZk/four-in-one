@@ -5,24 +5,31 @@ using System.Linq;
 
 public class Rope : MonoBehaviour {
     
+public LineRenderer ropeRenderer;    
 public GameObject ropeHingeAnchor;
 public Transform crosshair;
 public SpriteRenderer crosshairSprite;
 public playerController playerController;
+public float fireForce;
+public GameObject crossController;
+
+public Transform[] points;
+
+
+private ObjectRotator aimWheel;    
 private Vector2 playerPosition;
 private Rigidbody2D ropeHingeAnchorRb;
 private SpriteRenderer ropeHingeAnchorSprite;
-public LineRenderer ropeRenderer;
 private float ropeMaxCastDistance = 20f;
 private Vector3 aimDirection;
-public float fireForce;
-public Transform[] points;
+
 private bool isFired = false;
 
 
 
-void Awake(){
-    
+void Awake()
+{
+    aimWheel = crossController.GetComponent<ObjectRotator>();
     playerPosition = transform.position;
     ropeHingeAnchorRb = ropeHingeAnchor.GetComponent<Rigidbody2D>();
     ropeHingeAnchorSprite = ropeHingeAnchor.GetComponent<SpriteRenderer>();
@@ -37,11 +44,17 @@ void Update(){
     if (aimAngle < 0f){
         aimAngle = Mathf.PI * 2 + aimAngle;
     }
-    aimDirection = Quaternion.Euler(0, 0, aimAngle * Mathf.Rad2Deg) * Vector2.right;
+    
+    Debug.Log("AimAngle:: "+ aimAngle);
+    //aimDirection = Quaternion.Euler(0, 0, aimAngle * Mathf.Rad2Deg) * Vector2.right;
     playerPosition = transform.position;
     
-    if (!isFired){
-	SetCrosshairPosition(aimAngle);
+    //Debug.Log("AimDirection:: "+ aimDirection);
+    
+    if (!isFired)
+    {
+    
+	SetCrosshairPosition(aimWheel.GetRadianAngles());    
     }
     else {
 	crosshairSprite.enabled = false;
@@ -54,10 +67,14 @@ void Update(){
 }
 // calculates crosshair position
 private void SetCrosshairPosition(float aimAngle){
+    
+    Debug.Log("Rope:: " + aimAngle);
+    
     if (!crosshairSprite.enabled)
     {
         crosshairSprite.enabled = true;
     }
+   
     var x = transform.position.x + 3f * Mathf.Cos(aimAngle);
     var y = transform.position.y + 3f * Mathf.Sin(aimAngle);
 
