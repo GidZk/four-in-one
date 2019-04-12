@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.NetworkSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Directory = System.IO.Directory;
+using Random = UnityEngine.Random;
 
 // ReSharper disable All
 
@@ -20,6 +19,68 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     private GameObject playerRef;
     private GameState gameState;
 
+    
+    public MyNetworkDiscovery discovery;
+    public MyNetworkManager manager;
+    private HashSet<InputListener> inputListeners;
+
+    // TODO move this away to some sort of UIController
+    public Canvas selectCanvas;
+    public Canvas waitCanvas;
+    public MemberDisplayController memberDisplayController;
+
+    
+    public bool UseLocalhost { get; private set; }
+    public int NetworkId { get; private set; }
+    private bool StartHost { get; set; }
+    private Team Team { get; set; }
+    private int m_MemberCount;
+    private NpcSpawner npcSpawner;
+    public List<GameObject> spawnable;
+    
+    
+    private void Awake()
+    {
+        discovery.Register(this);
+        discovery.StopBroadcast();
+        manager.Register(this);
+        inputListeners = new HashSet<InputListener>();
+        InitHostHandlers();
+        RegisterSpawnable();
+        DontDestroyOnLoad(this);
+        gameState = GameState.Lobby;
+        npcSpawner = gameObject.GetComponent<NpcSpawner>();
+    }
+  
+    
+    private void Update()
+    {
+        EvaluateServerState();
+
+        if (gameState == GameState.RunningGame && IsServer	())
+        {
+            
+            npcSpawner.SpawnNPC();
+        }
+        
+
+        if (Input.GetKeyDown(KeyCode.S) && IsServer())
+        {
+            SpawnPrefab	("spawnable/player");
+           
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.D) && IsServer())
+        {
+            OnLobbyFilled();
+        }
+    }
+    
+    
+    
+    
+    
     private void Log(string s, Color c)
     {
         _logText.text = s + "\n" + _logText.text;
@@ -37,21 +98,8 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         Debug.Log(s);
     }
 
-    public MyNetworkDiscovery discovery;
-    public MyNetworkManager manager;
-    private HashSet<InputListener> inputListeners;
 
-    // TODO move this away to some sort of UIController
-    public Canvas selectCanvas;
-    public Canvas waitCanvas;
-    public MemberDisplayController memberDisplayController;
 
-    public bool UseLocalhost { get; private set; }
-    public int NetworkId { get; private set; }
-    private bool StartHost { get; set; }
-    private Team Team { get; set; }
-    private int m_MemberCount;
-    public List<GameObject> spawnable;
 
     public int MemberCount
     {
@@ -68,41 +116,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     public bool IsServer() => NetworkServer.active;
     public bool IsClient() => Client() != null && Client().isConnected;
     public bool IsConnected() => IsClient();
-    private void Awake()
-    {
-        discovery.Register(this);
-        discovery.StopBroadcast();
-        manager.Register(this);
-        inputListeners = new HashSet<InputListener>();
-        InitHostHandlers();
-        RegisterSpawnable();
-        DontDestroyOnLoad(this);
-        gameState = GameState.Lobby;
 
-    }
-    private void Update()
-    {
-        EvaluateServerState();
-
-        if (gameState == GameState.RunningGame && IsServer	())
-        {
-            
-            
-        }
-        
- 
-        if (Input.GetKeyDown(KeyCode.S) && IsServer())
-        {
-            SpawnPrefab	("spawnable/player");
-        }
-
-        if (Input.GetKeyDown(KeyCode.D) && IsServer())
-        {
-            OnLobbyFilled();
-        }
-    }
-
-    
 
 
     // Scrapes the Assets/Prefabs/Resources/Spawnable folder for prefabs and registers them
