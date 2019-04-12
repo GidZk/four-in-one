@@ -2,12 +2,13 @@ using UnityEngine.Networking;
 
 #pragma warning disable 618
 
-public class Messages
+public static class Messages
 {
     public const short Base = MsgType.Highest;
-    public const short MessageGiveClientId = Base + 1;
-    public const short MessageGiveMembersJoined = Base + 2;
-    public const short ControlMessage = Base + 3;
+    public const short ClientId = Base + 1;
+    public const short MemberCount = Base + 2;
+    public const short Control = Base + 3;
+    public const short StartGame = Base + 4;
 }
 
 public class ControlMessage : MessageBase
@@ -28,8 +29,8 @@ public class ControlMessage : MessageBase
 
 public enum ControlType
 {
-    VERTICAL,
-    HORIZONTAL,
-    CANNON_ANGLE,
-    CANNON_LAUNCH
+    Vertical,
+    Horizontal,
+    CannonAngle,
+    CannonLaunch
 }

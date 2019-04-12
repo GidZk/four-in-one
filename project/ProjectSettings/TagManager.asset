@@ -4,8 +4,12 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - alga
+  - NPC
   - crabplast
+  - alga
+  - CameraManager
+  - DebugText
+  - NetworkController
   layers:
   - Default
   - TransparentFX
@@ -15,11 +19,11 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - background
+  - midground
+  - forground
+  - ui
+  - shadow
   - 
   - 
   - 
@@ -40,6 +44,21 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 708902841
+    locked: 0
+  - name: shadow
+    uniqueID: 313286199
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: midground
+    uniqueID: 3513416019
+    locked: 0
+  - name: forground
+    uniqueID: 4263059413
+    locked: 0
+  - name: ui
+    uniqueID: 3921692601
     locked: 0

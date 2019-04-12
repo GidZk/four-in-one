@@ -1,28 +1,28 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CameraManager : MonoBehaviour
 {
     public Camera[] cams;
 
-    public int CurrentCamera;
-    private int m_lastCamera;
-
-    private void Update()
-    {
-        if (m_lastCamera == CurrentCamera) return;
-        if (CurrentCamera < 0 || CurrentCamera > 3)
-            CurrentCamera = m_lastCamera;
-        SetCamera(CurrentCamera);
-    }
-
     private void Awake()
     {
-        SetCamera(0);
+        var nc = FindObjectOfType(typeof(NetworkController)) as NetworkController;
+        if (nc == null)
+        {
+            Debug.Log("No network manager");
+            SetCamera(0);
+            return;
+        }
+
+        Debug.Log($"Set camera {nc.NetworkId}");
+        SetCamera(nc.NetworkId);
     }
 
-    private void SetCamera(int n)
+    public void SetCamera(int n)
     {
         if (n < 0 || n > 3)
         {
@@ -30,7 +30,8 @@ public class CameraManager : MonoBehaviour
             return;
         }
 
-        m_lastCamera = n;
+        Debug.Log($"Set camera to {n}");
+
         foreach (var cam in cams)
         {
             cam.enabled = false;
