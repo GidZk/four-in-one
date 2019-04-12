@@ -1488,7 +1488,8 @@ MonoBehaviour:
   m_PlayerSpawnMethod: 0
   m_OfflineScene: 
   m_OnlineScene: 
-  m_SpawnPrefabs: []
+  m_SpawnPrefabs:
+  - {fileID: 0}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:
@@ -1531,7 +1532,7 @@ MonoBehaviour:
     m_MaxTimerTimeout: 12000
     m_MinNetSimulatorTimeout: 1
     m_MaxNetSimulatorTimeout: 12000
-  m_Channels: 
+  m_Channels: 0500000000000000
   m_UseWebSockets: 0
   m_UseSimulator: 0
   m_SimulatedLatency: 1
@@ -1593,7 +1594,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -144.5, y: -158.5}
+  m_AnchoredPosition: {x: -321, y: -102}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1162840822
@@ -2164,7 +2165,7 @@ GameObject:
   - component: {fileID: 1687519954}
   m_Layer: 0
   m_Name: NWController
-  m_TagString: Untagged
+  m_TagString: NetworkController
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2182,6 +2183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _logText: {fileID: 1187211404}
+  logger: 
   discovery: {fileID: 241540341}
   manager: {fileID: 1124385373}
   selectCanvas: {fileID: 1187257688}
@@ -2189,6 +2191,7 @@ MonoBehaviour:
   memberDisplayController: {fileID: 625400402}
   spawnable:
   - {fileID: 2384502420739889548, guid: a6c656be62fadec4a8ddbc91eb2560e4, type: 3}
+  - {fileID: 2096999536881306293, guid: b9226e47a633f464daa52cedc3367bc5, type: 3}
 --- !u!4 &1687519955
 Transform:
   m_ObjectHideFlags: 0

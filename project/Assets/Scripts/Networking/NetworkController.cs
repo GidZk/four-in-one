@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -16,7 +17,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 {
     // TODO delete dis
     public Text _logText;
-    public string logger;
+    private GameState gameState;
 
     private void Log(string s, Color c)
     {
@@ -66,28 +67,6 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     public bool IsServer() => NetworkServer.active;
     public bool IsClient() => Client() != null && Client().isConnected;
     public bool IsConnected() => IsClient();
-    private void Update()
-    {
-        EvaluateServerState();
-        if (Input.GetKey(KeyCode.Space))
-        {
-            OnCannonAngleInput(5f);
-        }
-
-        
-        if (Input.GetKeyDown(KeyCode.S) && IsServer())
-        {
-            GameObject go = Instantiate(Resources.Load("spawnable/dummyobj")) as GameObject;
-            go.transform.position = Vector3.zero;
-            NetworkServer.Spawn(go);
-        }
-
-        if (Input.GetKeyDown(KeyCode.D) && IsServer())
-        {
-            OnLobbyFilled();
-        }
-    }
-
     private void Awake()
     {
         discovery.Register(this);
@@ -97,8 +76,33 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         InitHostHandlers();
         RegisterSpawnable();
         DontDestroyOnLoad(this);
-        logger = "hello from the other siiiide";
+        gameState = GameState.Lobby;
+
     }
+    private void Update()
+    {
+        EvaluateServerState();
+
+        if (gameState == GameState.RunningGame && IsServer	())
+        {
+            
+            
+        }
+        
+ 
+        if (Input.GetKeyDown(KeyCode.S) && IsServer())
+        {
+            SpawnPrefab	("spawnable/player");
+        }
+
+        if (Input.GetKeyDown(KeyCode.D) && IsServer())
+        {
+            OnLobbyFilled();
+        }
+    }
+
+    
+
 
     // Scrapes the Assets/Prefabs/Resources/Spawnable folder for prefabs and registers them
     private void RegisterSpawnable()
@@ -263,7 +267,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         if (MemberCount > 4)
         {
             Log($"More than 4 connected ({MemberCount})", Color.red);
-            throw new Exception($"More than 4 connected ({MemberCount})");
+            throw new Exception($"More than 4 users connected ({MemberCount})");
         }
 
         if (MemberCount == 4)
@@ -354,6 +358,8 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     {
         Log("Received start message", Color.cyan);
         StartGame();
+        SpawnPrefab	("spawnable/dummyobj");
+
     }
 
 
@@ -386,7 +392,24 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         NetworkServer.RegisterHandler(Messages.Control, OnServerRcvControlMessage);
     }
 
-    private void StartGame() => SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
+    private void StartGame()
+    {
+        Log	("NetworkController:: starting game --", Color.green	);
+        this.gameState = GameState.RunningGame;
+        SceneManager.LoadScene("GameScene", LoadSceneMode.Single	);
+
+    }
+
+    private void SpawnPrefab(String path)
+    {
+        
+        Debug.Log	("Spawning Prefab at " + path);
+        GameObject go = Instantiate(Resources.Load(path)) as GameObject;
+        go.transform.position = Vector3.zero;
+        NetworkServer.Spawn(go);
+
+    }
+
 
     // ### Input Management ###
 
@@ -430,5 +453,13 @@ enum State
     Idle,
     Host,
     ClientSearching,
-    ClientOnServer
+    ClientOnServer,
+    Lobby,
+    Game
+}
+
+enum GameState
+{
+    Lobby,
+    RunningGame
 }

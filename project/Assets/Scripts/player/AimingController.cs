@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class Rope : MonoBehaviour {
+public class AimingController : MonoBehaviour {
     
 public LineRenderer ropeRenderer;    
 public GameObject ropeHingeAnchor;
@@ -36,20 +36,21 @@ void Awake()
 }
 
 void Update(){
-    
     var worldMousePosition =
         Camera.main.WorldToScreenPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0f));
     var facingDirection = worldMousePosition - transform.position;
-    var aimAngle = Mathf.Atan2(facingDirection.y, facingDirection.x);
-    if (aimAngle < 0f){
-        aimAngle = Mathf.PI * 2 + aimAngle;
-    }
-    
-   // Debug.Log("AimAngle:: "+ aimAngle);
-    //aimDirection = Quaternion.Euler(0, 0, aimAngle * Mathf.Rad2Deg) * Vector2.right;
+
+   
+    aimDirection = Quaternion.Euler(0, 0, aimWheel	.GetEulerAngles	()) * Vector2.right;
     playerPosition = transform.position;
+
+    if (Input.GetKey(KeyCode.Space))
+    {
+        Fire();
+    }
+
     
-    //Debug.Log("AimDirection:: "+ aimDirection);
+    
     
     if (!isFired)
     {
@@ -57,8 +58,6 @@ void Update(){
     }
     else {
 	crosshairSprite.enabled = false;
-
-	
 	
     for (int i = 0; i < points.Length; ++i){ 
             ropeRenderer.SetPosition(i, points[i].position);
@@ -66,10 +65,8 @@ void Update(){
     }
 
 }
-// calculates crosshair position
+//calculates and sets the aimangle, with @param aimangle given in radians
 private void SetCrosshairPosition(float aimAngle){
-    
-    //Debug.Log("Rope:: " + aimAngle);
     
     if (!crosshairSprite.enabled)
     {

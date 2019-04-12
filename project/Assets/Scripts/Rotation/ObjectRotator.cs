@@ -19,15 +19,13 @@ public class ObjectRotator : MonoBehaviour
 
     private void Awake()
     {
-      //      nwController = GameObject.FindWithTag("NetworkController").GetComponent<NetworkController>();
+           nwController = GameObject.FindWithTag("NetworkController").GetComponent<NetworkController>();
     }
 
     void Start()
     {    
         transform.position += Vector3.up;
         isMouseDown = false;
-        
-        //Debug.Log(nwController.logger);
 
     }
 
@@ -55,7 +53,7 @@ public class ObjectRotator : MonoBehaviour
                 ratio = accumulatedAngle / (maxRotations * 360);
             }     
             
-            //nwController.OnCannonAngleInput(GetEulerAngles());
+            nwController.OnCannonAngleInput(GetEulerAngles());
             
         }
     }
@@ -75,20 +73,22 @@ public class ObjectRotator : MonoBehaviour
 
     public float GetEulerAngles()
     {
-        
         return transform.eulerAngles.z;
     }
 
+
+    public Vector3 GetDirectionVector()
+    {
+        return transform.rotation * Vector3.forward;
+    }
 
     public float GetRadianAngles()
     {
         return transform.eulerAngles.z  * Mathf.Deg2Rad;
     }
 
-    public Vector3 GetDirectionVector()
-    {
-        return transform.forward;
-    }
+
+    
 
 
     // --------- private methods -------------

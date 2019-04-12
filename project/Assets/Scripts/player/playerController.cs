@@ -37,10 +37,8 @@ public class playerController : MonoBehaviour {
     }        
     
     void FixedUpdate (){
-        
         //uncomment for arrows instead
         Move(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        
     }
     
     public void Move ( float horizontalInput, float verticalInput){
@@ -50,7 +48,7 @@ public class playerController : MonoBehaviour {
         moveVelocity.y  = verticalInput * moveSpeed;
 
         rb.velocity = moveVelocity;
-        Debug.Log(rb.velocity);
+        //Debug.Log(rb.velocity);
         /* 
         if(Input.touchCount > 0){
             Touch touch = Input.GetTouch(0);
