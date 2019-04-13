@@ -35,8 +35,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     private bool StartHost { get; set; }
     private Team Team { get; set; }
     private int m_MemberCount;
-    private NpcSpawner npcSpawner;
-    public List<GameObject> spawnable;
+    private Spawner spawner;
     
     
     private void Awake()
@@ -45,28 +44,27 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         discovery.StopBroadcast();
         manager.Register(this);
         inputListeners = new HashSet<InputListener>();
+        spawner = gameObject.GetComponent<Spawner>();
         InitHostHandlers();
         RegisterSpawnable();
         DontDestroyOnLoad(this);
         gameState = GameState.Lobby;
-        npcSpawner = gameObject.GetComponent<NpcSpawner>();
     }
-  
-    
+
+
     private void Update()
     {
         EvaluateServerState();
 
         if (gameState == GameState.RunningGame && IsServer	())
         {
-            
-            npcSpawner.SpawnNPC();
+            spawner.SpawnNpc(3);
         }
         
 
         if (Input.GetKeyDown(KeyCode.S) && IsServer())
         {
-            SpawnPrefab	("spawnable/player");
+            spawner.SpawnPlayer();	
            
 
         }
@@ -122,7 +120,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     // Scrapes the Assets/Prefabs/Resources/Spawnable folder for prefabs and registers them
     private void RegisterSpawnable()
     {
-        foreach (var o in spawnable)
+        foreach (var o in spawner.spawnable)
         {
             if (o == null)
             {
@@ -373,7 +371,6 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     {
         Log("Received start message", Color.cyan);
         StartGame();
-        SpawnPrefab	("spawnable/dummyobj");
 
     }
 
@@ -415,15 +412,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 
     }
 
-    private void SpawnPrefab(String path)
-    {
-        
-        Debug.Log	("Spawning Prefab at " + path);
-        GameObject go = Instantiate(Resources.Load(path)) as GameObject;
-        go.transform.position = Vector3.zero;
-        NetworkServer.Spawn(go);
 
-    }
 
 
     // ### Input Management ###
