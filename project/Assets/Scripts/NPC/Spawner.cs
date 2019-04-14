@@ -64,11 +64,6 @@ public class Spawner : MonoBehaviour
     
   }
   
-  
-  
-
-  
-
 
   private void SpawnShark(float minScaling, float MaxScaling)
   {
@@ -80,17 +75,6 @@ public class Spawner : MonoBehaviour
     go.transform.localScale = new Vector3(scaling, scaling, 0.9f);
     NetworkServer.Spawn(go);
 
-
-
-    /*
-    Debug.Log("Spawner:: Spawning Shark");
-    Quaternion rotation = Quaternion.Euler(new Vector3(0, 0, (180 * (Random.Range(0, 2)))));
-    var go = Instantiate(spawnable[2], new Vector3(44, Random.Range(-29f,29f),0), Quaternion.identity);
-    float scaling = Random.Range(minScaling,MaxScaling);
-    go.transform.localScale = new Vector3(scaling, scaling, 0.9f);
-    NetworkServer.Spawn	(go);    
-    */
-
   }
   
   public void SpawnCrabPlast(float minScaling,float maxScaling)
@@ -98,7 +82,6 @@ public class Spawner : MonoBehaviour
     
     float scaling = Random.Range(minScaling, maxScaling);
     GameObject go = LoadPrefab("spawnable/crabplast");
-    
     go.transform.position = new Vector3(44, Random.Range(-29f, 29f), 0);
     go.transform.rotation = Quaternion.Euler(new Vector3(0, 0, (180 * (Random.Range(0, 2)))));
     go.transform.localScale = new Vector3(scaling,scaling,0.9f);
@@ -115,7 +98,6 @@ public class Spawner : MonoBehaviour
   float scaling = Random.Range(minScaling,MaxScaling);
   
   Debug.Log("Spawner:: Spawning Crab");
-  Quaternion rotation = Quaternion.Euler(new Vector3(0, 0, (180 * (Random.Range(0, 2)))));
   GameObject go = LoadPrefab("spawnable/crab");
   go.transform.position = new Vector3(44, Random.Range(-29f, 29f), 0);
   go.transform.rotation = Quaternion.Euler(new Vector3(0, 0, (180 * (Random.Range(0, 2)))));
@@ -128,7 +110,6 @@ public class Spawner : MonoBehaviour
 private void SpawnStone(float minScaling, float maxScaling)
 {
   float scaling = Random.Range(minScaling, maxScaling);
-
   GameObject go = LoadPrefab("spawnable/stone");
   go.transform.position = new Vector3(44, Random.Range(-29f, 29f), 0);
   go.transform.rotation = Quaternion.Euler(new Vector3(0, 0, (Random.Range(0f, 90f))));

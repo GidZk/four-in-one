@@ -3,23 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class playerController : MonoBehaviour {
+public class playerController : MonoBehaviour, InputListener {
 
-    public float moveSpeed;
+    
+    public float moveForce;
     private Rigidbody2D rb;
     private Vector2 moveInput;
-    private Vector2 moveVelocity;
+    //private Vector2 moveVelocity;
     private float hInput = 0;
     private float vInput = 0;
+
+    private NetworkController nwController;
 
 
     // Start is called before the first frame update
 
     void Start(){
         rb = GetComponent<Rigidbody2D>();
+        nwController = NetworkAssets.GetController();
+        nwController.Register(this);
     }
-
-    // Update is called once per frame
+    
+   
+    // ============ old code to be removed / updated for touches ================== 
+    /*
     void Update(){
         if(Input.touchCount > 0){
             Touch touch = Input.GetTouch(0);
@@ -34,61 +41,76 @@ public class playerController : MonoBehaviour {
         }
         //moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         //Move(hInput);
-    }        
-    
-    void FixedUpdate (){
-        //uncomment for arrows instead
-        Move(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
     }
-    
-    public void Move ( float horizontalInput, float verticalInput){
+    // ==============================================================================
+    */
+    // ============ old code to be removed / updated for touches ================== // 
+    void FixedUpdate()
+    {
+        
+        // delegate movement to server in msg passing system
+        if (Input.GetKey(KeyCode.UpArrow))
+            nwController.OnVerticalMovementInput(moveForce);
+        if (Input.GetKey(KeyCode.DownArrow))
+            nwController.OnVerticalMovementInput(-moveForce);
+        if (Input.GetKey(KeyCode.RightArrow))
+            nwController.OnHorizontalMovementInput(moveForce);
+        if (Input.GetKey(KeyCode.LeftArrow))
+            nwController.OnHorizontalMovementInput(-moveForce);
 
-        Vector2 moveVelocity = rb.velocity;
-        moveVelocity.x = horizontalInput * moveSpeed;
-        moveVelocity.y  = verticalInput * moveSpeed;
-
-        rb.velocity = moveVelocity;
-        //Debug.Log(rb.velocity);
-        /* 
-        if(Input.touchCount > 0){
-            Touch touch = Input.GetTouch(0);
-            if(touch.phase == TouchPhase.Ended){
-                Debug.Log(hInput);
-                moveVelocity.x = 0;
-                moveVelocity.y = 0;
-                rb.velocity = moveVelocity;
-            }
-        }*/    
-
-    } 
-
-    public void HorizontalMovement(float horizontalInput){
-        hInput = horizontalInput;
         
     }
-    public void VerticalMovement(float VerticalInput){
-        vInput = VerticalInput;
-    }
+  
+
+  // this method will be called by the client that has the server locally,
+  // after a remote client has commanded the client which has the server to do so.
+  public void OnHorizontalMovementInput(float value)
+  {
+      rb.AddForce(new Vector2(value,0));
+  }
+  
+  public void OnVerticalMovementInput(float value)
+  {
+      rb.AddForce(new Vector2(0,value));
+  }
 
 
 
-    // Invoked on collision
+  public void OnCannonAngleInput(float value)
+  {
+      throw new System.NotImplementedException();
+  }
+
+  public void OnCannonLaunchInput(float value)
+  {
+      throw new System.NotImplementedException();
+  }
+  
+  
+  // Invoked on collision
   void OnCollisionEnter2D(Collision2D coll)
-    {
-        if (coll.gameObject.tag == "crabplast")
-        {
-            Debug.Log($"{this} --a collision between player and alga. ");
+  {
+      if (coll.gameObject.tag == "crabplast")
+      {
+          Debug.Log($"{this} --a collision between player and alga. ");
 
-            Destroy(coll.gameObject);
+          Destroy(coll.gameObject);
 
-            //Add 1 point each time the starfish(object that gives points) collides
+          //Add 1 point each time the starfish(object that gives points) collides
 
-            // with the object this script is attached to
-            AddScore.scoreValue++;
+          // with the object this script is attached to
+          AddScore.scoreValue++;
 
-            //add time to the timebar when catching crab
-            Timer.timeLeft++;
-            Debug.Log("score = " + AddScore.scoreValue);
-        }
-    }
+          //add time to the timebar when catching crab
+          Timer.timeLeft++;
+          Debug.Log("score = " + AddScore.scoreValue);
+      }
+  }
+
+  
+  
+  
+  
+  
 }
+
