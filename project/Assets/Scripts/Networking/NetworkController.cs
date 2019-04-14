@@ -78,7 +78,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     
     
     
-    private void Log(string s, Color c)
+    public void Log(string s, Color c)
     {
         _logText.text = s + "\n" + _logText.text;
 
@@ -299,9 +299,9 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     /*Callback registred on the server by host to be executed server side */
     private void OnServerRcvControlMessage(NetworkMessage message)
     {
-        var msg = message.ReadMessage<ControlMessage>();
-        var type = msg.Type;
-        var val = msg.Value;
+        ControlMessage msg = message.ReadMessage<ControlMessage>();
+        ControlType type = msg.Type;
+        float val = msg.Value;
         Log($" Received control message containing {val} of type {type}", Color.cyan);
         switch (type)
         {
@@ -317,21 +317,21 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
             case ControlType.Horizontal:
                 foreach (var l in inputListeners)
                 {
-                    l.OnVerticalMovementInput(val);
+                    l.OnHorizontalMovementInput(val);
                 }
 
                 break;
             case ControlType.CannonAngle:
                 foreach (var l in inputListeners)
                 {
-                    l.OnVerticalMovementInput(val);
+                    l.OnCannonAngleInput(val);
                 }
 
                 break;
             case ControlType.CannonLaunch:
                 foreach (InputListener l in inputListeners)
                 {
-                    l.OnVerticalMovementInput(val);
+                    l.OnCannonLaunchInput(val);
                 }
 
                 break;
@@ -414,8 +414,25 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         SceneManager.LoadScene("GameScene", LoadSceneMode.Single	);
 
     }
+    
+    
+    private void NotifyHorizontalMovementListners(float value)
+    {
+        foreach (var l in inputListeners)
+        {
+            l.OnHorizontalMovementInput(value);
+        }  
+        
+    }
 
-
+    private void NotifyVerticalMovementListners(float value)
+    {
+        foreach (var l in inputListeners)
+        {
+            l.OnVerticalMovementInput(value);
+        }  
+        
+    }
 
 
     // ### Input Management ###
@@ -423,14 +440,14 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     public void OnVerticalMovementInput(float value)
     {
         if (IsServer())
-            Log("NetworkController should not be input listener while being host", Color.yellow);
+            NotifyVerticalMovementListners(value);
         Client().Send(Messages.Control, new ControlMessage(value, ControlType.Vertical));
     }
 
     public void OnHorizontalMovementInput(float value)
     {
         if (IsServer())
-            Log("NetworkController should not be input listener while being host", Color.yellow);
+            NotifyHorizontalMovementListners(value);
         Client().Send(Messages.Control, new ControlMessage(value, ControlType.Horizontal));
     }
 
