@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Linq;
+﻿using UnityEngine;
 
-public class AimingController : MonoBehaviour {
+public class AimingController : MonoBehaviour , InputListener {
     
 public LineRenderer ropeRenderer;    
 public GameObject ropeHingeAnchor;
@@ -44,14 +41,13 @@ void Update(){
     aimDirection = Quaternion.Euler(0, 0, aimWheel	.GetEulerAngles	()) * Vector2.right;
     playerPosition = transform.position;
 
+    
+    
     if (Input.GetKey(KeyCode.Space))
     {
         Fire();
     }
 
-    
-    
-    
     if (!isFired)
     {
 	SetCrosshairPosition(aimWheel.GetRadianAngles());    
@@ -102,8 +98,23 @@ public void ResetRope(){
     ropeHingeAnchorSprite.enabled = false;
 }
 
-    // Start is called before the first frame update
-    void Start(){
+    public void OnVerticalMovementInput(float value)
+    {
+        
     }
 
+    public void OnHorizontalMovementInput(float value)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnCannonAngleInput(float value)
+    {
+        SetCrosshairPosition(value); 
+    }
+
+    public void OnCannonLaunchInput(float value)
+    {
+        throw new System.NotImplementedException();
+    }
 }

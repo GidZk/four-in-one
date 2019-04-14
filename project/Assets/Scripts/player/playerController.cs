@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class playerController : MonoBehaviour {
+public class playerController : MonoBehaviour, InputListener {
 
+    
     public float moveSpeed;
     private Rigidbody2D rb;
     private Vector2 moveInput;
@@ -12,11 +13,16 @@ public class playerController : MonoBehaviour {
     private float hInput = 0;
     private float vInput = 0;
 
+    private NetworkController nwController;
+
 
     // Start is called before the first frame update
 
     void Start(){
         rb = GetComponent<Rigidbody2D>();
+        nwController = NetworkAssets.GetController();
+        nwController.Register(this);
+
     }
 
     // Update is called once per frame
@@ -34,12 +40,24 @@ public class playerController : MonoBehaviour {
         }
         //moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         //Move(hInput);
-    }        
-    
-    void FixedUpdate (){
-        //uncomment for arrows instead
-        Move(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
     }
+
+    void FixedUpdate()
+    {
+        //uncomment for arrows instead
+        float horizontal = Input.GetAxisRaw("Horizontal");
+        float vertical = Input.GetAxisRaw("Vertical");
+        if(horizontal > 0 )
+           nwController.OnHorizontalMovementInput(horizontal);
+
+
+     
+        //Move(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+    }
+    
+    
+    
+    
     
     public void Move ( float horizontalInput, float verticalInput){
 
@@ -60,7 +78,9 @@ public class playerController : MonoBehaviour {
             }
         }*/    
 
-    } 
+    }
+
+
 
     public void HorizontalMovement(float horizontalInput){
         hInput = horizontalInput;
@@ -71,6 +91,7 @@ public class playerController : MonoBehaviour {
     }
 
 
+    
 
     // Invoked on collision
   void OnCollisionEnter2D(Collision2D coll)
@@ -91,4 +112,28 @@ public class playerController : MonoBehaviour {
             Debug.Log("score = " + AddScore.scoreValue);
         }
     }
+  
+  
+  
+  
+
+  public void OnVerticalMovementInput(float value)
+  {
+      Move(value,0);
+  }
+
+  public void OnHorizontalMovementInput(float value)
+  {
+      throw new System.NotImplementedException();
+  }
+
+  public void OnCannonAngleInput(float value)
+  {
+      throw new System.NotImplementedException();
+  }
+
+  public void OnCannonLaunchInput(float value)
+  {
+      throw new System.NotImplementedException();
+  }
 }

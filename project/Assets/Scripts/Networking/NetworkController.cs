@@ -33,9 +33,10 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     public bool UseLocalhost { get; private set; }
     public int NetworkId { get; private set; }
     private bool StartHost { get; set; }
+   
     private Team Team { get; set; }
     private int m_MemberCount;
-    private Spawner spawner;
+    private Spawner spawnManager;
     
     
     private void Awake()
@@ -44,9 +45,8 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         discovery.StopBroadcast();
         manager.Register(this);
         inputListeners = new HashSet<InputListener>();
-        spawner = gameObject.GetComponent<Spawner>();
         InitHostHandlers();
-        RegisterSpawnable();
+        InitAndRegisterSpawnable();
         DontDestroyOnLoad(this);
         gameState = GameState.Lobby;
     }
@@ -58,15 +58,14 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 
         if (gameState == GameState.RunningGame && IsServer	())
         {
-            spawner.SpawnNpc(3);
+            spawnManager.SpawnNpc(3);
         }
         
 
         if (Input.GetKeyDown(KeyCode.S) && IsServer())
         {
-            spawner.SpawnPlayer();	
+            spawnManager.SpawnPlayer();	
            
-
         }
 
         if (Input.GetKeyDown(KeyCode.D) && IsServer())
@@ -115,12 +114,13 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     public bool IsClient() => Client() != null && Client().isConnected;
     public bool IsConnected() => IsClient();
 
-
-
     // Scrapes the Assets/Prefabs/Resources/Spawnable folder for prefabs and registers them
-    private void RegisterSpawnable()
+    private void InitAndRegisterSpawnable()
     {
-        foreach (var o in spawner.spawnable)
+        
+        // returns the 3'rd child of a spawnmanager, which should always be spawnManager
+        spawnManager = GameObject.Find("NWController/SpawnManager").GetComponent<Spawner>();
+        foreach (var o in spawnManager.spawnable)
         {
             if (o == null)
             {
@@ -308,6 +308,8 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
             case ControlType.Vertical:
                 foreach (var l in inputListeners)
                 {
+                    Log($" Received control message containing {val} of type {type}", Color.cyan);
+
                     l.OnVerticalMovementInput(val);
                 }
 
@@ -327,7 +329,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 
                 break;
             case ControlType.CannonLaunch:
-                foreach (var l in inputListeners)
+                foreach (InputListener l in inputListeners)
                 {
                     l.OnVerticalMovementInput(val);
                 }
@@ -406,6 +408,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 
     private void StartGame()
     {
+
         Log	("NetworkController:: starting game --", Color.green	);
         this.gameState = GameState.RunningGame;
         SceneManager.LoadScene("GameScene", LoadSceneMode.Single	);
