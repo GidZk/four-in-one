@@ -1854,6 +1854,7 @@ MonoBehaviour:
   - {fileID: 406239119}
   - {fileID: 125000883}
   - {fileID: 1020185893}
+  godCam: {fileID: 184513796}
 --- !u!1 &2077730669
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,26 +1,31 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class AimingController : MonoBehaviour, InputListener
+public class AimingController : NetworkBehaviour, InputListener
 {
-    public LineRenderer ropeRenderer;
-    public GameObject ropeHingeAnchor;
-    public Transform crosshair;
-    public SpriteRenderer crosshairSprite;
-    public playerController playerController;
-    public float fireForce;
+    private const float LaunchSpeedConstant = 30;
+    private const float YankConstant = 5;
+    private const float MinRange = 0.8f;
+    private const int CollectHookThreshold = 1;
+
+    // Game objects related to the crosshair
     public GameObject crossController;
+    public Transform crosshair;
+    private SpriteRenderer _crosshairSpriteRenderer;
+    private ObjectRotator _aimWheel;
 
-    public Transform[] points;
+    // Game objects related to the hook and line
+    public LineRenderer ropeRenderer;
+    public GameObject hook;
+    private Rigidbody2D _hookRb;
 
-
-    private ObjectRotator aimWheel;
-    private Rigidbody2D ropeHingeAnchorRb;
-    private SpriteRenderer ropeHingeAnchorSprite;
-    private float ropeMaxCastDistance = 20f;
-    private Vector3 aimDirection;
-
+    // State
     private HookState _state = HookState.Idle;
+    private bool _shouldReel;
+    private Vector3 _aimDirection;
+    public Transform[] points;
 
     private enum HookState
     {
@@ -31,20 +36,42 @@ public class AimingController : MonoBehaviour, InputListener
 
     void Awake()
     {
-        aimWheel = crossController.GetComponent<ObjectRotator>();
-        ropeHingeAnchorRb = ropeHingeAnchor.GetComponent<Rigidbody2D>();
-        ropeHingeAnchorSprite = ropeHingeAnchor.GetComponent<SpriteRenderer>();
+        _aimWheel = crossController.GetComponent<ObjectRotator>();
+        _crosshairSpriteRenderer = crosshair.GetComponent<SpriteRenderer>();
+        _hookRb = hook.GetComponent<Rigidbody2D>();
+        hook.GetComponent<SpriteRenderer>();
+        NetworkController.Instance.Register(this);
     }
 
     void Update()
     {
-        aimDirection = Quaternion.Euler(0, 0, aimWheel.GetEulerAngles()) * Vector2.right;
+        _aimDirection = Quaternion.Euler(0, 0, _aimWheel.GetEulerAngles()) * Vector2.right;
 
         UpdateCrosshair();
+        if (_state == HookState.Reeling)
+        {
+            ReturnHookWithPhysics();
+            CollectNearbyHook();
+        }
 
+        UpdateLineRenderer();
+    }
+
+    private void UpdateLineRenderer()
+    {
         for (int i = 0; i < points.Length; ++i)
         {
             ropeRenderer.SetPosition(i, points[i].position);
+        }
+    }
+
+    private void CollectNearbyHook()
+    {
+        if (Math.Abs((transform.position - hook.transform.position).magnitude) < CollectHookThreshold)
+        {
+            _state = HookState.Idle;
+            ropeRenderer.enabled = false;
+            hook.SetActive(false);
         }
     }
 
@@ -52,59 +79,60 @@ public class AimingController : MonoBehaviour, InputListener
     {
         if (_state != HookState.Idle)
         {
-            crosshairSprite.enabled = false; // Hide sprite
+            _crosshairSpriteRenderer.enabled = false; // Hide sprite
             return;
         }
 
-        if (crosshairSprite.enabled != true) crosshairSprite.enabled = true;
-        aimDirection = Quaternion.Euler(0, 0, aimWheel.GetEulerAngles()) * Vector2.right;
+        if (_crosshairSpriteRenderer.enabled != true) _crosshairSpriteRenderer.enabled = true;
+        _aimDirection = Quaternion.Euler(0, 0, _aimWheel.GetEulerAngles()) * Vector2.right;
     }
 
-//calculates and sets the aimangle, with @param aimangle given in radians
+    //calculates and sets direction of the crosshair, with @param aimangle given in radians
     private void SetCrosshairPosition(float aimAngle)
     {
-        if (!crosshairSprite.enabled)
+        if (!_crosshairSpriteRenderer.enabled)
         {
-            crosshairSprite.enabled = true;
+            _crosshairSpriteRenderer.enabled = true;
         }
 
-        var x = transform.position.x + 3f * Mathf.Cos(aimAngle);
-        var y = transform.position.y + 3f * Mathf.Sin(aimAngle);
+        var p = transform.position;
+        var x = p.x + 3f * Mathf.Cos(aimAngle);
+        var y = p.y + 3f * Mathf.Sin(aimAngle);
 
         var crossHairPosition = new Vector3(x, y, 0);
         crosshair.transform.position = crossHairPosition;
     }
 
-//fires the anchor
-    public void Fire()
+
+    // Fires the hook
+    private void Fire(float force)
     {
         _state = HookState.Firing;
         ropeRenderer.enabled = true;
-        ropeHingeAnchorSprite.enabled = true;
-        ropeHingeAnchorRb.position = transform.position;
+        hook.SetActive(true);
+        _hookRb.position = transform.position;
 
-        ropeHingeAnchorRb.velocity = new Vector2
+        var vec = new Vector2
         {
-            x = aimDirection.x * fireForce,
-            y = aimDirection.y * fireForce
+            x = _aimDirection.x * force,
+            y = _aimDirection.y * force
         };
+        _hookRb.velocity = vec * LaunchSpeedConstant;
     }
 
-    private void Reel()
-    {
-        _state = HookState.Reeling;
-        // TODO stuff
-        // wait for rotations
-    }
 
-//Halts the rope
-    public void ResetRope()
+    // "Yanks" the hook towards the controller
+    private void ReturnHookWithPhysics()
     {
-        ropeHingeAnchorRb.velocity = new Vector2(0, 0);
-        ropeRenderer.positionCount = 2;
-        ropeRenderer.SetPosition(0, transform.position);
-        ropeRenderer.SetPosition(1, transform.position);
-        ropeHingeAnchorSprite.enabled = false;
+        if (!_shouldReel)
+            return;
+
+        _shouldReel = false;
+        var thisPos = transform.position;
+        var hookPos = hook.transform.position;
+        var vec = (thisPos - hookPos).normalized * YankConstant;
+        _hookRb.velocity = vec;
+        Task.Delay(500).ContinueWith(t => _shouldReel = true);
     }
 
     public void OnVerticalMovementInput(float value)
@@ -122,10 +150,13 @@ public class AimingController : MonoBehaviour, InputListener
 
     public void OnCannonLaunchInput(float value)
     {
-        if (_state == HookState.Idle)
+        if (_state != HookState.Idle) return;
+
+        Fire(value);
+        Task.Delay((int) (2000 * (value + MinRange))).ContinueWith(t =>
         {
-            Fire();
-            Task.Delay(2000).ContinueWith(t => Reel());
-        }
+            _state = HookState.Reeling;
+            _shouldReel = true;
+        });
     }
 }

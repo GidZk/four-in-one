@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class playerController : MonoBehaviour, InputListener {
-
-    
+public class playerController : MonoBehaviour, InputListener
+{
     public float moveForce;
     private Rigidbody2D rb;
+
     private Vector2 moveInput;
+
     //private Vector2 moveVelocity;
     private float hInput = 0;
     private float vInput = 0;
@@ -18,13 +19,14 @@ public class playerController : MonoBehaviour, InputListener {
 
     // Start is called before the first frame update
 
-    void Start(){
+    void Start()
+    {
         rb = GetComponent<Rigidbody2D>();
         nwController = NetworkAssets.GetController();
         nwController.Register(this);
     }
-    
-   
+
+
     // ============ old code to be removed / updated for touches ================== 
     /*
     void Update(){
@@ -47,7 +49,6 @@ public class playerController : MonoBehaviour, InputListener {
     // ============ old code to be removed / updated for touches ================== // 
     void FixedUpdate()
     {
-        
         // delegate movement to server in msg passing system
         if (Input.GetKey(KeyCode.UpArrow))
             nwController.OnVerticalMovementInput(moveForce);
@@ -57,60 +58,48 @@ public class playerController : MonoBehaviour, InputListener {
             nwController.OnHorizontalMovementInput(moveForce);
         if (Input.GetKey(KeyCode.LeftArrow))
             nwController.OnHorizontalMovementInput(-moveForce);
-
-        
     }
-  
-
-  // this method will be called by the client that has the server locally,
-  // after a remote client has commanded the client which has the server to do so.
-  public void OnHorizontalMovementInput(float value)
-  {
-      rb.AddForce(new Vector2(value,0));
-  }
-  
-  public void OnVerticalMovementInput(float value)
-  {
-      rb.AddForce(new Vector2(0,value));
-  }
 
 
+    // this method will be called by the client that has the server locally,
+    // after a remote client has commanded the client which has the server to do so.
+    public void OnHorizontalMovementInput(float value)
+    {
+        rb.AddForce(new Vector2(value, 0));
+    }
 
-  public void OnCannonAngleInput(float value)
-  {
-      throw new System.NotImplementedException();
-  }
+    public void OnVerticalMovementInput(float value)
+    {
+        rb.AddForce(new Vector2(0, value));
+    }
 
-  public void OnCannonLaunchInput(float value)
-  {
-      throw new System.NotImplementedException();
-  }
-  
-  
-  // Invoked on collision
-  void OnCollisionEnter2D(Collision2D coll)
-  {
-      if (coll.gameObject.tag == "crabplast")
-      {
-          Debug.Log($"{this} --a collision between player and alga. ");
 
-          Destroy(coll.gameObject);
+    public void OnCannonAngleInput(float value)
+    {
+    }
 
-          //Add 1 point each time the starfish(object that gives points) collides
+    public void OnCannonLaunchInput(float value)
+    {
+    }
 
-          // with the object this script is attached to
-          AddScore.scoreValue++;
 
-          //add time to the timebar when catching crab
-          Timer.timeLeft++;
-          Debug.Log("score = " + AddScore.scoreValue);
-      }
-  }
+    // Invoked on collision
+    void OnCollisionEnter2D(Collision2D coll)
+    {
+        if (coll.gameObject.tag == "crabplast")
+        {
+            Debug.Log($"{this} --a collision between player and alga. ");
 
-  
-  
-  
-  
-  
+            Destroy(coll.gameObject);
+
+            //Add 1 point each time the starfish(object that gives points) collides
+
+            // with the object this script is attached to
+            AddScore.scoreValue++;
+
+            //add time to the timebar when catching crab
+            Timer.timeLeft++;
+            Debug.Log("score = " + AddScore.scoreValue);
+        }
+    }
 }
-
