@@ -19,7 +19,6 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     private GameObject playerRef;
     private GameState gameState;
 
-    
     public MyNetworkDiscovery discovery;
     public MyNetworkManager manager;
     private HashSet<InputListener> inputListeners;
@@ -29,16 +28,41 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     public Canvas waitCanvas;
     public MemberDisplayController memberDisplayController;
 
-    
+
     public bool UseLocalhost { get; private set; }
+    public bool SingleGameDebug { get; set; }
     public int NetworkId { get; private set; }
     private bool StartHost { get; set; }
-   
+
     private Team Team { get; set; }
     private int m_MemberCount;
     private Spawner spawnManager;
-    
-    
+
+
+    private void Update()
+    {
+        EvaluateServerState();
+
+        if (gameState == GameState.RunningGame && IsServer())
+        {
+            spawnManager.SpawnNpc(3);
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.S) && IsServer())
+        {
+            spawnManager.SpawnPlayer();
+        }
+
+        // magical debug code
+        // magical debug code
+        // magical debug code
+        if (Input.GetKeyDown(KeyCode.D) && IsServer())
+        {
+            OnLobbyFilled();
+        }
+    }
+
     private void Awake()
     {
         discovery.Register(this);
@@ -52,32 +76,6 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     }
 
 
-    private void Update()
-    {
-        EvaluateServerState();
-
-        if (gameState == GameState.RunningGame && IsServer	())
-        {
-            spawnManager.SpawnNpc(3);
-        }
-        
-
-        if (Input.GetKeyDown(KeyCode.S) && IsServer())
-        {
-            spawnManager.SpawnPlayer();	
-           
-        }
-
-        if (Input.GetKeyDown(KeyCode.D) && IsServer())
-        {
-            OnLobbyFilled();
-        }
-    }
-    
-    
-    
-    
-    
     public void Log(string s, Color c)
     {
         _logText.text = s + "\n" + _logText.text;
@@ -94,8 +92,6 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         _logText.text = s + "\n" + prev;
         Debug.Log(s);
     }
-
-
 
 
     public int MemberCount
@@ -117,7 +113,6 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     // Scrapes the Assets/Prefabs/Resources/Spawnable folder for prefabs and registers them
     private void InitAndRegisterSpawnable()
     {
-        
         // returns the 3'rd child of a spawnmanager, which should always be spawnManager
         spawnManager = GameObject.Find("NWController/SpawnManager").GetComponent<Spawner>();
         foreach (var o in spawnManager.spawnable)
@@ -373,7 +368,6 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     {
         Log("Received start message", Color.cyan);
         StartGame();
-
     }
 
 
@@ -408,21 +402,22 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 
     private void StartGame()
     {
-
-        Log	("NetworkController:: starting game --", Color.green	);
+        if (MemberCount <= 1)
+            SingleGameDebug = true;
+        Log("NetworkController:: starting game --", Color.green);
         this.gameState = GameState.RunningGame;
-        SceneManager.LoadScene("GameScene", LoadSceneMode.Single	);
+        SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
 
+        //spawn dude
     }
-    
-    
+
+
     private void NotifyHorizontalMovementListners(float value)
     {
         foreach (var l in inputListeners)
         {
             l.OnHorizontalMovementInput(value);
-        }  
-        
+        }
     }
 
     private void NotifyVerticalMovementListners(float value)
@@ -430,8 +425,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         foreach (var l in inputListeners)
         {
             l.OnVerticalMovementInput(value);
-        }  
-        
+        }
     }
 
 
@@ -460,7 +454,6 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 
     public void OnCannonLaunchInput(float value)
     {
-    
         if (IsServer())
             Log("NetworkController should not be input listener while being host", Color.yellow);
 
