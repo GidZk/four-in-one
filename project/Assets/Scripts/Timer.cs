@@ -15,7 +15,7 @@ public class Timer : MonoBehaviour
     void Start()
     {
         GameOver.SetActive(false);
-        timerBar = GetComponent<Image>();
+        timerBar = GetComponent<Image>();  // grön bar
         timeLeft = maxTime;
     }
 
@@ -23,10 +23,12 @@ public class Timer : MonoBehaviour
     void Update()
     {
 
-        if (timeLeft > 0)
+        if (timeLeft > 0)   //fortfarande grön bar
+       
         {
             timeLeft -= Time.deltaTime;
             timerBar.fillAmount = timeLeft / maxTime;
+
         }
         else
         {
