@@ -12,6 +12,7 @@ public class playerController : MonoBehaviour, InputListener {
     //private Vector2 moveVelocity;
     private float hInput = 0;
     private float vInput = 0;
+  
 
     private NetworkController nwController;
 
@@ -47,26 +48,47 @@ public class playerController : MonoBehaviour, InputListener {
     // ============ old code to be removed / updated for touches ================== // 
     void FixedUpdate()
     {
-        
+
+        //if (RectTransformUtility.RectangleContainsScreenPoint(
+                //           rightRect, data.position, data.pressEventCamera
+        //   )
+
+        {
+            //targetRectArea is the rectangle transform you want your
+            //input to be inside, the above will return true if it is inside.
+        }
+
+
+    
+
         // delegate movement to server in msg passing system
         if (Input.GetKey(KeyCode.UpArrow))
             nwController.OnVerticalMovementInput(moveForce);
         if (Input.GetKey(KeyCode.DownArrow))
             nwController.OnVerticalMovementInput(-moveForce);
-        if (Input.GetKey(KeyCode.RightArrow))
-            nwController.OnHorizontalMovementInput(moveForce);
+       // if (Input.GetKey(KeyCode.RightArrow))
+         //   nwController.OnHorizontalMovementInput(moveForce);
         if (Input.GetKey(KeyCode.LeftArrow))
             nwController.OnHorizontalMovementInput(-moveForce);
 
         
     }
-  
 
-  // this method will be called by the client that has the server locally,
-  // after a remote client has commanded the client which has the server to do so.
-  public void OnHorizontalMovementInput(float value)
+
+    public void moveRight()
+    {
+        nwController.OnHorizontalMovementInput(moveForce);
+    }
+
+
+
+
+    // this method will be called by the client that has the server locally,
+    // after a remote client has commanded the client which has the server to do so.
+    public void OnHorizontalMovementInput(float value)
   {
-      rb.AddForce(new Vector2(value,0));
+        transform.Translate(new Vector2(value,0));
+      //rb.AddForce(new Vector2(value,0));
   }
   
   public void OnVerticalMovementInput(float value)
