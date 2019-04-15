@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Experimental.UIElements;
 using UnityEngine.Networking;
 using UnityEngine.Networking.NetworkSystem;
 using UnityEngine.SceneManagement;
@@ -18,6 +19,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     public Text _logText;
     private GameObject playerRef;
     private GameState gameState;
+
 
     public MyNetworkDiscovery discovery;
     public MyNetworkManager manager;
@@ -36,7 +38,29 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 
     private Team Team { get; set; }
     private int m_MemberCount;
-    private Spawner spawnManager;
+    public Spawner spawnManager;
+
+    public static NetworkController Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Log($"Multiple NetworkControllers!!!", Color.red);
+            throw new Exception();
+        }
+
+        Instance = this;
+
+        discovery.Register(this);
+        discovery.StopBroadcast();
+        manager.Register(this);
+        inputListeners = new HashSet<InputListener>();
+        InitHostHandlers();
+        InitAndRegisterSpawnable();
+        DontDestroyOnLoad(this);
+        gameState = GameState.Lobby;
+    }
 
 
     private void Update()
@@ -54,44 +78,40 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
             spawnManager.SpawnPlayer();
         }
 
-        // magical debug code
-        // magical debug code
-        // magical debug code
         if (Input.GetKeyDown(KeyCode.D) && IsServer())
         {
             OnLobbyFilled();
         }
     }
 
-    private void Awake()
+    private void ToDebugText(String s)
     {
-        discovery.Register(this);
-        discovery.StopBroadcast();
-        manager.Register(this);
-        inputListeners = new HashSet<InputListener>();
-        InitHostHandlers();
-        InitAndRegisterSpawnable();
-        DontDestroyOnLoad(this);
-        gameState = GameState.Lobby;
+        if (debugText)
+        {
+            _logText.text = s + "\n" + _logText.text;
+        }
     }
-
 
     public void Log(string s, Color c)
     {
-        _logText.text = s + "\n" + _logText.text;
+        ToDebugText(s);
 
         String colorCode = "#" + ((int) (c.r * 0xFF)).ToString("X2")
                                + ((int) (c.g * 0xFF)).ToString("X2")
                                + ((int) (c.b * 0xFF)).ToString("X2");
+
+
         Debug.Log($"<color={colorCode}>" + s + "</color>");
     }
 
     private void Log(string s)
     {
-        var prev = _logText.text;
-        _logText.text = s + "\n" + prev;
+        ToDebugText(s);
         Debug.Log(s);
     }
+
+    public void OnToggleDebugText() => debugText = !debugText;
+    private bool debugText = false;
 
 
     public int MemberCount
@@ -435,29 +455,33 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     {
         if (IsServer())
             NotifyVerticalMovementListners(value);
-        Client().Send(Messages.Control, new ControlMessage(value, ControlType.Vertical));
+        else
+            Client().Send(Messages.Control, new ControlMessage(value, ControlType.Vertical));
     }
 
     public void OnHorizontalMovementInput(float value)
     {
         if (IsServer())
             NotifyHorizontalMovementListners(value);
-        Client().Send(Messages.Control, new ControlMessage(value, ControlType.Horizontal));
+        else
+            Client().Send(Messages.Control, new ControlMessage(value, ControlType.Horizontal));
     }
 
     public void OnCannonAngleInput(float value)
     {
         if (IsServer())
             Log("NetworkController should not be input listener while being host", Color.yellow);
-        Client().Send(Messages.Control, new ControlMessage(value, ControlType.CannonAngle));
+
+        if (IsConnected())
+            Client().Send(Messages.Control, new ControlMessage(value, ControlType.CannonAngle));
     }
 
     public void OnCannonLaunchInput(float value)
     {
         if (IsServer())
             Log("NetworkController should not be input listener while being host", Color.yellow);
-
-        Client().Send(Messages.Control, new ControlMessage(value, ControlType.CannonLaunch));
+        if (IsConnected())
+            Client().Send(Messages.Control, new ControlMessage(value, ControlType.CannonLaunch));
     }
 
     public void Register(InputListener il) => inputListeners.Add(il);

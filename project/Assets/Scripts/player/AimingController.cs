@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Threading.Tasks;
+using UnityEngine;
 
 public class AimingController : MonoBehaviour, InputListener
 {
@@ -14,53 +15,49 @@ public class AimingController : MonoBehaviour, InputListener
 
 
     private ObjectRotator aimWheel;
-    private Vector2 playerPosition;
     private Rigidbody2D ropeHingeAnchorRb;
     private SpriteRenderer ropeHingeAnchorSprite;
     private float ropeMaxCastDistance = 20f;
     private Vector3 aimDirection;
 
-    private bool isFired = false;
+    private HookState _state = HookState.Idle;
 
+    private enum HookState
+    {
+        Idle,
+        Firing,
+        Reeling
+    }
 
     void Awake()
     {
         aimWheel = crossController.GetComponent<ObjectRotator>();
-        playerPosition = transform.position;
         ropeHingeAnchorRb = ropeHingeAnchor.GetComponent<Rigidbody2D>();
         ropeHingeAnchorSprite = ropeHingeAnchor.GetComponent<SpriteRenderer>();
     }
 
     void Update()
     {
-        var worldMousePosition =
-            Camera.main.WorldToScreenPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0f));
-        var facingDirection = worldMousePosition - transform.position;
-
-
         aimDirection = Quaternion.Euler(0, 0, aimWheel.GetEulerAngles()) * Vector2.right;
-        playerPosition = transform.position;
 
+        UpdateCrosshair();
 
-        if (Input.GetKey(KeyCode.Space))
+        for (int i = 0; i < points.Length; ++i)
         {
-            Fire();
+            ropeRenderer.SetPosition(i, points[i].position);
+        }
+    }
+
+    private void UpdateCrosshair()
+    {
+        if (_state != HookState.Idle)
+        {
+            crosshairSprite.enabled = false; // Hide sprite
+            return;
         }
 
-        if (!isFired)
-        {
-            SetCrosshairPosition(aimWheel.GetRadianAngles());
-        }
-        else
-        {
-            crosshairSprite.enabled = false;
-            ropeHingeAnchorRb.position = playerPosition;
-
-            for (int i = 0; i < points.Length; ++i)
-            {
-                ropeRenderer.SetPosition(i, points[i].position);
-            }
-        }
+        if (crosshairSprite.enabled != true) crosshairSprite.enabled = true;
+        aimDirection = Quaternion.Euler(0, 0, aimWheel.GetEulerAngles()) * Vector2.right;
     }
 
 //calculates and sets the aimangle, with @param aimangle given in radians
@@ -81,23 +78,28 @@ public class AimingController : MonoBehaviour, InputListener
 //fires the anchor
     public void Fire()
     {
+        _state = HookState.Firing;
         ropeRenderer.enabled = true;
         ropeHingeAnchorSprite.enabled = true;
-        ropeHingeAnchorRb.position = playerPosition;
+        ropeHingeAnchorRb.position = transform.position;
 
-        Vector2 fireVector = new Vector2
+        ropeHingeAnchorRb.velocity = new Vector2
         {
             x = aimDirection.x * fireForce,
             y = aimDirection.y * fireForce
         };
-        ropeHingeAnchorRb.velocity = fireVector;
-        isFired = true;
+    }
+
+    private void Reel()
+    {
+        _state = HookState.Reeling;
+        // TODO stuff
+        // wait for rotations
     }
 
 //Halts the rope
     public void ResetRope()
     {
-        isFired = false;
         ropeHingeAnchorRb.velocity = new Vector2(0, 0);
         ropeRenderer.positionCount = 2;
         ropeRenderer.SetPosition(0, transform.position);
@@ -111,7 +113,6 @@ public class AimingController : MonoBehaviour, InputListener
 
     public void OnHorizontalMovementInput(float value)
     {
-        throw new System.NotImplementedException();
     }
 
     public void OnCannonAngleInput(float value)
@@ -121,6 +122,10 @@ public class AimingController : MonoBehaviour, InputListener
 
     public void OnCannonLaunchInput(float value)
     {
-        throw new System.NotImplementedException();
+        if (_state == HookState.Idle)
+        {
+            Fire();
+            Task.Delay(2000).ContinueWith(t => Reel());
+        }
     }
 }
