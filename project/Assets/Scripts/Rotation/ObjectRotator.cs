@@ -53,9 +53,7 @@ public class ObjectRotator : MonoBehaviour
                 accumulatedAngle += Mathf.Abs(CalculateDeltaTheta(objectToMouse, theta, rotationSpeedLimit));
                 ratio = accumulatedAngle / (maxRotations * 360);
             }     
-            
             nwController.OnCannonAngleInput(GetEulerAngles());
-            
         }
     }
 

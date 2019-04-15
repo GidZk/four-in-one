@@ -1,65 +1,116 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class MyEventTrigger : EventTrigger
-{
-    NetworkController nwController;
-    private bool isClickedYaoo;
 
+{
+    private playerController _playerController;
+    
+    private bool isClickedYaoo;
+    private bool isUp, isDown;
+    private bool isRight, isLeft;
+
+    private float moveForce;
+   
     private void Awake()
     {
-        nwController = NetworkController.Instance;
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
+        _playerController = playerController.instance;
+        isClickedYaoo = false;
+        InitIsRight();
+        InitIsUp();
+        InitIsDown();
+        InitIsLeft();
 
-               
+        moveForce = GetMoveForce();
+
     }
+    
+
+    
+    
+
+ 
 
 
     private void FixedUpdate()
     {
+
+
         if (isClickedYaoo)
-            nwController.OnHorizontalMovementInput(1);
+        {
+            
+            if (!isRight &&!isLeft && !isUp )
+            { Debug.Log("down called");
+                _playerController.OnVerticalMovementInput(5);
+            }
+            //right
+            if (isRight &&!isLeft && !isUp  )
+            {
+                Debug.Log("right called");
+                _playerController.OnHorizontalMovementInput(moveForce);
+                
+            }
+            if (!isRight && isLeft && !isUp)
+            {
+                Debug.Log("left called");
+                _playerController.OnHorizontalMovementInput(- moveForce);
+            }    
+
+            if (!isRight && isUp && !isDown)
+            { Debug.Log("up called");
+                _playerController.OnVerticalMovementInput(moveForce);
+            }
+
+
+
+            
+        }
+
+
 
     }
 
     public override void OnPointerDown(PointerEventData eventData)
     {
         base.OnPointerDown(eventData);  
+       
+        
         isClickedYaoo = true;
     }
 
     public override void OnPointerUp(PointerEventData eventData)
     {
-        base.OnPointerDown(eventData);
+        base.OnPointerUp(eventData);
         isClickedYaoo = false;
     }
 
+   private float  GetMoveForce()
+   {
+       return GameObject.FindWithTag("Player").GetComponent<playerController>().moveForce;
+   }
 
 
-
-
-    public override void OnPointerClick(PointerEventData eventData)
+    private void InitIsRight()
     {
-            base.OnPointerClick(eventData);
-        Debug.Log("is network controller null ?????" + nwController );
-        nwController.OnHorizontalMovementInput(1);
-            }
-
-    void MoveRight()
+        isRight = (gameObject.tag == "RightButton");
+    }
+    
+    private void InitIsLeft()
     {
-        nwController.OnHorizontalMovementInput(1);
-
+        isLeft = (gameObject.tag == "LeftButton");
     }
 
 
-    // Update is called once per frame
-    void Update()
+    private void InitIsUp()
     {
-        
+        isUp = (gameObject.tag == "UpButton");
     }
+    
+    private void InitIsDown()
+    {
+        isDown = (gameObject.tag == "DownButton");
+    }
+    
 }

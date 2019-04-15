@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,9 +16,22 @@ public class playerController : MonoBehaviour, InputListener {
   
 
     private NetworkController nwController;
+    
+    public static playerController instance { get; private set; }
 
 
     // Start is called before the first frame update
+
+
+    private void Awake()
+    {
+        if (instance != null)
+        {
+            throw new Exception("Instance is not null ");
+        }
+
+        instance = this;
+    }
 
     void Start(){
         rb = GetComponent<Rigidbody2D>();
@@ -87,8 +101,7 @@ public class playerController : MonoBehaviour, InputListener {
     // after a remote client has commanded the client which has the server to do so.
     public void OnHorizontalMovementInput(float value)
   {
-        transform.Translate(new Vector2(value,0));
-      //rb.AddForce(new Vector2(value,0));
+      rb.AddForce(new Vector2(value,0));
   }
   
   public void OnVerticalMovementInput(float value)
