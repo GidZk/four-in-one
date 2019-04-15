@@ -438,14 +438,16 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     {
         if (IsServer())
             NotifyVerticalMovementListners(value);
-        Client().Send(Messages.Control, new ControlMessage(value, ControlType.Vertical));
+        else
+            Client().Send(Messages.Control, new ControlMessage(value, ControlType.Vertical));
     }
 
     public void OnHorizontalMovementInput(float value)
     {
         if (IsServer())
             NotifyHorizontalMovementListners(value);
-        Client().Send(Messages.Control, new ControlMessage(value, ControlType.Horizontal));
+        else
+            Client().Send(Messages.Control, new ControlMessage(value, ControlType.Horizontal));
     }
 
     public void OnCannonAngleInput(float value)
