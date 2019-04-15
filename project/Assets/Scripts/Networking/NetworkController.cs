@@ -36,7 +36,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 
     private Team Team { get; set; }
     private int m_MemberCount;
-    private Spawner spawnManager;
+    public Spawner spawnManager;
 
     public static NetworkController Instance { get; private set; }
 
