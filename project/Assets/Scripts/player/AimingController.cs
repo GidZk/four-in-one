@@ -3,18 +3,17 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
+#pragma warning disable 618
+
 public class AimingController : NetworkBehaviour, InputListener
 {
     private const float LaunchSpeedConstant = 30;
-    private const float YankConstant = 5;
+    private const float YankConstant = 200;
     private const float MinRange = 0.8f;
     private const int CollectHookThreshold = 1;
 
     // Game objects related to the crosshair
-    public GameObject crossController;
-    public Transform crosshair;
-    private SpriteRenderer _crosshairSpriteRenderer;
-    private ObjectRotator _aimWheel;
+    public GameObject crosshair;
 
     // Game objects related to the hook and line
     public LineRenderer ropeRenderer;
@@ -25,18 +24,25 @@ public class AimingController : NetworkBehaviour, InputListener
     [SerializeField] private HookState state = HookState.Idle;
     private bool _shouldReel;
 
-    [SyncVar] [SerializeField] private Vector3 aimAngle;
-    public Transform[] points;
-    [SerializeField] private bool hookVisible;
+    [SerializeField] private Vector2 aimVector;
+    private Transform[] points;
+    private bool _hookVisible;
+
+    private bool _onServer;
 
     private bool HookVisible
     {
-        get => hookVisible;
+        get => _hookVisible;
         set
         {
-            hookVisible = value;
+            _hookVisible = value;
             ropeRenderer.enabled = value;
             hook.SetActive(value);
+            if (_onServer)
+            {
+                Debug.Log($"Call RpcHookVisible: {value}");
+                RpcHookVisible(value);
+            }
         }
     }
 
@@ -49,36 +55,57 @@ public class AimingController : NetworkBehaviour, InputListener
 
     void Awake()
     {
-        _aimWheel = crossController.GetComponent<ObjectRotator>();
-        _crosshairSpriteRenderer = crosshair.GetComponent<SpriteRenderer>();
+        _onServer = NetworkController.Instance.IsServer();
+
+        aimVector = Vector2.right;
+
+        if (_onServer)
+        {
+            hook = Instantiate(Resources.Load("spawnable/hook")) as GameObject;
+            NetworkServer.Spawn(hook);
+        }
+        else
+        {
+            hook = GameObject.FindWithTag("Hook");
+            if (hook == null)
+                Debug.Log("Did not find the hook on the client");
+        }
+
         _hookRb = hook.GetComponent<Rigidbody2D>();
         hook.GetComponent<SpriteRenderer>();
         NetworkController.Instance.Register(this);
+
+        points = new Transform[2];
+        points[0] = gameObject.transform;
+        points[1] = hook.transform;
         HookVisible = false;
     }
 
     void Update()
     {
-        //_aimAngle = Quaternion.Euler(0, 0, _aimWheel.GetEulerAngles()) * Vector2.right;
+        // Render the synchronized state
+        SetCrosshairPosition(aimVector);
+        UpdateLineRenderer();
+        if (!_onServer)
+            return;
 
-        SetCrosshairPosition(Vector3.Angle(aimAngle,Vector3.right));
+        // Logic that should only be executed on the server below here
+
         if (state == HookState.Reeling)
         {
             ReturnHookWithPhysics();
             CollectNearbyHook();
         }
-
-        UpdateLineRenderer();
     }
 
+    /// Update the positions of the line between player and hook
     private void UpdateLineRenderer()
     {
-        for (var i = 0; i < points.Length; ++i)
-        {
-            ropeRenderer.SetPosition(i, points[i].position);
-        }
+        ropeRenderer.SetPosition(0, transform.position);
+        ropeRenderer.SetPosition(1, hook.transform.position);
     }
 
+    /// Collects the hook if nearby, hiding if so
     private void CollectNearbyHook()
     {
         if (!(Math.Abs((transform.position - hook.transform.position).magnitude) < CollectHookThreshold)) return;
@@ -86,30 +113,24 @@ public class AimingController : NetworkBehaviour, InputListener
         HookVisible = false;
     }
 
-    //calculates and sets direction of the crosshair, with @param aimangle given in radians
-    private void SetCrosshairPosition(float aimAngle)
+    /// Sets the position and rotation of the crosshair
+    private void SetCrosshairPosition(Vector3 v)
     {
-        if (!_crosshairSpriteRenderer.enabled)
-        {
-            _crosshairSpriteRenderer.enabled = true;
-        }
-
         var p = transform.position;
-        var crossHairPosition = new Vector3(
-            p.x + 5f * Mathf.Cos(aimAngle),
-            p.y + 5f * Mathf.Sin(aimAngle),
-            0);
+        const float distFromPlayer = 5f;
+        var pos = new Vector2(
+            p.x + v.x * distFromPlayer,
+            p.y + v.y * distFromPlayer);
 
-        var rot = Quaternion.Euler(
-            0,
-            0,
-            Mathf.Rad2Deg * aimAngle);
+        var angle = Vector2.Angle(v, Vector2.right);
+        if (v.y < 0) angle = -angle;
+        var rot = Quaternion.Euler(0, 0, angle);
 
-        crosshair.SetPositionAndRotation(crossHairPosition, rot);
+        crosshair.transform.SetPositionAndRotation(pos, rot);
     }
 
 
-    // Fires the hook
+    /// Fires the hook
     private void Fire(float force)
     {
         state = HookState.Firing;
@@ -118,14 +139,17 @@ public class AimingController : NetworkBehaviour, InputListener
 
         var vec = new Vector2
         {
-            x = aimAngle.x * force,
-            y = aimAngle.y * force
+            x = aimVector.x * force,
+            y = aimVector.y * force
         };
+        var angle = Vector2.Angle(aimVector, Vector2.right);
+        if (aimVector.y < 0) angle = -angle;
+        hook.transform.rotation = Quaternion.Euler(0, 0, angle);
         _hookRb.velocity = vec * LaunchSpeedConstant;
     }
 
 
-    // "Yanks" the hook towards the controller
+    /// "Yanks" the hook towards the controller
     private void ReturnHookWithPhysics()
     {
         if (!_shouldReel)
@@ -135,8 +159,22 @@ public class AimingController : NetworkBehaviour, InputListener
         var thisPos = transform.position;
         var hookPos = hook.transform.position;
         var vec = (thisPos - hookPos).normalized * YankConstant;
-        _hookRb.velocity = vec;
+        //_hookRb.velocity = vec / 50;
+        _hookRb.AddForce(vec);
         Task.Delay(500).ContinueWith(t => _shouldReel = true);
+    }
+
+    [ClientRpc]
+    public void RpcHookVisible(bool visible)
+    {
+        if (_onServer) return;
+        HookVisible = visible;
+    }
+
+    [ClientRpc]
+    private void RpcSetAimAngle(float x, float y)
+    {
+        aimVector.Set(x, y);
     }
 
     public void OnVerticalMovementInput(float value)
@@ -149,11 +187,9 @@ public class AimingController : NetworkBehaviour, InputListener
 
     public void OnCannonAngleInput(float value)
     {
-        aimAngle.Set(
-            Mathf.Cos(value),
-            Mathf.Sin(value),
-            0
-        );
+        var x = Mathf.Cos(value);
+        var y = Mathf.Sin(value);
+        RpcSetAimAngle(x, y);
     }
 
     public void OnCannonLaunchInput(float value)

@@ -12,11 +12,11 @@ public class ObjectRotator : MonoBehaviour
     public int maxRotations;
 
 
-    private float theta { get; set; }
-    private float prevTheta { get; set; }
-    private float accumulatedAngle { get; set; }
-    private float ratio { get; set; }
-    private bool isMouseDown;
+    [SerializeField] private float theta;
+    [SerializeField] private float prevTheta;
+    [SerializeField] private float accumulatedAngle;
+    [SerializeField] private float ratio;
+    [SerializeField] private bool isMouseDown;
     [SerializeField] private float RotationFactorConstant = 1 / 360f;
 
     private void Awake()
@@ -56,7 +56,7 @@ public class ObjectRotator : MonoBehaviour
                 ratio = accumulatedAngle / (maxRotations * 360);
             }
 
-            nwController.OnCannonAngleInput(GetEulerAngles() * RotationFactorConstant);
+            nwController.OnCannonAngleInput(GetEulerAngles() * Mathf.Deg2Rad);
         }
     }
 

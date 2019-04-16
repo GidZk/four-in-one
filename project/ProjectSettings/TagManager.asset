@@ -15,6 +15,7 @@ TagManager:
   - UpButton
   - DownButton
   - hej
+  - Hook
   layers:
   - Default
   - TransparentFX
