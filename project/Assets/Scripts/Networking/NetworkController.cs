@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Experimental.UIElements;
 using UnityEngine.Networking;
 using UnityEngine.Networking.NetworkSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 // ReSharper disable All
 
@@ -24,13 +21,16 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 
     public MyNetworkDiscovery discovery;
     public MyNetworkManager manager;
+
+    /// Contains all recieved fromAdresses from hosting servers and their team
+    private Dictionary<string, Team> broadcastTable;
+
     private HashSet<InputListener> inputListeners;
 
     // TODO move this away to some sort of UIController
     public Canvas selectCanvas;
     public Canvas waitCanvas;
     public MemberDisplayController memberDisplayController;
-
 
     public bool UseLocalhost { get; private set; }
     public bool SingleGameDebug { get; set; }
@@ -45,6 +45,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 
     private void Awake()
     {
+        Team = Team.None;
         if (Instance != null)
         {
             Log($"Multiple NetworkControllers!!!", Color.red);
@@ -58,6 +59,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         discovery.StartAsClient();
         manager.Register(this);
         inputListeners = new HashSet<InputListener>();
+        broadcastTable = new Dictionary<string, Team>();
         InitHostHandlers();
         InitAndRegisterSpawnable();
         DontDestroyOnLoad(this);
@@ -201,30 +203,32 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 
     public void OnReceivedBroadcast(string fromAddress, string data)
     {
-        Log($"BC from {fromAddress}", Color.cyan);
-        var otherTeam = TeamUtil.FromIdent((data.Substring(0, 2)));
-        if (otherTeam != Team)
-            return;
-
-        var ipv4 = "localhost";
-        if (fromAddress != "localhost")
-            ipv4 = fromAddress.Substring(7);
-
-        manager.networkAddress = ipv4;
-        var client = manager.StartClient();
-
-        Log($"Attempting connect to {ipv4}");
-
-        if (client.isConnected)
+        var otherTeam = TeamUtil.FromIdent(data.Substring(0, 2));
+        Debug.Log($"Broadcast from {fromAddress}, team: {otherTeam}");
+        if (broadcastTable.ContainsKey(fromAddress))
         {
-            Log("Connected!", Color.green);
-            if (discovery.running)
-                discovery.StopBroadcast();
+            broadcastTable[fromAddress] = otherTeam;
         }
         else
         {
-            Log("Could not establish connection to host", Color.yellow);
+            broadcastTable.Add(fromAddress, otherTeam);
         }
+
+        if (otherTeam != Team)
+            return;
+
+        ConnectTo(fromAddress);
+    }
+
+    private bool ConnectTo(string fromAddress)
+    {
+        var ipv4 = "localhost";
+        if (fromAddress != "localhost")
+            ipv4 = fromAddress.Substring(7);
+        manager.networkAddress = ipv4;
+        var client = manager.StartClient();
+        Log($"Attempting connect to {ipv4}");
+        return true;
     }
 
     /**
@@ -233,6 +237,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
      * */
     private void JoinTeam(Team team)
     {
+        Log($"Starting to join team {team}");
         memberDisplayController.Color = TeamUtil.GetTeamColor(team);
         Team = team;
 
@@ -243,10 +248,17 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
             return;
         }
 
-        Log($"Starting to join team {team}");
-        if (discovery.running)
-            // TODO make sure this stops properly
-            Log("Tried to change team when discovery was running", Color.yellow);
+        if (broadcastTable.ContainsValue(team))
+        {
+            Log("- appropriate team already found in broadcastTable, joining");
+            foreach (var p in broadcastTable)
+            {
+                if (p.Value != team)
+                    continue;
+
+                ConnectTo(p.Key);
+            }
+        }
 
         discovery.broadcastData = TeamUtil.ToIdent(team).ToString();
 
@@ -254,8 +266,8 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         discovery.StartAsClient();
         if (success)
         {
-            // listen to broadcasts for 2 seconds, if none of team found, switch to host
-            Log($"starting host in 2 seconds");
+            // listen to broadcasts for 2 seconds, if none of same team found, switch to host
+            Log($" - starting host in 2 seconds");
             Task.Delay(2000).ContinueWith(t => StartHost = true);
         }
         else
@@ -357,6 +369,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     public void OnClientConnect(NetworkConnection conn)
     {
         Log("Connected to server", Color.green);
+        discovery.StopBroadcast();
         InitClientHandlers();
         selectCanvas.gameObject.SetActive(false);
         waitCanvas.gameObject.SetActive(true);

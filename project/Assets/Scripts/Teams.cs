@@ -3,6 +3,7 @@ using UnityEngine;
 
 public enum Team
 {
+    None,
     Green,
     Teal,
     Red
@@ -42,13 +43,15 @@ class TeamUtil
     public static Team FromIdent(string s)
     {
         // TODO plz dont have this
-        switch (s)
+        switch (s.ToLower())
         {
             case GreenIdent: return Team.Green;
             case RedIdent: return Team.Red;
             case TealIdent: return Team.Teal;
             default:
-                throw new ArgumentOutOfRangeException();
+                var err = new ArgumentOutOfRangeException(nameof(s), s, "Something's fucky");
+                Debug.LogError(err);
+                throw err;
         }
     }
 }
