@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 8188747420945402909}
   - component: {fileID: 1297945555761484790}
   - component: {fileID: 4228733095899242426}
-  - component: {fileID: 4915711597171554245}
   - component: {fileID: 4664578385873551038}
+  - component: {fileID: 5244512636007554865}
   m_Layer: 0
   m_Name: shark
   m_TagString: Untagged
@@ -177,78 +177,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 2
---- !u!60 &4915711597171554245
-PolygonCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1338293152497271818}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 4.54, y: 4.54}
-    newSize: {x: 9.6, y: 6.86}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 0.44, y: -0.08}
-      - {x: 0.5, y: -0.03}
-      - {x: 0.79999995, y: 0.06}
-      - {x: 1.04, y: 0.099999994}
-      - {x: 1.26, y: 0.11}
-      - {x: 1.37, y: 0.049999997}
-      - {x: 1.51, y: -0.02}
-      - {x: 1.56, y: -0.04}
-      - {x: 1.5799999, y: -0.03}
-      - {x: 1.5799999, y: 0}
-      - {x: 1.56, y: 0.049999997}
-      - {x: 1.4599999, y: 0.16}
-      - {x: 1.27, y: 0.25}
-      - {x: 1.06, y: 0.29}
-      - {x: 0.68, y: 0.32}
-      - {x: 0.42999998, y: 0.34}
-      - {x: 0.42, y: 0.41}
-      - {x: 0.39999998, y: 0.45}
-      - {x: 0.19999999, y: 0.38}
-      - {x: -0.13, y: 0.39999998}
-      - {x: -0.21, y: 0.42999998}
-      - {x: -0.21, y: 0.62}
-      - {x: -0.19, y: 0.71999997}
-      - {x: -0.21, y: 0.72999996}
-      - {x: -0.26, y: 0.72999996}
-      - {x: -0.42, y: 0.53999996}
-      - {x: -0.53, y: 0.37}
-      - {x: -0.58, y: 0.38}
-      - {x: -0.76, y: 0.35}
-      - {x: -0.96, y: 0.32}
-      - {x: -1.17, y: 0.24}
-      - {x: -1.25, y: 0.19999999}
-      - {x: -1.4, y: 0.049999997}
-      - {x: -1.4, y: 0.02}
-      - {x: -1.35, y: -0.049999997}
-      - {x: -1.2099999, y: -0.16}
-      - {x: -1.09, y: -0.17999999}
-      - {x: -0.93, y: -0.21}
-      - {x: -0.76, y: -0.22}
-      - {x: -0.61, y: -0.24}
-      - {x: -0.45, y: -0.24}
-      - {x: -0.38, y: -0.26999998}
-      - {x: -0.19, y: -0.42}
-      - {x: -0.12, y: -0.42}
-      - {x: -0.099999994, y: -0.39999998}
-      - {x: -0.16, y: -0.19}
-      - {x: 0.26, y: -0.089999996}
 --- !u!95 &4664578385873551038
 Animator:
   serializedVersion: 3
@@ -268,3 +196,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!70 &5244512636007554865
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1338293152497271818}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 2.81, y: 0.33}
+  m_Direction: 1

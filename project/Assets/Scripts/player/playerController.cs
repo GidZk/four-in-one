@@ -11,10 +11,6 @@ public class playerController : MonoBehaviour, InputListener
 
     private Vector2 moveInput;
 
-    //private Vector2 moveVelocity;
-    private float hInput = 0;
-    private float vInput = 0;
-
     [SerializeField] private float _hInput;
     [SerializeField] private float _vInput;
 
@@ -64,7 +60,7 @@ public class playerController : MonoBehaviour, InputListener
             rb.AddForce(new Vector2(0, _vInput) * SpeedFactorConstant);
         }
     }
-  
+
 
     // this method will be called by the client that has the server locally,
     // after a remote client has commanded the client which has the server to do so.
@@ -119,22 +115,23 @@ public class playerController : MonoBehaviour, InputListener
         // if (BoundaryController.  object.objectcollide Equals(true))
         if (transform.position.y > 28f)
         {
-
             transform.position = new Vector3(transform.position.x, 28f, transform.position.z);
             Debug.Log("outside background");
         }
+
         if (transform.position.y < -28f)
         {
             transform.position = new Vector3(transform.position.x, -28f, transform.position.z);
         }
+
         if (transform.position.x < -38f)
         {
             transform.position = new Vector3(-38f, transform.position.y, transform.position.z);
         }
+
         if (transform.position.x > 38f)
         {
             transform.position = new Vector3(38f, transform.position.y, transform.position.z);
         }
-
     }
 }

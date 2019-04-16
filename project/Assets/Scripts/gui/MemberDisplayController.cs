@@ -10,8 +10,6 @@ public class MemberDisplayController : MonoBehaviour
     public Sprite ActiveSprite;
     public Sprite InactiveSprite;
 
-    private int a = 0;
-
     private void Awake()
     {
         foreach (var im in members)

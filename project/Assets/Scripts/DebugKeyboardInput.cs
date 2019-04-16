@@ -7,11 +7,13 @@ using UnityEngine;
 
 public class DebugKeyboardInput : MonoBehaviour
 {
-    private float _spaceDownTime = -1;
     private List<InputListener> _inputListeners;
-    private const float ChargeTimeFactor = 1;
-    private float _aimAngle;
-    private float _aimRotationSpeed = 0.018f;
+    
+    public float _spaceDownTime = -1;
+    public float ChargeTimeFactor = 1;
+    public float _aimRotationSpeed = Mathf.PI;
+
+    [SerializeField] private float _aimAngle;
 
     private void Awake()
     {
@@ -28,25 +30,27 @@ public class DebugKeyboardInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var h = Input.GetAxis("horizontal");
-        var v = Input.GetAxis("vertical");
+        var h = (Input.GetKey(KeyCode.LeftArrow) ? -1 : 0) +
+                (Input.GetKey(KeyCode.RightArrow) ? 1 : 0);
+        var v = (Input.GetKey(KeyCode.DownArrow) ? -1 : 0) +
+                (Input.GetKey(KeyCode.UpArrow) ? 1 : 0);
 
         if (lastH != h) _inputListeners.ForEach(it => it.OnHorizontalMovementInput(h));
-        if (lastV != v) _inputListeners.ForEach(it => it.OnHorizontalMovementInput(v));
+        if (lastV != v) _inputListeners.ForEach(it => it.OnVerticalMovementInput(v));
 
         lastH = h;
         lastV = v;
 
         if (Input.GetKey(KeyCode.Q))
         {
-            _aimAngle -= _aimRotationSpeed;
+            _aimAngle -= _aimRotationSpeed * Time.deltaTime;
             _aimAngle = _aimAngle % (Mathf.PI * 2);
             _inputListeners.ForEach(it => it.OnCannonAngleInput(_aimAngle));
         }
 
         if (Input.GetKey(KeyCode.E))
         {
-            _aimAngle += _aimRotationSpeed;
+            _aimAngle += _aimRotationSpeed * Time.deltaTime;
             _aimAngle = _aimAngle % (Mathf.PI * 2);
             _inputListeners.ForEach(it => it.OnCannonAngleInput(_aimAngle));
         }
