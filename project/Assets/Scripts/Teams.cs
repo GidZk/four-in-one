@@ -10,9 +10,9 @@ public enum Team
 
 class TeamUtil
 {
-    private const string GreenIdent = "green";
-    private const string TealIdent = "cyan";
-    private const string RedIdent = "red";
+    private const string GreenIdent = "gr";
+    private const string TealIdent = "te";
+    private const string RedIdent = "re";
 
     public static Color GetTeamColor(Team t)
     {
