@@ -10,6 +10,11 @@ TagManager:
   - CameraManager
   - DebugText
   - NetworkController
+  - LeftButton
+  - RightButton
+  - UpButton
+  - DownButton
+  - hej
   layers:
   - Default
   - TransparentFX

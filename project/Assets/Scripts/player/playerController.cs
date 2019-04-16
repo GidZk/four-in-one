@@ -1,11 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 
 public class playerController : MonoBehaviour, InputListener
 {
-    public float moveForce;
     private Rigidbody2D rb;
 
     private Vector2 moveInput;
@@ -14,63 +14,69 @@ public class playerController : MonoBehaviour, InputListener
     private float hInput = 0;
     private float vInput = 0;
 
-    private NetworkController nwController;
+    [SerializeField] private float _hInput;
+    [SerializeField] private float _vInput;
+
+    public const float SpeedFactorConstant = 45f;
+
+    public static playerController Instance { get; private set; }
 
 
     // Start is called before the first frame update
 
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            throw new Exception("Instance is not null ");
+        }
+
+        Instance = this;
+    }
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        nwController = NetworkController.Instance;
-        nwController.Register(this);
+        NetworkController.Instance.Register(this);
     }
 
 
-    // ============ old code to be removed / updated for touches ================== 
-    /*
-    void Update(){
-        if(Input.touchCount > 0){
-            Touch touch = Input.GetTouch(0);
-            if(touch.phase == TouchPhase.Began){
-                Move(hInput, vInput);
-            }
-            else if(touch.phase == TouchPhase.Ended){
-                Debug.Log(hInput);
-                Move(0,0);
-            }
-                
-        }
-        //moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        //Move(hInput);
-    }
-    // ==============================================================================
-    */
-    // ============ old code to be removed / updated for touches ================== // 
     void FixedUpdate()
     {
-        // delegate movement to server in msg passing system
-        if (Input.GetKey(KeyCode.UpArrow))
-            nwController.OnVerticalMovementInput(moveForce);
-        if (Input.GetKey(KeyCode.DownArrow))
-            nwController.OnVerticalMovementInput(-moveForce);
-        if (Input.GetKey(KeyCode.RightArrow))
-            nwController.OnHorizontalMovementInput(moveForce);
-        if (Input.GetKey(KeyCode.LeftArrow))
-            nwController.OnHorizontalMovementInput(-moveForce);
-    }
+        if (Math.Abs(_hInput) < 0.1f)
+        {
+        } // decelerate maybe
+        else
+        {
+            rb.AddForce(new Vector2(_hInput, 0) * SpeedFactorConstant);
+        }
 
+        if (Math.Abs(_vInput) < 0.1f)
+        {
+        } // decelerate maybe
+        else
+        {
+            rb.AddForce(new Vector2(0, _vInput) * SpeedFactorConstant);
+        }
+    }
+  
 
     // this method will be called by the client that has the server locally,
     // after a remote client has commanded the client which has the server to do so.
     public void OnHorizontalMovementInput(float value)
     {
-        rb.AddForce(new Vector2(value, 0));
+        _hInput = value;
     }
 
     public void OnVerticalMovementInput(float value)
     {
-        rb.AddForce(new Vector2(0, value));
+        _vInput = value;
+    }
+
+    public void LinearDrag(float value)
+    {
+        rb.drag = value;
     }
 
 
@@ -86,9 +92,9 @@ public class playerController : MonoBehaviour, InputListener
     // Invoked on collision
     void OnCollisionEnter2D(Collision2D coll)
     {
-        if (coll.gameObject.tag == "crabplast")
+        if (coll.gameObject.CompareTag("crabplast"))
         {
-            Debug.Log($"{this} --a collision between player and alga. ");
+            Debug.Log($"{this} --a collision between player and crab. ");
 
             Destroy(coll.gameObject);
 

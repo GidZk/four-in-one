@@ -43,6 +43,7 @@ public class ObjectRotator : MonoBehaviour
                 OnReset();
             }
 
+            // not sure which camera to use
             Vector3 objectToMouse = Camera.main.WorldToScreenPoint(transform.position) - Input.mousePosition;
             theta = CalculateRotationAngle(objectToMouse);
             transform.Rotate(Vector3.forward, (theta - prevTheta));
@@ -52,8 +53,7 @@ public class ObjectRotator : MonoBehaviour
             if (isTerminating)
             {
                 accumulatedAngle += Mathf.Abs(CalculateDeltaTheta(objectToMouse, theta, rotationSpeedLimit));
-                ratio = accumulatedAngle / (maxRotations
-                                            * 360);
+                ratio = accumulatedAngle / (maxRotations * 360);
             }
 
             nwController.OnCannonAngleInput(GetEulerAngles() * RotationFactorConstant);
@@ -88,8 +88,6 @@ public class ObjectRotator : MonoBehaviour
     {
         return transform.eulerAngles.z * Mathf.Deg2Rad;
     }
-
-
     // --------- private methods -------------
 
 
@@ -99,6 +97,7 @@ public class ObjectRotator : MonoBehaviour
         {
             return speedLimit;
         }
+
 
         return (theta - prevTheta);
     }
@@ -128,7 +127,6 @@ public class ObjectRotator : MonoBehaviour
 
 
     // to be able to debug with mouse
-
 
     private void DebugLogValues()
     {
