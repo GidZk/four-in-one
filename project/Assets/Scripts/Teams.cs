@@ -10,6 +10,10 @@ public enum Team
 
 class TeamUtil
 {
+    private const string GreenIdent = "green";
+    private const string TealIdent = "cyan";
+    private const string RedIdent = "red";
+
     public static Color GetTeamColor(Team t)
     {
         switch (t)
@@ -22,27 +26,27 @@ class TeamUtil
         return Color.white;
     }
 
-    public static int ToInt(Team t)
+    public static string ToIdent(Team t)
     {
         // TODO plz dont have this either
         switch (t)
         {
-            case Team.Green: return 0;
-            case Team.Red: return 1;
-            case Team.Teal: return 2;
+            case Team.Green: return GreenIdent;
+            case Team.Red: return RedIdent;
+            case Team.Teal: return TealIdent;
             default:
                 throw new ArgumentOutOfRangeException(nameof(t), t, null);
         }
     }
 
-    public static Team FromInt(int d)
+    public static Team FromIdent(string s)
     {
         // TODO plz dont have this
-        switch (d)
+        switch (s)
         {
-            case 0: return Team.Green;
-            case 1: return Team.Red;
-            case 2: return Team.Teal;
+            case GreenIdent: return Team.Green;
+            case RedIdent: return Team.Red;
+            case TealIdent: return Team.Teal;
             default:
                 throw new ArgumentOutOfRangeException();
         }
