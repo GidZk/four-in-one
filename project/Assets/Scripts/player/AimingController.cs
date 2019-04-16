@@ -26,7 +26,7 @@ public class AimingController : NetworkBehaviour, InputListener
     private bool _shouldReel;
 
     [SyncVar] [SerializeField] private Vector3 aimAngle;
-    public Transform[] points;
+    private Transform[] points;
     [SerializeField] private bool hookVisible;
 
     private bool HookVisible
@@ -49,11 +49,18 @@ public class AimingController : NetworkBehaviour, InputListener
 
     void Awake()
     {
+        hook = Instantiate(Resources.Load("spawnable/hook")) as GameObject;
+        NetworkServer.Spawn(hook);
+        
         _aimWheel = crossController.GetComponent<ObjectRotator>();
         _crosshairSpriteRenderer = crosshair.GetComponent<SpriteRenderer>();
         _hookRb = hook.GetComponent<Rigidbody2D>();
         hook.GetComponent<SpriteRenderer>();
         NetworkController.Instance.Register(this);
+
+        points = new Transform[2];
+        points[0] = gameObject.transform;
+        points[1] = hook.transform;
         HookVisible = false;
     }
 
