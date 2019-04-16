@@ -106,11 +106,17 @@ public class AimingController : NetworkBehaviour, InputListener
         }
 
         var p = transform.position;
-        var x = p.x + 3f * Mathf.Cos(aimAngle);
-        var y = p.y + 3f * Mathf.Sin(aimAngle);
+        var crossHairPosition = new Vector3(
+            p.x + 5f * Mathf.Cos(aimAngle),
+            p.y + 5f * Mathf.Sin(aimAngle),
+            0);
 
-        var crossHairPosition = new Vector3(x, y, 0);
-        crosshair.transform.position = crossHairPosition;
+        var rot = Quaternion.Euler(
+            0,
+            0,
+            Mathf.Rad2Deg * aimAngle);
+
+        crosshair.SetPositionAndRotation(crossHairPosition, rot);
     }
 
 
@@ -156,8 +162,8 @@ public class AimingController : NetworkBehaviour, InputListener
     {
         SetCrosshairPosition(value);
         aimAngle.Set(
-            (float) Math.Cos(value),
-            (float) Math.Sin(value),
+            Mathf.Cos(value),
+            Mathf.Sin(value),
             0
         );
     }

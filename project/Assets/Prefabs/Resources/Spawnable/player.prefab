@@ -125,9 +125,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2096999536553920177}
-  m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 6, y: 6, z: 6}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 10.03, y: 0.06, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 6}
   m_Children: []
   m_Father: {fileID: 2096999536881306289}
   m_RootOrder: 1
@@ -169,7 +169,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
-  m_Sprite: {fileID: 21300000, guid: a8260c68cb7b178479f46ba6f93ffb59, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c5228c60b655d1d4dbccbfd190f64b02, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -245,14 +245,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c86dc0f676c74264a850cdc9bc5d5bc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ropeRenderer: {fileID: 2096999536881306291}
   crossController: {fileID: 2364407202780951028, guid: 93aa4100e921e48219c8b5761adc49d9,
     type: 3}
   crosshair: {fileID: 2096999536553920179}
+  ropeRenderer: {fileID: 2096999536881306291}
   hook: {fileID: 2096999535367854366}
+  state: 0
+  aimAngle: {x: 0, y: 0, z: 0}
   points:
   - {fileID: 2096999536881306289}
   - {fileID: 2096999535367854367}
+  hookVisible: 0
 --- !u!50 &2096999536881306295
 Rigidbody2D:
   serializedVersion: 4

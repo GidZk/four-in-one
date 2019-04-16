@@ -417,7 +417,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 
     private void StartGame()
     {
-        if (MemberCount <= 1)
+        if (MemberCount <= 1 && IsServer())
             SingleGameDebug = true;
         Log("NetworkController:: starting game --", Color.green);
         this.gameState = GameState.RunningGame;
@@ -465,8 +465,12 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     public void OnCannonAngleInput(float value)
     {
         if (IsServer())
-            Log("NetworkController should not be input listener while being host", Color.yellow);
+            foreach (var il in inputListeners)
+            {
+                il.OnCannonAngleInput(value);
+            }
 
+        //Log("NetworkController should not be input listener while being host", Color.yellow);
         if (IsConnected())
             Client().Send(Messages.Control, new ControlMessage(value, ControlType.CannonAngle));
     }
@@ -474,7 +478,12 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     public void OnCannonLaunchInput(float value)
     {
         if (IsServer())
-            Log("NetworkController should not be input listener while being host", Color.yellow);
+            foreach (var il in inputListeners)
+            {
+                il.OnCannonLaunchInput(value);
+            }
+
+        //Log("NetworkController should not be input listener while being host", Color.yellow);
         if (IsConnected())
             Client().Send(Messages.Control, new ControlMessage(value, ControlType.CannonLaunch));
     }

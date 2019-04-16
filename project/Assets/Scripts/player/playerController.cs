@@ -22,7 +22,7 @@ public class playerController : MonoBehaviour, InputListener
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        nwController = NetworkAssets.GetController();
+        nwController = NetworkController.Instance;
         nwController.Register(this);
     }
 

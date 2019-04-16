@@ -25,12 +25,14 @@ public class DebugKeyboardInput : MonoBehaviour
         if (Input.GetKey(KeyCode.Q))
         {
             _aimAngle -= _aimRotationSpeed;
+            _aimAngle = _aimAngle % (Mathf.PI * 2);
             inputListeners.ForEach(it => it.OnCannonAngleInput(_aimAngle));
         }
 
         if (Input.GetKey(KeyCode.E))
         {
             _aimAngle += _aimRotationSpeed;
+            _aimAngle = _aimAngle % (Mathf.PI * 2);
             inputListeners.ForEach(it => it.OnCannonAngleInput(_aimAngle));
         }
 
