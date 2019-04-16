@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Experimental.UIElements;
@@ -53,7 +54,8 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         Instance = this;
 
         discovery.Register(this);
-        discovery.StopBroadcast();
+        discovery.Initialize();
+        discovery.StartAsClient();
         manager.Register(this);
         inputListeners = new HashSet<InputListener>();
         InitHostHandlers();
@@ -200,7 +202,8 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     public void OnReceivedBroadcast(string fromAddress, string data)
     {
         Log($"BC from {fromAddress}", Color.cyan);
-        var otherTeam = TeamUtil.FromString(data);
+        var filteredString = data.Where(c => c != '\0');
+        var otherTeam = TeamUtil.FromString(filteredString.ToString());
         if (otherTeam != Team)
             return;
 
