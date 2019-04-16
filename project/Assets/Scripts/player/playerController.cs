@@ -121,13 +121,13 @@ public class playerController : MonoBehaviour, InputListener
         {
             transform.position = new Vector3(transform.position.x, -28f, transform.position.z);
         }
-        if (transform.position.x < -38f)
+        if (transform.position.x < -35f)
         {
-            transform.position = new Vector3(-38f, transform.position.y, transform.position.z);
+            transform.position = new Vector3(-35f, transform.position.y, transform.position.z);
         }
-        if (transform.position.x > 38f)
+        if (transform.position.x > 35f)
         {
-            transform.position = new Vector3(38f, transform.position.y, transform.position.z);
+            transform.position = new Vector3(35f, transform.position.y, transform.position.z);
         }
 
     }
