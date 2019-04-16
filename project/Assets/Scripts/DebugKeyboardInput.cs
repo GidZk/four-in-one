@@ -11,16 +11,29 @@ public class DebugKeyboardInput : MonoBehaviour
     private float _spaceDownTime = -1;
     private List<InputListener> inputListeners;
     private const float CHARGE_TIME_FACTOR = 1;
+    private float _aimAngle = 0;
+    private float _aimRotationSpeed = 0.018f;
 
     private void Awake()
     {
-        inputListeners = new List<InputListener>();
-        inputListeners.Add(nc);
+        inputListeners = new List<InputListener> {nc};
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKey(KeyCode.Q))
+        {
+            _aimAngle -= _aimRotationSpeed;
+            inputListeners.ForEach(it => it.OnCannonAngleInput(_aimAngle));
+        }
+
+        if (Input.GetKey(KeyCode.E))
+        {
+            _aimAngle += _aimRotationSpeed;
+            inputListeners.ForEach(it => it.OnCannonAngleInput(_aimAngle));
+        }
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             _spaceDownTime = Time.time;

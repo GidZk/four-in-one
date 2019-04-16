@@ -26,6 +26,17 @@ public class AimingController : NetworkBehaviour, InputListener
     private bool _shouldReel;
     private Vector3 _aimDirection;
     public Transform[] points;
+    private bool _hookVisible;
+    private bool HookVisible
+    {
+        get => _hookVisible;
+        set
+        {
+            _hookVisible = value;
+            ropeRenderer.enabled = value;
+            hook.SetActive(value);
+        }
+    }
 
     private enum HookState
     {
@@ -41,6 +52,7 @@ public class AimingController : NetworkBehaviour, InputListener
         _hookRb = hook.GetComponent<Rigidbody2D>();
         hook.GetComponent<SpriteRenderer>();
         NetworkController.Instance.Register(this);
+        HookVisible = false;
     }
 
     void Update()
@@ -59,7 +71,7 @@ public class AimingController : NetworkBehaviour, InputListener
 
     private void UpdateLineRenderer()
     {
-        for (int i = 0; i < points.Length; ++i)
+        for (var i = 0; i < points.Length; ++i)
         {
             ropeRenderer.SetPosition(i, points[i].position);
         }
@@ -67,12 +79,9 @@ public class AimingController : NetworkBehaviour, InputListener
 
     private void CollectNearbyHook()
     {
-        if (Math.Abs((transform.position - hook.transform.position).magnitude) < CollectHookThreshold)
-        {
-            _state = HookState.Idle;
-            ropeRenderer.enabled = false;
-            hook.SetActive(false);
-        }
+        if (!(Math.Abs((transform.position - hook.transform.position).magnitude) < CollectHookThreshold)) return;
+        _state = HookState.Idle;
+        HookVisible = false;
     }
 
     private void UpdateCrosshair()
@@ -108,8 +117,7 @@ public class AimingController : NetworkBehaviour, InputListener
     private void Fire(float force)
     {
         _state = HookState.Firing;
-        ropeRenderer.enabled = true;
-        hook.SetActive(true);
+        HookVisible = true;
         _hookRb.position = transform.position;
 
         var vec = new Vector2
