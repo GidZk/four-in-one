@@ -419,7 +419,11 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     private void StartGame()
     {
         if (MemberCount <= 1 && IsServer())
+        {
             SingleGameDebug = true;
+            Debug.Log("Starting in single player debug mode");
+        }
+
         Debug.Log("NetworkController:: starting game --");
         this.gameState = GameState.RunningGame;
         SceneManager.LoadScene("GameScene", LoadSceneMode.Single);

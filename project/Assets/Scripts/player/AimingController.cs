@@ -24,7 +24,8 @@ public class AimingController : NetworkBehaviour, InputListener
     // State
     [SerializeField] private HookState state = HookState.Idle;
     private bool _shouldReel;
-    [SerializeField] private Vector3 aimAngle;
+
+    [SyncVar] [SerializeField] private Vector3 aimAngle;
     public Transform[] points;
     [SerializeField] private bool hookVisible;
 
@@ -60,6 +61,7 @@ public class AimingController : NetworkBehaviour, InputListener
     {
         //_aimAngle = Quaternion.Euler(0, 0, _aimWheel.GetEulerAngles()) * Vector2.right;
 
+        SetCrosshairPosition(Vector3.Angle(aimAngle,Vector3.right));
         if (state == HookState.Reeling)
         {
             ReturnHookWithPhysics();
@@ -147,7 +149,6 @@ public class AimingController : NetworkBehaviour, InputListener
 
     public void OnCannonAngleInput(float value)
     {
-        SetCrosshairPosition(value);
         aimAngle.Set(
             Mathf.Cos(value),
             Mathf.Sin(value),

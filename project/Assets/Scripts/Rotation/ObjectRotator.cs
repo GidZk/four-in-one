@@ -17,7 +17,7 @@ public class ObjectRotator : MonoBehaviour
     private float accumulatedAngle { get; set; }
     private float ratio { get; set; }
     private bool isMouseDown;
-    private const float RotationFactorConstant = 0.5f;
+    [SerializeField] private float RotationFactorConstant = 1 / 360f;
 
     private void Awake()
     {
