@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+
 //TODO refine this code by extending this ojbect and move functionality
-public class ObjectRotator : MonoBehaviour 
+public class ObjectRotator : MonoBehaviour
 {
     private NetworkController nwController;
 
@@ -9,58 +10,60 @@ public class ObjectRotator : MonoBehaviour
     public bool isTouch;
     public int rotationSpeedLimit;
     public int maxRotations;
-    
-    
+
+
     private float theta { get; set; }
     private float prevTheta { get; set; }
     private float accumulatedAngle { get; set; }
     private float ratio { get; set; }
     private bool isMouseDown;
+    [SerializeField] private float RotationFactorConstant = 1 / 360f;
 
     private void Awake()
     {
-        nwController = NetworkAssets.GetController();
-        
+        nwController = NetworkController.Instance;
+        if (nwController.NetworkId != 1 && !nwController.SingleGameDebug)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     void Start()
-    {    
+    {
         transform.position += Vector3.up;
         isMouseDown = false;
-
     }
 
     void Update()
     {
-
-        
         if (isMouseDown || Input.touchCount > 0)
         {
-           
             if (isFinished(accumulatedAngle, maxRotations) && isTerminating)
             {
                 OnReset();
             }
+
             // not sure which camera to use
             Vector3 objectToMouse = Camera.main.WorldToScreenPoint(transform.position) - Input.mousePosition;
             theta = CalculateRotationAngle(objectToMouse);
             transform.Rotate(Vector3.forward, (theta - prevTheta));
-            Debug.Log("angle :" + transform.eulerAngles.z  * Mathf.Deg2Rad);
+            Debug.Log("angle :" + transform.eulerAngles.z * Mathf.Deg2Rad);
             prevTheta = theta;
-           
+
             if (isTerminating)
             {
                 accumulatedAngle += Mathf.Abs(CalculateDeltaTheta(objectToMouse, theta, rotationSpeedLimit));
                 ratio = accumulatedAngle / (maxRotations * 360);
-            }     
-            nwController.OnCannonAngleInput(GetEulerAngles());
+            }
+
+            nwController.OnCannonAngleInput(GetEulerAngles() * RotationFactorConstant);
         }
     }
 
     private void OnMouseDown()
     {
         Vector3 objectToMouse = Camera.main.WorldToScreenPoint(transform.position) - Input.mousePosition;
-        prevTheta = (Mathf.Atan2((objectToMouse.y), objectToMouse.x) * Mathf.Rad2Deg) + 180;
+        prevTheta = Mathf.Atan2((objectToMouse.y), objectToMouse.x) * Mathf.Rad2Deg + 180;
         isMouseDown = true;
     }
 
@@ -83,13 +86,8 @@ public class ObjectRotator : MonoBehaviour
 
     public float GetRadianAngles()
     {
-        return transform.eulerAngles.z  * Mathf.Deg2Rad;
+        return transform.eulerAngles.z * Mathf.Deg2Rad;
     }
-
-
-    
-
-
     // --------- private methods -------------
 
 
@@ -99,11 +97,13 @@ public class ObjectRotator : MonoBehaviour
         {
             return speedLimit;
         }
+
+
         return (theta - prevTheta);
     }
 
 
-     private float CalculateRotationAngle(Vector3 objectToMouse)
+    private float CalculateRotationAngle(Vector3 objectToMouse)
     {
         return (Mathf.Atan2((objectToMouse.y), objectToMouse.x) * Mathf.Rad2Deg) + 180;
     }
@@ -128,14 +128,10 @@ public class ObjectRotator : MonoBehaviour
 
     // to be able to debug with mouse
 
-
-
     private void DebugLogValues()
     {
         //Debug.Log("ObjectRotator:: Theta: " + (theta));
         Debug.Log("ObjectRotator::      :" + GetNOfRotations());
         Debug.Log("ObjectRotator:: Ratio :" + ratio);
     }
-
-
 }

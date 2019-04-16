@@ -8,6 +8,8 @@ public class CameraManager : MonoBehaviour
 {
     public Camera[] cams;
 
+    public Camera godCam;
+
     private void Awake()
     {
         var nc = FindObjectOfType(typeof(NetworkController)) as NetworkController;
@@ -18,11 +20,29 @@ public class CameraManager : MonoBehaviour
             return;
         }
 
-        Debug.Log($"Set camera {nc.NetworkId}");
-        SetCamera(nc.NetworkId);
+        if (nc.SingleGameDebug)
+        {
+            SetGodCamera();
+            Debug.Log("Enable god camera");
+        }
+        else
+        {
+            SetCamera(nc.NetworkId);
+            Debug.Log($"Set camera {nc.NetworkId}");
+        }
     }
 
-    public void SetCamera(int n)
+    private void SetGodCamera()
+    {
+        foreach (var cam in cams)
+        {
+            cam.enabled = false;
+        }
+
+        godCam.enabled = true;
+    }
+
+    private void SetCamera(int n)
     {
         if (n < 0 || n > 3)
         {

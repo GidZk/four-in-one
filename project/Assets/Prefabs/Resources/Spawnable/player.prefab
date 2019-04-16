@@ -11,8 +11,10 @@ GameObject:
   - component: {fileID: 2096999535367854367}
   - component: {fileID: 2096999535367854361}
   - component: {fileID: 2096999535367854360}
+  - component: {fileID: 8643374093603207035}
+  - component: {fileID: 7006910854127652637}
   m_Layer: 12
-  m_Name: RopeHinge
+  m_Name: Hook
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -93,7 +95,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 0.0001
-  m_LinearDrag: 0
+  m_LinearDrag: 1
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -101,6 +103,61 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &8643374093603207035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2096999535367854366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 0
+    i1: 0
+    i2: 0
+    i3: 0
+    i4: 0
+    i5: 0
+    i6: 0
+    i7: 0
+    i8: 0
+    i9: 0
+    i10: 0
+    i11: 0
+    i12: 0
+    i13: 0
+    i14: 0
+    i15: 0
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
+--- !u!114 &7006910854127652637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2096999535367854366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 2
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 3
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_VelocityThreshold: 0.0001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
 --- !u!1 &2096999536553920177
 GameObject:
   m_ObjectHideFlags: 0
@@ -125,9 +182,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2096999536553920177}
-  m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 6, y: 6, z: 6}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 10.03, y: 0.06, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 6}
   m_Children: []
   m_Father: {fileID: 2096999536881306289}
   m_RootOrder: 1
@@ -169,7 +226,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
-  m_Sprite: {fileID: 21300000, guid: a8260c68cb7b178479f46ba6f93ffb59, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c5228c60b655d1d4dbccbfd190f64b02, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -190,11 +247,11 @@ GameObject:
   m_Component:
   - component: {fileID: 2096999536881306289}
   - component: {fileID: 4358117009079790165}
+  - component: {fileID: 2096999536881306290}
   - component: {fileID: 2096999536881306295}
   - component: {fileID: 2096999536881306294}
   - component: {fileID: 2096999536881306288}
   - component: {fileID: 2096999536881306291}
-  - component: {fileID: 2096999536881306290}
   - component: {fileID: 8395899048168906226}
   - component: {fileID: 2032583853489797464}
   m_Layer: 0
@@ -233,6 +290,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveForce: 5
+--- !u!114 &2096999536881306290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2096999536881306293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c86dc0f676c74264a850cdc9bc5d5bc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  crossController: {fileID: 2364407202780951028, guid: 93aa4100e921e48219c8b5761adc49d9,
+    type: 3}
+  crosshair: {fileID: 2096999536553920179}
+  ropeRenderer: {fileID: 2096999536881306291}
+  hook: {fileID: 2096999535367854366}
+  state: 0
+  aimAngle: {x: 0, y: 0, z: 0}
+  points:
+  - {fileID: 2096999536881306289}
+  - {fileID: 2096999535367854367}
+  hookVisible: 0
 --- !u!50 &2096999536881306295
 Rigidbody2D:
   serializedVersion: 4
@@ -699,29 +779,6 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
---- !u!114 &2096999536881306290
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2096999536881306293}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c86dc0f676c74264a850cdc9bc5d5bc0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ropeRenderer: {fileID: 2096999536881306291}
-  ropeHingeAnchor: {fileID: 2096999535367854366}
-  crosshair: {fileID: 2096999536553920179}
-  crosshairSprite: {fileID: 2096999536553920178}
-  playerController: {fileID: 4358117009079790165}
-  fireForce: 2
-  crossController: {fileID: 2364407202780951028, guid: 93aa4100e921e48219c8b5761adc49d9,
-    type: 3}
-  points:
-  - {fileID: 2096999536881306289}
-  - {fileID: 2096999535367854367}
 --- !u!114 &8395899048168906226
 MonoBehaviour:
   m_ObjectHideFlags: 0

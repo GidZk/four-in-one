@@ -1,12 +1,9 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BoundaryController : MonoBehaviour
 {
-
     private void OnTriggerExit2D(Collider2D collision)
     {
-
         /*
          To next person working on this. We can use tag system in unity to 
          filter if the thing is a NPC or player.
@@ -14,12 +11,9 @@ public class BoundaryController : MonoBehaviour
 
         if (collision.gameObject.tag != "Player")
         {
-            Debug.Log(" --Destroying object, object outside of boundary --");
+            //Debug.Log(" --Destroying object, object outside of boundary --");
 
             Destroy(collision.gameObject);
         }
-       
-
     }
 }
-

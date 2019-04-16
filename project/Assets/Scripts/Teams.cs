@@ -3,6 +3,7 @@ using UnityEngine;
 
 public enum Team
 {
+    None,
     Green,
     Teal,
     Red
@@ -10,6 +11,10 @@ public enum Team
 
 class TeamUtil
 {
+    private const string GreenIdent = "gr";
+    private const string TealIdent = "te";
+    private const string RedIdent = "re";
+
     public static Color GetTeamColor(Team t)
     {
         switch (t)
@@ -22,13 +27,31 @@ class TeamUtil
         return Color.white;
     }
 
-    public static Team FromString(String s)
+    public static string ToIdent(Team t)
     {
-        if (Enum.TryParse(s, true, out Team team))
+        // TODO plz dont have this either
+        switch (t)
         {
-            return team;
+            case Team.Green: return GreenIdent;
+            case Team.Red: return RedIdent;
+            case Team.Teal: return TealIdent;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(t), t, null);
         }
+    }
 
-        throw new Exception($"Could not parse {s}");
+    public static Team FromIdent(string s)
+    {
+        // TODO plz dont have this
+        switch (s.ToLower())
+        {
+            case GreenIdent: return Team.Green;
+            case RedIdent: return Team.Red;
+            case TealIdent: return Team.Teal;
+            default:
+                var err = new ArgumentOutOfRangeException(nameof(s), s, "Something's fucky");
+                Debug.LogError(err);
+                throw err;
+        }
     }
 }
