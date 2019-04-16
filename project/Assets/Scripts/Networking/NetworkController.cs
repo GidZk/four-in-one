@@ -112,7 +112,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         {
             if (o == null)
             {
-                Debug.Log("null object in spawnable");
+                Debug.Log(Util.C("null object in spawnable", Color.red));
                 continue;
             }
 
@@ -514,7 +514,7 @@ enum GameState
     RunningGame
 }
 
-static class Util
+public static class Util
 {
     /// <summary>
     /// Returns the input string wrapped with "color"-tags 

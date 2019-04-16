@@ -10,7 +10,7 @@ public class AimingController : NetworkBehaviour, InputListener
     private const float LaunchSpeedConstant = 30;
     private const float YankConstant = 200;
     private const float MinRange = 0.8f;
-    private const int CollectHookThreshold = 1;
+    private const int CollectHookThreshold = 2;
 
     // Game objects related to the crosshair
     public GameObject crosshair;
