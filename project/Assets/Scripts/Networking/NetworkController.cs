@@ -202,7 +202,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     public void OnReceivedBroadcast(string fromAddress, string data)
     {
         Log($"BC from {fromAddress}", Color.cyan);
-        var otherTeam = TeamUtil.FromInt(data[0]);
+        var otherTeam = TeamUtil.FromInt(int.Parse(data.Substring(0, 1)));
         if (otherTeam != Team)
             return;
 
