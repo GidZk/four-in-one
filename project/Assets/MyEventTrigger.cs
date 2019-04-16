@@ -40,22 +40,24 @@ public class MyEventTrigger : EventTrigger
 
         if (isClickedYaoo)
         {
-            
-            if (!isRight &&!isLeft && !isUp )
+            //!isRight && !isUp && 
+            if (isDown)
             { Debug.Log("down called");
-                _playerController.OnVerticalMovementInput(5);
+                _playerController.OnVerticalMovementInput(-moveForce);
+     
             }
             //right
             if (isRight &&!isLeft && !isUp  )
             {
                 Debug.Log("right called");
                 _playerController.OnHorizontalMovementInput(moveForce);
-                
+  
+
             }
             if (!isRight && isLeft && !isUp)
             {
                 Debug.Log("left called");
-                _playerController.OnHorizontalMovementInput(- moveForce);
+                _playerController.OnHorizontalMovementInput(-moveForce);
             }    
 
             if (!isRight && isUp && !isDown)
@@ -67,6 +69,8 @@ public class MyEventTrigger : EventTrigger
 
             
         }
+
+
 
 
 
@@ -86,11 +90,16 @@ public class MyEventTrigger : EventTrigger
         isClickedYaoo = false;
     }
 
+
    private float  GetMoveForce()
    {
        return GameObject.FindWithTag("Player").GetComponent<playerController>().moveForce;
    }
 
+    private void InitIsDown()
+    {
+        isDown = (gameObject.tag == "DownButton");
+    }
 
     private void InitIsRight()
     {
@@ -108,9 +117,6 @@ public class MyEventTrigger : EventTrigger
         isUp = (gameObject.tag == "UpButton");
     }
     
-    private void InitIsDown()
-    {
-        isDown = (gameObject.tag == "DownButton");
-    }
+
     
 }

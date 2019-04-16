@@ -89,11 +89,7 @@ public class playerController : MonoBehaviour, InputListener {
     }
 
 
-    public void moveRight()
-    {
-        nwController.OnHorizontalMovementInput(moveForce);
-    }
-
+ 
 
 
 
