@@ -60,7 +60,6 @@ public class AimingController : NetworkBehaviour, InputListener
     {
         //_aimAngle = Quaternion.Euler(0, 0, _aimWheel.GetEulerAngles()) * Vector2.right;
 
-        UpdateCrosshair();
         if (state == HookState.Reeling)
         {
             ReturnHookWithPhysics();
@@ -83,18 +82,6 @@ public class AimingController : NetworkBehaviour, InputListener
         if (!(Math.Abs((transform.position - hook.transform.position).magnitude) < CollectHookThreshold)) return;
         state = HookState.Idle;
         HookVisible = false;
-    }
-
-    private void UpdateCrosshair()
-    {
-        if (state != HookState.Idle)
-        {
-            _crosshairSpriteRenderer.enabled = false; // Hide sprite
-            return;
-        }
-
-        if (_crosshairSpriteRenderer.enabled != true) _crosshairSpriteRenderer.enabled = true;
-        //aimAngle = Quaternion.Euler(0, 0, _aimWheel.GetEulerAngles()) * Vector2.right;
     }
 
     //calculates and sets direction of the crosshair, with @param aimangle given in radians
