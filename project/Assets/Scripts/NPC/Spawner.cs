@@ -9,9 +9,10 @@ public class Spawner : MonoBehaviour
     public float secondsBetweenSpawn;
     public List<GameObject> spawnable;
 
-    public List<float> crabScale;
-    public List<float> sharkScale;
-    public List<float> stoneScale;
+    // public List<float> crabScale;
+  
+    //public List<float> sharkScale;
+    //public List<float> stoneScale;
 
     private float elapsedTime;
 
@@ -34,17 +35,18 @@ public class Spawner : MonoBehaviour
             // TODO fix probability distribution
             float p = Random.Range(0, nOfNpcs + 1);
 
-            if (p <= 1)
+            if (p <= 0.8)
             {
-                SpawnCrabPlast(crabScale[0], crabScale[1]);
+                SpawnCrabPlast(0.2f, 0.3f);
+              
             }
-            else if (p > 1 && p <= 2)
+            else if (p > 0.8 && p <= 2.5)
             {
-                SpawnStone(stoneScale[0], stoneScale[1]);
+                SpawnStone(1, 2);
             }
             else
             {
-                SpawnShark(sharkScale[0], sharkScale[1]);
+                SpawnShark(1.5f, 2);
             }
         }
     }
