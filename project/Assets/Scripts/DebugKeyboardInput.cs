@@ -3,11 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// ReSharper disable CompareOfFloatsByEqualityOperator
+
 public class DebugKeyboardInput : MonoBehaviour
 {
-    // TODO improve
-    public NetworkController nc;
-
     private float _spaceDownTime = -1;
     private List<InputListener> _inputListeners;
     private const float ChargeTimeFactor = 1;
@@ -16,12 +15,28 @@ public class DebugKeyboardInput : MonoBehaviour
 
     private void Awake()
     {
-        _inputListeners = new List<InputListener> {nc};
+        _inputListeners = new List<InputListener>();
+        var nc = NetworkController.Instance;
+        if (nc != null)
+            _inputListeners.Add(nc);
     }
+
+
+    private float lastH;
+    private float lastV;
 
     // Update is called once per frame
     void Update()
     {
+        var h = Input.GetAxis("horizontal");
+        var v = Input.GetAxis("vertical");
+
+        if (lastH != h) _inputListeners.ForEach(it => it.OnHorizontalMovementInput(h));
+        if (lastV != v) _inputListeners.ForEach(it => it.OnHorizontalMovementInput(v));
+
+        lastH = h;
+        lastV = v;
+
         if (Input.GetKey(KeyCode.Q))
         {
             _aimAngle -= _aimRotationSpeed;
