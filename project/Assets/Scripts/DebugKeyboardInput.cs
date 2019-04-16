@@ -9,14 +9,14 @@ public class DebugKeyboardInput : MonoBehaviour
     public NetworkController nc;
 
     private float _spaceDownTime = -1;
-    private List<InputListener> inputListeners;
-    private const float CHARGE_TIME_FACTOR = 1;
-    private float _aimAngle = 0;
+    private List<InputListener> _inputListeners;
+    private const float ChargeTimeFactor = 1;
+    private float _aimAngle;
     private float _aimRotationSpeed = 0.018f;
 
     private void Awake()
     {
-        inputListeners = new List<InputListener> {nc};
+        _inputListeners = new List<InputListener> {nc};
     }
 
     // Update is called once per frame
@@ -26,14 +26,14 @@ public class DebugKeyboardInput : MonoBehaviour
         {
             _aimAngle -= _aimRotationSpeed;
             _aimAngle = _aimAngle % (Mathf.PI * 2);
-            inputListeners.ForEach(it => it.OnCannonAngleInput(_aimAngle));
+            _inputListeners.ForEach(it => it.OnCannonAngleInput(_aimAngle));
         }
 
         if (Input.GetKey(KeyCode.E))
         {
             _aimAngle += _aimRotationSpeed;
             _aimAngle = _aimAngle % (Mathf.PI * 2);
-            inputListeners.ForEach(it => it.OnCannonAngleInput(_aimAngle));
+            _inputListeners.ForEach(it => it.OnCannonAngleInput(_aimAngle));
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -43,9 +43,9 @@ public class DebugKeyboardInput : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.Space))
         {
-            var val = Math.Min((Time.time - _spaceDownTime) * CHARGE_TIME_FACTOR, 1.0f);
+            var val = Math.Min((Time.time - _spaceDownTime) * ChargeTimeFactor, 1.0f);
             Debug.Log($"Firing with force {val}");
-            inputListeners.ForEach(it => it.OnCannonLaunchInput(val));
+            _inputListeners.ForEach(it => it.OnCannonLaunchInput(val));
         }
     }
 }
