@@ -22,17 +22,18 @@ public class AimingController : NetworkBehaviour, InputListener
     private Rigidbody2D _hookRb;
 
     // State
-    private HookState _state = HookState.Idle;
+    [SerializeField] private HookState state = HookState.Idle;
     private bool _shouldReel;
-    private Vector3 _aimDirection;
+    [SerializeField] private Vector3 aimAngle;
     public Transform[] points;
-    private bool _hookVisible;
+    [SerializeField] private bool hookVisible;
+
     private bool HookVisible
     {
-        get => _hookVisible;
+        get => hookVisible;
         set
         {
-            _hookVisible = value;
+            hookVisible = value;
             ropeRenderer.enabled = value;
             hook.SetActive(value);
         }
@@ -57,10 +58,10 @@ public class AimingController : NetworkBehaviour, InputListener
 
     void Update()
     {
-        _aimDirection = Quaternion.Euler(0, 0, _aimWheel.GetEulerAngles()) * Vector2.right;
+        //_aimAngle = Quaternion.Euler(0, 0, _aimWheel.GetEulerAngles()) * Vector2.right;
 
         UpdateCrosshair();
-        if (_state == HookState.Reeling)
+        if (state == HookState.Reeling)
         {
             ReturnHookWithPhysics();
             CollectNearbyHook();
@@ -80,20 +81,20 @@ public class AimingController : NetworkBehaviour, InputListener
     private void CollectNearbyHook()
     {
         if (!(Math.Abs((transform.position - hook.transform.position).magnitude) < CollectHookThreshold)) return;
-        _state = HookState.Idle;
+        state = HookState.Idle;
         HookVisible = false;
     }
 
     private void UpdateCrosshair()
     {
-        if (_state != HookState.Idle)
+        if (state != HookState.Idle)
         {
             _crosshairSpriteRenderer.enabled = false; // Hide sprite
             return;
         }
 
         if (_crosshairSpriteRenderer.enabled != true) _crosshairSpriteRenderer.enabled = true;
-        _aimDirection = Quaternion.Euler(0, 0, _aimWheel.GetEulerAngles()) * Vector2.right;
+        //aimAngle = Quaternion.Euler(0, 0, _aimWheel.GetEulerAngles()) * Vector2.right;
     }
 
     //calculates and sets direction of the crosshair, with @param aimangle given in radians
@@ -116,14 +117,14 @@ public class AimingController : NetworkBehaviour, InputListener
     // Fires the hook
     private void Fire(float force)
     {
-        _state = HookState.Firing;
+        state = HookState.Firing;
         HookVisible = true;
         _hookRb.position = transform.position;
 
         var vec = new Vector2
         {
-            x = _aimDirection.x * force,
-            y = _aimDirection.y * force
+            x = aimAngle.x * force,
+            y = aimAngle.y * force
         };
         _hookRb.velocity = vec * LaunchSpeedConstant;
     }
@@ -154,16 +155,21 @@ public class AimingController : NetworkBehaviour, InputListener
     public void OnCannonAngleInput(float value)
     {
         SetCrosshairPosition(value);
+        aimAngle.Set(
+            (float) Math.Cos(value),
+            (float) Math.Sin(value),
+            0
+        );
     }
 
     public void OnCannonLaunchInput(float value)
     {
-        if (_state != HookState.Idle) return;
+        if (state != HookState.Idle) return;
 
         Fire(value);
         Task.Delay((int) (2000 * (value + MinRange))).ContinueWith(t =>
         {
-            _state = HookState.Reeling;
+            state = HookState.Reeling;
             _shouldReel = true;
         });
     }

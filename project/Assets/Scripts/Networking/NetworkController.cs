@@ -73,11 +73,6 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         }
 
 
-        if (Input.GetKeyDown(KeyCode.S) && IsServer())
-        {
-            spawnManager.SpawnPlayer();
-        }
-
         if (Input.GetKeyDown(KeyCode.D) && IsServer())
         {
             OnLobbyFilled();
