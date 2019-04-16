@@ -177,7 +177,13 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
             !UseLocalhost)
         {
             Log($"Starting host", Color.green);
-            if (discovery.isClient) discovery.StopBroadcast();
+            if (discovery.isClient)
+            {
+                discovery.StopBroadcast();
+                Debug.Log("Stopped broadcast in evaluate server state");
+            }
+
+            discovery.Initialize();
             discovery.StartAsServer();
             manager.StartHost();
             StartHost = false;
@@ -369,7 +375,8 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     public void OnClientConnect(NetworkConnection conn)
     {
         Log("Connected to server", Color.green);
-        discovery.StopBroadcast();
+        if (IsServer())
+            discovery.StopBroadcast();
         InitClientHandlers();
         selectCanvas.gameObject.SetActive(false);
         waitCanvas.gameObject.SetActive(true);
