@@ -262,7 +262,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34de9c370463f864a893af821b6dfc5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  team: 1
+  team: 2
 --- !u!1 &180706704
 GameObject:
   m_ObjectHideFlags: 0
@@ -2455,7 +2455,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34de9c370463f864a893af821b6dfc5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  team: 2
+  team: 3
 --- !u!1 &1494618541
 GameObject:
   m_ObjectHideFlags: 0
@@ -2683,7 +2683,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34de9c370463f864a893af821b6dfc5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  team: 0
+  team: 1
 --- !u!1 &1838886813
 GameObject:
   m_ObjectHideFlags: 0
