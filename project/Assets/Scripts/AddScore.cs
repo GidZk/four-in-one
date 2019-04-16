@@ -20,6 +20,6 @@ public class AddScore : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        score.text = "Poäng: " + scoreValue;
+        score.text = "" + scoreValue;
     }
 }
