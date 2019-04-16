@@ -16,6 +16,8 @@ public class Spawner : MonoBehaviour
 
     private float elapsedTime;
 
+     public static Spawner Instance { get; private set; }
+
     private void Start()
     {
     }
