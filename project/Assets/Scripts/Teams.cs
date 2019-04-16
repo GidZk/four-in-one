@@ -22,13 +22,29 @@ class TeamUtil
         return Color.white;
     }
 
-    public static Team FromString(String s)
+    public static int ToInt(Team t)
     {
-        if (Enum.TryParse(s, true, out Team team))
+        // TODO plz dont have this either
+        switch (t)
         {
-            return team;
+            case Team.Green: return 0;
+            case Team.Red: return 1;
+            case Team.Teal: return 2;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(t), t, null);
         }
+    }
 
-        throw new Exception($"Could not parse {s}");
+    public static Team FromInt(int d)
+    {
+        // TODO plz dont have this
+        switch (d)
+        {
+            case 0: return Team.Green;
+            case 1: return Team.Red;
+            case 2: return Team.Teal;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 }

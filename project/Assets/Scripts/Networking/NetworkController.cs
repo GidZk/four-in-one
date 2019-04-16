@@ -202,8 +202,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     public void OnReceivedBroadcast(string fromAddress, string data)
     {
         Log($"BC from {fromAddress}", Color.cyan);
-        var filteredString = data.Where(c => c != '\0');
-        var otherTeam = TeamUtil.FromString(filteredString.ToString());
+        var otherTeam = TeamUtil.FromInt(data[0]);
         if (otherTeam != Team)
             return;
 
@@ -249,7 +248,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
             // TODO make sure this stops properly
             Log("Tried to change team when discovery was running", Color.yellow);
 
-        discovery.broadcastData = team.ToString();
+        discovery.broadcastData = TeamUtil.ToInt(team).ToString();
 
         var success = discovery.Initialize();
         discovery.StartAsClient();
