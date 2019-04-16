@@ -376,7 +376,11 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     {
         Log("Connected to server", Color.green);
         if (IsServer())
+        {
             discovery.StopBroadcast();
+            Debug.Log("Stopped broadcast in on client connect");
+        }
+
         InitClientHandlers();
         selectCanvas.gameObject.SetActive(false);
         waitCanvas.gameObject.SetActive(true);
@@ -418,6 +422,8 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
             return;
         }
 
+
+        Debug.Log("Stopped broadcast in evaluate stop broadcast");
         discovery.StopBroadcast();
 
         NetworkServer.SendToAll(Messages.StartGame, new EmptyMessage());
