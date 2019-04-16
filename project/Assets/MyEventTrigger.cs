@@ -38,30 +38,38 @@ public class MyEventTrigger : EventTrigger
     {
 
 
-        if (isClickedYaoo)
+        if ( isClickedYaoo)
         {
+       //     _playerController.LinearDrag(0.25f);
+       
+
+
             //!isRight && !isUp && 
-            if (isDown)
+            if (isDown && !isUp)
             { Debug.Log("down called");
+                _playerController.LinearDrag(0.25f);
                 _playerController.OnVerticalMovementInput(-moveForce);
      
             }
             //right
-            if (isRight &&!isLeft && !isUp  )
+            if (isRight &&!isLeft   )
             {
                 Debug.Log("right called");
+                _playerController.LinearDrag(0.25f);
                 _playerController.OnHorizontalMovementInput(moveForce);
   
 
             }
-            if (!isRight && isLeft && !isUp)
+            if (!isRight && isLeft)
             {
                 Debug.Log("left called");
+                _playerController.LinearDrag(0.25f);
                 _playerController.OnHorizontalMovementInput(-moveForce);
             }    
 
-            if (!isRight && isUp && !isDown)
+            if (isUp && !isDown)
             { Debug.Log("up called");
+                _playerController.LinearDrag(0.25f);
                 _playerController.OnVerticalMovementInput(moveForce);
             }
 
@@ -69,6 +77,17 @@ public class MyEventTrigger : EventTrigger
 
             
         }
+
+
+
+      //  if (isClickedYaoo == false)
+        {
+         //   _playerController.LinearDrag(2);
+        
+
+
+        }
+
 
 
 

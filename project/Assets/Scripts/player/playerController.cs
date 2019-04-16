@@ -13,6 +13,7 @@ public class playerController : MonoBehaviour, InputListener {
     //private Vector2 moveVelocity;
     private float hInput = 0;
     private float vInput = 0;
+    
   
 
     private NetworkController nwController;
@@ -105,9 +106,14 @@ public class playerController : MonoBehaviour, InputListener {
       rb.AddForce(new Vector2(0,value));
   }
 
+    public void LinearDrag(float value)
+    {
+        rb.drag = value;
+    }
 
 
-  public void OnCannonAngleInput(float value)
+
+    public void OnCannonAngleInput(float value)
   {
       throw new System.NotImplementedException();
   }
@@ -123,7 +129,7 @@ public class playerController : MonoBehaviour, InputListener {
   {
       if (coll.gameObject.tag == "crabplast")
       {
-          Debug.Log($"{this} --a collision between player and alga. ");
+          Debug.Log($"{this} --a collision between player and crab. ");
 
           Destroy(coll.gameObject);
 
