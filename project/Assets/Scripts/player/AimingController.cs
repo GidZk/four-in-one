@@ -25,7 +25,7 @@ public class AimingController : NetworkBehaviour, InputListener
     private bool _shouldReel;
 
     [SerializeField] private Vector2 aimVector;
-    private Transform[] points;
+    private Transform[] transformsLineRender;
     private bool _hookVisible;
 
     private bool _onServer;
@@ -38,6 +38,11 @@ public class AimingController : NetworkBehaviour, InputListener
             _hookVisible = value;
             ropeRenderer.enabled = value;
             hook.SetActive(value);
+            // needs to re-apply this every time the hook is enabled
+            if (value)
+                Physics2D.IgnoreCollision(
+                    GetComponent<Collider2D>(),
+                    hook.GetComponent<Collider2D>());
             if (_onServer)
             {
                 Debug.Log($"Call RpcHookVisible: {value}");
@@ -75,9 +80,9 @@ public class AimingController : NetworkBehaviour, InputListener
         hook.GetComponent<SpriteRenderer>();
         NetworkController.Instance.Register(this);
 
-        points = new Transform[2];
-        points[0] = gameObject.transform;
-        points[1] = hook.transform;
+        transformsLineRender = new Transform[2];
+        transformsLineRender[0] = gameObject.transform;
+        transformsLineRender[1] = hook.transform;
         HookVisible = false;
     }
 

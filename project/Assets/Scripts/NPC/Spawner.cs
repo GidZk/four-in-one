@@ -10,7 +10,7 @@ public class Spawner : MonoBehaviour
     public List<GameObject> spawnable;
 
     // public List<float> crabScale;
-  
+
     //public List<float> sharkScale;
     //public List<float> stoneScale;
 
@@ -38,7 +38,6 @@ public class Spawner : MonoBehaviour
             if (p <= 0.8)
             {
                 SpawnCrabPlast(0.2f, 0.3f);
-              
             }
             else if (p > 0.8 && p <= 2.5)
             {
@@ -54,7 +53,13 @@ public class Spawner : MonoBehaviour
 
     public void SpawnPlayer()
     {
-        GameObject go = LoadPrefab("spawnable/player");
+        var prefab = Resources.Load<GameObject>("Spawnable/player");
+        if (prefab == null)
+            throw new Exception("Could not get player prefab");
+        GameObject go =
+            Instantiate(prefab);
+        if (go == null)
+            throw new Exception("Did not spawn player");
         go.transform.position = Vector3.zero;
         NetworkServer.Spawn(go);
     }

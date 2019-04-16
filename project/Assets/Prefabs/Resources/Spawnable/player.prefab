@@ -147,10 +147,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   crosshair: {fileID: 2096999536553920177}
   ropeRenderer: {fileID: 2096999536881306291}
-  hook: {fileID: 4522060880052365788, guid: 5aa49b944fd92384085605eed4d61bb7, type: 3}
+  hook: {fileID: 50, guid: 5aa49b944fd92384085605eed4d61bb7, type: 3}
   state: 0
   aimVector: {x: 0, y: 0}
-  hookVisible: 0
 --- !u!50 &2096999536881306295
 Rigidbody2D:
   serializedVersion: 4
