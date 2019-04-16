@@ -696,6 +696,88 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &756034919
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 756034920}
+  - component: {fileID: 756034922}
+  - component: {fileID: 756034921}
+  m_Layer: 0
+  m_Name: Camera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &756034920
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 756034919}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2077730670}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!81 &756034921
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 756034919}
+  m_Enabled: 1
+--- !u!20 &756034922
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 756034919}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_projectionMatrixMode: 1
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_GateFitMode: 2
+  m_FocalLength: 50
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 3.5126817
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
 --- !u!1 &825564332
 GameObject:
   m_ObjectHideFlags: 0
@@ -2008,6 +2090,7 @@ MonoBehaviour:
   - {fileID: 406239119}
   - {fileID: 125000883}
   - {fileID: 1020185893}
+  godCam: {fileID: 756034922}
 --- !u!1 &2077730669
 GameObject:
   m_ObjectHideFlags: 0
@@ -2040,6 +2123,7 @@ Transform:
   - {fileID: 125000881}
   - {fileID: 1020185891}
   - {fileID: 2021213118}
+  - {fileID: 756034920}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2050,11 +2134,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1427343719}
     m_Modifications:
-    - target: {fileID: 353698065278723175, guid: 7cbdebbcad316e745a3e4a89d3fce317,
-        type: 3}
-      propertyPath: m_Name
-      value: ScoreText
-      objectReference: {fileID: 0}
     - target: {fileID: 353698065278723174, guid: 7cbdebbcad316e745a3e4a89d3fce317,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2160,6 +2239,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 353698065278723175, guid: 7cbdebbcad316e745a3e4a89d3fce317,
+        type: 3}
+      propertyPath: m_Name
+      value: ScoreText
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7cbdebbcad316e745a3e4a89d3fce317, type: 3}
 --- !u!1001 &3746864574811245700
@@ -2169,11 +2253,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1427343719}
     m_Modifications:
-    - target: {fileID: 3746864574604476670, guid: 0738746a062e94b9facee5a750e4432c,
-        type: 3}
-      propertyPath: m_Name
-      value: Bottle
-      objectReference: {fileID: 0}
     - target: {fileID: 3746864574604476671, guid: 0738746a062e94b9facee5a750e4432c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2278,6 +2357,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3746864574604476670, guid: 0738746a062e94b9facee5a750e4432c,
+        type: 3}
+      propertyPath: m_Name
+      value: Bottle
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0738746a062e94b9facee5a750e4432c, type: 3}
