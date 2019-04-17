@@ -109,7 +109,7 @@ public class playerController : MonoBehaviour, InputListener
             Timer.timeLeft++;
             Debug.Log("score = " + AddScore.scoreValue);
         }
-    }*/
+    }
 
     private void InsideGUI()
     {
