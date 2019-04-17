@@ -10,6 +10,9 @@ public class OnScreenButtonController : MonoBehaviour
 
     public Canvas upDownCanvas;
     public Canvas leftRightCanvas;
+    public Canvas hookLauncher;
+
+    private const float ChargeTimeFactor = 1f;
 
     private List<InputListener> _inputListeners;
 
@@ -24,8 +27,23 @@ public class OnScreenButtonController : MonoBehaviour
             _inputListeners.Add(nc);
             // TODO improve this such that "roles" aren't solely determined by net id
             upDownCanvas.enabled = nc.NetworkId == 0;
+            hookLauncher.enabled = nc.NetworkId == 2;
             leftRightCanvas.enabled = nc.NetworkId == 3;
         }
+    }
+
+
+    private float _launchPressedTime;
+
+    public void OnLaunchPressed()
+    {
+        _launchPressedTime = Time.time;
+    }
+
+    public void OnLaunchReleased()
+    {
+        var val = Mathf.Min((Time.time - _launchPressedTime) * ChargeTimeFactor, 1.0f);
+        _inputListeners.ForEach(it => it.OnCannonLaunchInput(val));
     }
 
     public void OnLeftPressed()

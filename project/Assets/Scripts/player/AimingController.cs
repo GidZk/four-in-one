@@ -174,6 +174,7 @@ public class AimingController : NetworkBehaviour, InputListener
     {
         if (_onServer) return;
         HookVisible = visible;
+        UpdateLineRenderer();
     }
 
     [ClientRpc]

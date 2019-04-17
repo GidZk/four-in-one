@@ -399,7 +399,8 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         Debug.Log("Stopped broadcast in evaluate stop broadcast");
         discovery.StopBroadcast();
 
-        NetworkServer.SendToAll(Messages.StartGame, new EmptyMessage());
+        Task.Delay(500).ContinueWith(
+            t => NetworkServer.SendToAll(Messages.StartGame, new EmptyMessage()));
     }
 
     // Registers the message handling that is to be received on  the clients' side
