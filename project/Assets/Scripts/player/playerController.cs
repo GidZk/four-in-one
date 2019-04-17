@@ -45,7 +45,7 @@ public class playerController : MonoBehaviour, InputListener
 
     void FixedUpdate()
     {
-
+        InsideGUI();
         if (Math.Abs(_hInput) < 0.1f)
         {
         } // decelerate maybe
@@ -109,6 +109,30 @@ public class playerController : MonoBehaviour, InputListener
             Timer.timeLeft++;
             Debug.Log("score = " + AddScore.scoreValue);
         }
+    }
+
+    private void InsideGUI()
+    {
+        // if (BoundaryController.  object.objectcollide Equals(true))
+        if (transform.position.y > 28f)
+        {
+
+            transform.position = new Vector3(transform.position.x, 28f, transform.position.z);
+            Debug.Log("outside background");
+        }
+        if (transform.position.y < -28f)
+        {
+            transform.position = new Vector3(transform.position.x, -28f, transform.position.z);
+        }
+        if (transform.position.x < -35f)
+        {
+            transform.position = new Vector3(-35f, transform.position.y, transform.position.z);
+        }
+        if (transform.position.x > 35f)
+        {
+            transform.position = new Vector3(35f, transform.position.y, transform.position.z);
+        }
+
     }
 
 }
