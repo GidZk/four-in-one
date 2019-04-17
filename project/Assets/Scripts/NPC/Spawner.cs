@@ -7,6 +7,9 @@ using Random = UnityEngine.Random;
 public class Spawner : MonoBehaviour
 {
     public float secondsBetweenSpawn;
+
+    public bool spawnDisabled;
+
     public List<GameObject> spawnable;
 
     // public List<float> crabScale;
@@ -29,6 +32,7 @@ public class Spawner : MonoBehaviour
     // TODO then for each index call NPC.spawn()
     public void SpawnNpc(int nOfNpcs)
     {
+        if (spawnDisabled) return;
         elapsedTime += Time.deltaTime;
 
         if (elapsedTime > secondsBetweenSpawn)

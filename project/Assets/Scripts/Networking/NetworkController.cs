@@ -71,6 +71,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 
         if (gameState == GameState.RunningGame && IsServer())
         {
+            // TODO wtf is this in network controller
             spawnManager.SpawnNpc(3);
         }
 

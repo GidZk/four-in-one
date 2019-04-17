@@ -43,8 +43,11 @@ public class RemovePuzzle : MonoBehaviour
 
     private static void StartGame(bool start)
     {
-        playerController.Instance.gameObject.SetActive(start);
-        Spawner.Instance.gameObject.SetActive(start);
+        if (!NetworkController.Instance.IsServer()) return;
+        var pc = playerController.Instance.gameObject;
+        if (pc != null) pc.SetActive(start);
+        var sp = Spawner.Instance;
+        if (sp != null) sp.spawnDisabled = !start;
     }
 
     // Update is called once per frame
