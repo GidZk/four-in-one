@@ -1425,7 +1425,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spaceDownTime: -1
   ChargeTimeFactor: 1
-  _aimRotationSpeed: 0.018
+  _aimRotationSpeed: 3.14
   _aimAngle: 0
 --- !u!4 &1064692087
 Transform:

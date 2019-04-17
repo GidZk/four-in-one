@@ -41,14 +41,14 @@ public class DebugKeyboardInput : MonoBehaviour
         lastH = h;
         lastV = v;
 
-        if (Input.GetKey(KeyCode.Q))
+        if (Input.GetKey(KeyCode.E))
         {
             _aimAngle -= _aimRotationSpeed * Time.deltaTime;
             _aimAngle = _aimAngle % (Mathf.PI * 2);
             _inputListeners.ForEach(it => it.OnCannonAngleInput(_aimAngle));
         }
 
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKey(KeyCode.Q))
         {
             _aimAngle += _aimRotationSpeed * Time.deltaTime;
             _aimAngle = _aimAngle % (Mathf.PI * 2);
