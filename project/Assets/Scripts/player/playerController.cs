@@ -92,7 +92,7 @@ public class playerController : MonoBehaviour, InputListener
 
 
     // Invoked on collision
-  /*  void OnCollisionEnter2D(Collision2D coll)
+    void OnCollisionEnter2D(Collision2D coll)
     {
         if (coll.gameObject.CompareTag("crabplast"))
         {
