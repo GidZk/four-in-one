@@ -12,8 +12,10 @@ public class BoundaryController : MonoBehaviour
         if (collision.gameObject.tag != "Player")
         {
             //Debug.Log(" --Destroying object, object outside of boundary --");
-
-            Destroy(collision.gameObject);
+            if (collision.gameObject.tag != "Hook")
+            {
+                Destroy(collision.gameObject);
+            }
         }
     }
 }
