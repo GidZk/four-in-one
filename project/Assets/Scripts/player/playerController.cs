@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 
 public class playerController : MonoBehaviour, InputListener
@@ -44,8 +45,6 @@ public class playerController : MonoBehaviour, InputListener
 
     void FixedUpdate()
     {
-        //player inside of boundary
-        InsideGUI();
 
         if (Math.Abs(_hInput) < 0.1f)
         {
@@ -63,7 +62,7 @@ public class playerController : MonoBehaviour, InputListener
             rb.AddForce(new Vector2(0, _vInput) * SpeedFactorConstant);
         }
     }
-  
+
 
     // this method will be called by the client that has the server locally,
     // after a remote client has commanded the client which has the server to do so.
@@ -112,28 +111,4 @@ public class playerController : MonoBehaviour, InputListener
         }
     }
 
-
-    private void InsideGUI()
-    {
-        // if (BoundaryController.  object.objectcollide Equals(true))
-        if (transform.position.y > 28f)
-        {
-
-            transform.position = new Vector3(transform.position.x, 28f, transform.position.z);
-            Debug.Log("outside background");
-        }
-        if (transform.position.y < -28f)
-        {
-            transform.position = new Vector3(transform.position.x, -28f, transform.position.z);
-        }
-        if (transform.position.x < -35f)
-        {
-            transform.position = new Vector3(-35f, transform.position.y, transform.position.z);
-        }
-        if (transform.position.x > 35f)
-        {
-            transform.position = new Vector3(35f, transform.position.y, transform.position.z);
-        }
-
-    }
 }

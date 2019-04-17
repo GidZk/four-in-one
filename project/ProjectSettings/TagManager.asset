@@ -15,6 +15,8 @@ TagManager:
   - UpButton
   - DownButton
   - hej
+  - Hook
+  - Puzzle
   layers:
   - Default
   - TransparentFX
@@ -54,6 +56,15 @@ TagManager:
     locked: 0
   - name: shadow
     uniqueID: 313286199
+    locked: 0
+  - name: Stone
+    uniqueID: 2979686873
+    locked: 0
+  - name: Crab
+    uniqueID: 3390867761
+    locked: 0
+  - name: Shark
+    uniqueID: 158971229
     locked: 0
   - name: Default
     uniqueID: 0

@@ -9,6 +9,8 @@ public static class Messages
     public const short MemberCount = Base + 2;
     public const short Control = Base + 3;
     public const short StartGame = Base + 4;
+    public const short PuzzleReady = Base + 4;
+    public const short ClearPuzzle = Base + 5;
 }
 
 public class ControlMessage : MessageBase

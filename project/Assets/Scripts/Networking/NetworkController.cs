@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.NetworkSystem;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+using Task = System.Threading.Tasks.Task;
 
 // ReSharper disable All
 
@@ -16,7 +15,6 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     // TODO delete dis
     private GameObject playerRef;
     private GameState gameState;
-
 
     public MyNetworkDiscovery discovery;
     public MyNetworkManager manager;
@@ -112,7 +110,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         {
             if (o == null)
             {
-                Debug.Log("null object in spawnable");
+                Debug.Log(Util.C("null object in spawnable", Color.red));
                 continue;
             }
 
@@ -298,6 +296,22 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         MemberCount--;
     }
 
+    private int nPuzzleReady;
+
+    private void OnServerRcvPuzzleReady(NetworkMessage message)
+    {
+        var msg = message.ReadMessage<IntegerMessage>();
+        if (msg.value == 0) // 0 = un-ready, 1 = ready
+            nPuzzleReady--;
+        else
+            nPuzzleReady++;
+
+        if (nPuzzleReady >= MemberCount)
+            NetworkServer.SendToAll(Messages.ClearPuzzle, new EmptyMessage());
+
+        Debug.Log($"Recieved puzzle ready: {nPuzzleReady}/{MemberCount}");
+    }
+
 
     /*Callback registred on the server by host to be executed server side */
     private void OnServerRcvControlMessage(NetworkMessage message)
@@ -384,6 +398,14 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         StartGame();
     }
 
+    private void OnClientRcvClearPuzzle(NetworkMessage netmsg)
+    {
+        Debug.Log("Recieved ok to clear puzzle!");
+        var go = GameObject.FindWithTag("Puzzle");
+        if (go == null)
+            throw new Exception("Could not find puzzle");
+        go.GetComponent<RemovePuzzle>().Clear();
+    }
 
     // ### Misc ###
 
@@ -399,7 +421,8 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         Debug.Log("Stopped broadcast in evaluate stop broadcast");
         discovery.StopBroadcast();
 
-        NetworkServer.SendToAll(Messages.StartGame, new EmptyMessage());
+        Task.Delay(500).ContinueWith(
+            t => NetworkServer.SendToAll(Messages.StartGame, new EmptyMessage()));
     }
 
     // Registers the message handling that is to be received on  the clients' side
@@ -408,12 +431,14 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         Client().RegisterHandler(Messages.ClientId, OnClientRcvGiveClientId);
         Client().RegisterHandler(Messages.MemberCount, OnClientRcvMembersJoined);
         Client().RegisterHandler(Messages.StartGame, OnClientRcvStartGame);
+        Client().RegisterHandler(Messages.ClearPuzzle, OnClientRcvClearPuzzle);
     }
 
     // Registers the message handling that is to be received on the host's side
     private void InitHostHandlers()
     {
         NetworkServer.RegisterHandler(Messages.Control, OnServerRcvControlMessage);
+        NetworkServer.RegisterHandler(Messages.PuzzleReady, OnServerRcvPuzzleReady);
     }
 
     private void StartGame()
@@ -496,6 +521,12 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     public void Register(InputListener il) => inputListeners.Add(il);
 
     public bool Unregister(InputListener il) => inputListeners.Remove(il);
+
+    /// Signal to the controller that the puzzle on this client is ready
+    public void PuzzleReady(bool b)
+    {
+        Client().Send(Messages.PuzzleReady, new IntegerMessage(b ? 1 : 0));
+    }
 }
 
 enum State
@@ -514,7 +545,7 @@ enum GameState
     RunningGame
 }
 
-static class Util
+public static class Util
 {
     /// <summary>
     /// Returns the input string wrapped with "color"-tags 

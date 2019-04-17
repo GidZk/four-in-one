@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
-
     public float speed;
     public GameObject shark;
     public GameObject stone;
@@ -12,30 +11,16 @@ public class EnemyMovement : MonoBehaviour
     private bool sharkUp = true;
     private bool crabUp = true;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     private void FixedUpdate()
     {
-
         transform.Translate(Vector2.left * Time.deltaTime * speed, Space.World);
 
-
-        if (sharkUp == true && gameObject == shark )
+        if (sharkUp && gameObject == shark)
         {
             shark.transform.Translate(Vector2.up * Time.deltaTime * speed);
         }
 
-        if (sharkUp == false && gameObject == shark )
+        if (!sharkUp && gameObject == shark)
         {
             shark.transform.Translate(Vector2.down * Time.deltaTime * speed);
         }
@@ -58,12 +43,10 @@ public class EnemyMovement : MonoBehaviour
                 crabUp = false;
             }
 
-            else 
+            else
             {
                 crabUp = true;
             }
-
-
         }
 
         if (crabUp == true && gameObject == crabplast)
@@ -75,8 +58,5 @@ public class EnemyMovement : MonoBehaviour
         {
             crabplast.transform.Translate(Vector2.down * Time.deltaTime * speed);
         }
-
-
-
     }
 }

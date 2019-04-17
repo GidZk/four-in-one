@@ -29,6 +29,7 @@ public class CameraManager : MonoBehaviour
         {
             SetCamera(nc.NetworkId);
             Debug.Log($"Set camera {nc.NetworkId}");
+            godCam.enabled = false;
         }
     }
 
