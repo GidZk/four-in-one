@@ -45,7 +45,7 @@ More information on deprecation of Unity on [UNet deprecation page](https://supp
 
 
 ## Acknowledgements
-Special thanks to our bachelors thesis supervisor **Olof Torgerssor** for helping us with litterature and support through out the project.
+Special thanks to our bachelors thesis supervisor **Olof Torgersson** for helping us with litterature and support through out the project.
 
 
 Other thanks to :
