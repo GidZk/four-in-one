@@ -24,7 +24,7 @@ public class HookCollisionHandler : MonoBehaviour
             Physics2D.IgnoreCollision(
                 GetComponent<Collider2D>(),
                 oGameObj.GetComponent<Collider2D>());
-            oGameObj.GetComponent<EnemyMovement>().enabled = false;
+            oGameObj.GetComponent<NPCMovement>().enabled = false;
 
             oRigidBody.MovePosition(transform.position);
             var joint = gameObject.AddComponent<FixedJoint2D>();

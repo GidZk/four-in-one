@@ -70,8 +70,7 @@ public class Spawner : MonoBehaviour
         var prefab = Resources.Load<GameObject>("Spawnable/player");
         if (prefab == null)
             throw new Exception("Could not get player prefab");
-        GameObject go =
-            Instantiate(prefab);
+        GameObject go = Instantiate(prefab);
         if (go == null)
             throw new Exception("Did not spawn player");
         go.transform.position = Vector3.zero;
@@ -98,8 +97,6 @@ public class Spawner : MonoBehaviour
 
     public void SpawnCrabPlast(float minScaling, float maxScaling)
     {
-        
-        
         float scaling = Random.Range(minScaling, maxScaling);
         GameObject go = LoadPrefab("spawnable/crabplast");
         go.GetComponent<CrabMovement>().Direction = SetDirection(isSpawningLeft_Crabby);
@@ -133,7 +130,7 @@ public class Spawner : MonoBehaviour
     {
         float scaling = Random.Range(minScaling, maxScaling);
         GameObject go = LoadPrefab("spawnable/stone");
-        go.transform.position = new Vector3(44,  SetYPosition(), 0);
+        go.transform.position = new Vector3(34,  SetYPosition(), 0);
         go.transform.rotation = Quaternion.Euler(new Vector3(0, 0, (Random.Range(0f, 90f))));
         go.transform.localScale = new Vector3(scaling, scaling, 0.9f);
 
@@ -143,16 +140,16 @@ public class Spawner : MonoBehaviour
     private Vector3 SetStartPosition(bool shouldSpawnLeft)
     {
         if (shouldSpawnLeft)    
-            return new Vector2(-44, SetYPosition());
+            return new Vector2(-34, SetYPosition());
         
-         return new Vector3(44, SetYPosition());
+         return new Vector3(34, SetYPosition());
 
     }
 
     // TODO set params to camera params hardcoded for now
     private float SetYPosition()
     {
-        return Random.Range(-29f, 29f);
+        return Random.Range(-17f, 17f);
 
     }
 
