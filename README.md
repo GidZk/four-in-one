@@ -5,6 +5,8 @@ This game was made in joint with the department of Information technologies and 
 The goal of this project is to design and implement a game where communication and cooperation is encouraged and trained.
 The game consists of four tablets put together into one gaming field, the players will interact with a submarine in order to collect valuables.
 
+**IMPORTANT: this project is only built and tested on IPAD AIR 2, model A1566**,  bugs on other tablets or models will not be concidered as a part of this bachelor thesis.
+
 The players have  control over different mechanisms of the submarine.
 * **Player 1**: Steer the submarine along the **y-axis (UP,DOWN)**
 * **Player 2**: Steer the submarine aling the **x-axis (LEFT,RIGHT)**
@@ -35,6 +37,29 @@ In order to connect the tablets we have set up the networking communication with
 If further development is made with versions higher than v.2018.4.x, you will need to **migrate the networking code** to suit the to-be-launched HLAPI and LLAPI.
 
 More information on deprecation of Unity on [UNet deprecation page](https://support.unity3d.com/hc/en-us/articles/360001252086-UNet-Deprecation-FAQ)
+
+## Deployment 
+
+#### Standalone build Apple Ipad
+You need:
+* **4x Ipad** preferably Ipad Air 2, model A1566
+* **A licenced Mac computer** 
+  * **X-code** installed
+  * **Unity** (v.2018.4.x or earlier versions) 
+
+In Unity project window click:
+
+**File > Build Settings>  iOs > Switch platform > Build**
+
+You will now generate a XCode project that can be built to the Ipad. 
+
+Once again, note that we have only tested and developed for Ipad Air 2, model A1566 this model is prefered to use since we don't account  for bugs generated on another model.
+
+
+#### Standalone build Android
+Not tested, I dare you to try!
+
+
 ## Authors
 * [Alice Gunnarsson](https://github.com/blackfisken)
 * [Erik Lundin](https://github.com/erilundi)
