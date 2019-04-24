@@ -118,7 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 202a37ab4c7d67648b39e718a9997602, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 4.2
+  speed: 2.1
   shark: {fileID: 0}
   stone: {fileID: 0}
   crabplast: {fileID: 3110941543900868242}

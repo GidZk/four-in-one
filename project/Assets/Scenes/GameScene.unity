@@ -239,7 +239,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 125000880}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -20.2, y: -14.9, z: 0}
+  m_LocalPosition: {x: -9.98, y: -7.49, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2077730670}
@@ -279,7 +279,7 @@ Camera:
   far clip plane: 79.11
   field of view: 60
   orthographic: 1
-  orthographic size: 14.8
+  orthographic size: 7.5122724
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -368,6 +368,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: puzzle
+      objectReference: {fileID: 0}
+    - target: {fileID: 6736691157804483945, guid: 6b5802a01590c09409bb919bdc74cbb8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6736691157804483947, guid: 6b5802a01590c09409bb919bdc74cbb8,
         type: 3}
@@ -468,7 +473,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 406239116}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 19.9, y: 15.1, z: 0}
+  m_LocalPosition: {x: 9.92, y: 7.44, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2077730670}
@@ -508,7 +513,7 @@ Camera:
   far clip plane: 79.11
   field of view: 60
   orthographic: 1
-  orthographic size: 14.8
+  orthographic size: 7.5731897
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -609,7 +614,7 @@ Camera:
   far clip plane: 79.11
   field of view: 60
   orthographic: 1
-  orthographic size: 14.8
+  orthographic size: 7.512189
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -633,7 +638,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -20.1, y: 15.2, z: 0}
+  m_LocalPosition: {x: -9.8, y: 7.38, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2077730670}
@@ -727,7 +732,7 @@ Transform:
   m_GameObject: {fileID: 536870188}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 22.1}
-  m_LocalScale: {x: 80, y: 60, z: 1}
+  m_LocalScale: {x: 40, y: 30, z: 1}
   m_Children:
   - {fileID: 1292888581}
   m_Father: {fileID: 0}
@@ -955,7 +960,7 @@ Camera:
   far clip plane: 1000
   field of view: 3.5126817
   orthographic: 1
-  orthographic size: 31
+  orthographic size: 15.767677
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -1238,7 +1243,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1020185890}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 19.9, y: -15.2, z: 0}
+  m_LocalPosition: {x: 10.03, y: -7.28, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2077730670}
@@ -1278,7 +1283,7 @@ Camera:
   far clip plane: 79.11
   field of view: 60
   orthographic: 1
-  orthographic size: 14.8
+  orthographic size: 7.495592
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1325,12 +1330,12 @@ PrefabInstance:
     - target: {fileID: 7717426066003177175, guid: 93aa4100e921e48219c8b5761adc49d9,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 29.4
+      value: 16.31
       objectReference: {fileID: 0}
     - target: {fileID: 7717426066003177175, guid: 93aa4100e921e48219c8b5761adc49d9,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 19.9
+      value: 11.31
       objectReference: {fileID: 0}
     - target: {fileID: 7717426066003177175, guid: 93aa4100e921e48219c8b5761adc49d9,
         type: 3}
@@ -1380,12 +1385,12 @@ PrefabInstance:
     - target: {fileID: 7717426066003177175, guid: 93aa4100e921e48219c8b5761adc49d9,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 2
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 7717426066003177175, guid: 93aa4100e921e48219c8b5761adc49d9,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 2
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 4245173963548516774, guid: 93aa4100e921e48219c8b5761adc49d9,
         type: 3}
