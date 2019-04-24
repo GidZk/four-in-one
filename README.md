@@ -6,10 +6,10 @@ The goal of this project is to design and implement a game where communication a
 The game consists of four tablets put together into one gaming field, the players will interact with a submarine in order to collect valuables.
 
 The players have  control over different mechanisms of the submarine.
-* Player 1: Steer the submarine along the **y-axis (UP,DOWN)**
-* Player 2: Steer the submarine aling the **x-axis (LEFT,RIGHT)**
-* Player 3: Aim a hook in order to shoot collecatbles.
-* Player 4: Trigger shots and reel in the hook.
+* **Player 1**: Steer the submarine along the **y-axis (UP,DOWN)**
+* **Player 2**: Steer the submarine aling the **x-axis (LEFT,RIGHT)**
+* **Player 3**: Aim a hook in order to shoot collecatbles.
+* **Player 4**: Trigger shots and reel in the hook.
 
 #### Current status of the project
 Here are some screenshots of the current status of the project
@@ -18,7 +18,7 @@ Here are some screenshots of the current status of the project
   <img src="https://github.com/GidZk/four-in-one/blob/master/media/gameplay%20screenshot%201.jpg" width="340" heigth ="400" title="Gameplay scene">
 </p>
 
-We are to test this with users one more time (friday 26/04), and some modifications will be made for the final prototype/ product.
+We are to test this with users one more time **(friday 26/04-19)**, and some modifications will be made for the final prototype/ product.
 
 
 ## Built with
@@ -30,8 +30,24 @@ We are to test this with users one more time (friday 26/04), and some modificati
 
 #### IMPORTANT: UNET Networking information
 
-In order to connect the tablets we have set up the networking communication with networking API's built inot UNet. Although  **the HLAPI and LLAPI _is-to-be-removed_ in future versions of Unity** so if you want to do further development of this game, the latest version of Unity to use is _2018.4.x_. 
-The other option is to rewrite the network communication into the networking API being launched by unity.
+In order to connect the tablets we have set up the networking communication with networking API's built inot UNet. Although  **the HLAPI and LLAPI _is-to-be-removed_ in future versions of Unity** so for further development of this game, the latest version of Unity that is usable is **_v.2018.4.x_**. 
+
+If further development is made with versions higher than v.2018.4.x, you will need to **migrate the networking code** to suit the to-be-launched HLAPI and LLAPI.
 
 More information on deprecation of Unity on [UNet deprecation page](https://support.unity3d.com/hc/en-us/articles/360001252086-UNet-Deprecation-FAQ)
+## Authors
+* [Alice Gunnarsson](https://github.com/blackfisken)
+* [Erik Lundin](https://github.com/erilundi)
+* [John Lindström Gidskehaug](https://github.com/GidZk)
+* [Linnea Elman](https://github.com/linneaelm)
+* [Magnus Wamby](https://github.com/EmElw)
 
+
+
+## Acknowledgements
+Special thanks to our bachelors thesis supervisor **Olof Torgerssor** for helping us with litterature and support through out the project.
+
+
+Other thanks to :
+* **Peter Börjesson** - doctorial student (24/04-19) : For helping us with interview questions and support with designing games for children.
+* **Förskolan Lokomotivet (Nursery school Lokomotivet)** : For letting us use their pupils as user testers.
