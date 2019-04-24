@@ -18,9 +18,8 @@ public class Spawner : MonoBehaviour
     //public List<float> stoneScale;
 
     private float elapsedTime;
-    private Vector2 camera_y_extremes;
-    private bool spawnCrabLeft;
-    private bool spawnSharkLeft;
+    private bool isSpawningLeft_Crabby;
+    private bool isSpawningLeft_Sharky;
     
     
 
@@ -29,8 +28,8 @@ public class Spawner : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        spawnCrabLeft = true;
-        spawnSharkLeft = true;
+        isSpawningLeft_Crabby = true;
+        isSpawningLeft_Sharky = true;
         
     }
 
@@ -84,17 +83,16 @@ public class Spawner : MonoBehaviour
     {
         
         float scaling = Random.Range(minScaling, MaxScaling);
-
         GameObject go = LoadPrefab("spawnable/shark");
 
-        go.GetComponent<SharkController>().Direction = SetDirection(spawnSharkLeft);
-        go.transform.position = SetStartPosition(spawnSharkLeft);
-        go.transform.rotation = SetRotation(spawnSharkLeft);
+        go.GetComponent<SharkMovement>().Direction = SetDirection(isSpawningLeft_Sharky);
+        go.transform.position = SetStartPosition(isSpawningLeft_Sharky);
+        go.transform.rotation = SetRotation(isSpawningLeft_Sharky);
         go.transform.localScale = new Vector3(scaling, scaling, 0.9f);
         
-        Debug.Log("before : " + spawnSharkLeft);
-        spawnSharkLeft = !spawnSharkLeft;
-        Debug.Log("after : " + spawnSharkLeft);
+        Debug.Log("before : " + isSpawningLeft_Sharky);
+        isSpawningLeft_Sharky = !isSpawningLeft_Sharky;
+        Debug.Log("after : " + isSpawningLeft_Sharky);
         NetworkServer.Spawn(go);
     }
 
@@ -104,28 +102,30 @@ public class Spawner : MonoBehaviour
         
         float scaling = Random.Range(minScaling, maxScaling);
         GameObject go = LoadPrefab("spawnable/crabplast");
-        go.transform.position = SetStartPosition(spawnCrabLeft);
+        go.GetComponent<CrabMovement>().Direction = SetDirection(isSpawningLeft_Crabby);
+        go.transform.position = SetStartPosition(isSpawningLeft_Crabby);
         go.transform.rotation = Quaternion.Euler(new Vector3(0, 0, (180 * (Random.Range(0, 2)))));
         go.transform.localScale = new Vector3(scaling, scaling, 0.9f);
         
-        
-        
-        spawnCrabLeft = !spawnCrabLeft;
+        isSpawningLeft_Crabby = !isSpawningLeft_Crabby;
 
         NetworkServer.Spawn(go);
     }
 
-    private void SpawnCrab(float minScaling, float MaxScaling)
+    private void SpawnCrab(float minScaling, float maxScaling)
     {
-        float scaling = Random.Range(minScaling, MaxScaling);
+        float scaling = Random.Range(minScaling, maxScaling);
 
         Debug.Log("Spawner:: Spawning Crab");
         GameObject go = LoadPrefab("spawnable/crab");
-        go.transform.position = SetStartPosition(spawnCrabLeft);
+        go.GetComponent<CrabMovement>().Direction = SetDirection(isSpawningLeft_Crabby);
+        go.transform.position = SetStartPosition(isSpawningLeft_Crabby);
         go.transform.rotation = Quaternion.Euler(new Vector3(0, 0, (180 * (Random.Range(0, 2)))));
         go.transform.localScale = new Vector3(scaling, scaling, 0.9f);
-        spawnCrabLeft = !spawnCrabLeft;
 
+        isSpawningLeft_Crabby = !isSpawningLeft_Crabby;
+
+        
         NetworkServer.Spawn(go);
     }
 

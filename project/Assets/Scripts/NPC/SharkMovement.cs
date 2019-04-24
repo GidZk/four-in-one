@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SharkController : NPCController
+public class SharkMovement : NPCMovement
 {
     protected override void Move()
     {

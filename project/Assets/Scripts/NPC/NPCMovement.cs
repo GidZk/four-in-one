@@ -3,7 +3,7 @@ using System.Xml.Linq;
 using UnityEngine;
 
 
-public abstract class NPCController : MonoBehaviour
+public abstract class NPCMovement : MonoBehaviour
 {
     public float movementSpeed;
     protected Vector3 direction;

@@ -71,7 +71,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1315280423
-  m_SortingLayer: 4
+  m_SortingLayer: -3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 3944b0f3a1a8948d998158a06f12ef9a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -154,13 +154,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1385068942873735544}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 202a37ab4c7d67648b39e718a9997602, type: 3}
+  m_Script: {fileID: 11500000, guid: 5ce172b4a4c649898c44c44fbb203865, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3.2
-  shark: {fileID: 0}
-  stone: {fileID: 0}
-  crabplast: {fileID: 0}
+  movementSpeed: 2
 --- !u!50 &2123734414831548969
 Rigidbody2D:
   serializedVersion: 4
