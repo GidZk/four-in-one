@@ -36,6 +36,10 @@ public class EnemyMovement : MonoBehaviour
             sharkUp = true;
         }
 
+        
+        
+        
+        
         if (Random.value < 0.06 && gameObject == crabplast)
         {
             if (crabUp == true)
