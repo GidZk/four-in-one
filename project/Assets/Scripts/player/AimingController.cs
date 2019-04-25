@@ -33,7 +33,7 @@ public class AimingController : NetworkBehaviour, InputListener
 
     private bool HookVisible
     {
-        get => _hookVisible;
+        get { return _hookVisible; }
         set
         {
             _hookVisible = value;

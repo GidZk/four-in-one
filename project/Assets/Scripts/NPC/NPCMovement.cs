@@ -21,7 +21,7 @@ public abstract class NPCMovement : MonoBehaviour
 
     public Vector2 Direction
     {
-        set => direction = value;
+        set { direction = value; }
     }
 
 

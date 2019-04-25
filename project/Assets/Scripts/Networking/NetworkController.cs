@@ -88,7 +88,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 
     public int MemberCount
     {
-        get => m_MemberCount;
+        get { return m_MemberCount; }
         private set
         {
             m_MemberCount = value;

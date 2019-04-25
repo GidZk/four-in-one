@@ -7,8 +7,8 @@ public class CrabMovement : NPCMovement
 
     public bool IsHooked
     {
-        get => isHooked;
-        set => isHooked = value;
+        get { return isHooked; }
+        set { isHooked = value; }
     }
 
 
@@ -23,9 +23,7 @@ public class CrabMovement : NPCMovement
         // randomly simulate the crabby craaawlings
         if (Random.value < 0.06)
             direction.y = -direction.y;
-        
-        transform.Translate(direction * Time.deltaTime * movementSpeed,Space.World);
-    }
-    
-}
 
+        transform.Translate(direction * Time.deltaTime * movementSpeed, Space.World);
+    }
+}
