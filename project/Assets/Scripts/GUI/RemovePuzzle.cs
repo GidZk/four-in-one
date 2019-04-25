@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using player;
 using UnityEngine;
 using UnityEngine.Experimental.PlayerLoop;
 using UnityEngine.Networking;
+using PlayerController = player.PlayerController;
 
 public class RemovePuzzle : MonoBehaviour
 {
@@ -44,7 +46,7 @@ public class RemovePuzzle : MonoBehaviour
     private static void StartGame(bool start)
     {
         if (!NetworkController.Instance.IsServer()) return;
-        var pc = playerController.Instance.gameObject;
+        var pc = PlayerController.Instance.gameObject;
         if (pc != null) pc.SetActive(start);
         var sp = Spawner.Instance;
         if (sp != null) sp.spawnDisabled = !start;

@@ -442,7 +442,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         NetworkServer.RegisterHandler(Messages.PuzzleReady, OnServerRcvPuzzleReady);
     }
 
-    private void StartGame()
+    public void StartGame()
     {
         if (MemberCount <= 1 && IsServer())
         {

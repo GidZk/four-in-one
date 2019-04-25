@@ -11,11 +11,11 @@ GameObject:
   - component: {fileID: 6903047145663543323}
   - component: {fileID: 5777917630490803729}
   - component: {fileID: 158672237252975400}
-  - component: {fileID: 2612989359835956109}
   - component: {fileID: 3838366323426475819}
   - component: {fileID: 1833456916907798590}
   - component: {fileID: 5061388635755986910}
   - component: {fileID: 4780895957779424543}
+  - component: {fileID: 281314930603132603}
   m_Layer: 0
   m_Name: crabplast
   m_TagString: crabplast
@@ -106,22 +106,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &2612989359835956109
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3110941543900868242}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 202a37ab4c7d67648b39e718a9997602, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 4.2
-  shark: {fileID: 0}
-  stone: {fileID: 0}
-  crabplast: {fileID: 3110941543900868242}
 --- !u!95 &3838366323426475819
 Animator:
   serializedVersion: 3
@@ -212,3 +196,16 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 5.5
+--- !u!114 &281314930603132603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3110941543900868242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf45164ea3764aed943aa8af814282df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementSpeed: 1.5

@@ -10,11 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1758381105719556926}
   - component: {fileID: 2606734404355845114}
-  - component: {fileID: 8643314028334223514}
   - component: {fileID: 8188747420945402909}
   - component: {fileID: 1297945555761484790}
   - component: {fileID: 4228733095899242426}
   - component: {fileID: 7727255607513456588}
+  - component: {fileID: 9039869279259046780}
   m_Layer: 0
   m_Name: crab
   m_TagString: Untagged
@@ -71,7 +71,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -904099535
-  m_SortingLayer: 5
+  m_SortingLayer: -2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: fbc508c4896e4cb4db3b917dccda45b2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -84,22 +84,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8643314028334223514
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1338293152497271818}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 202a37ab4c7d67648b39e718a9997602, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 5
-  shark: {fileID: 0}
-  stone: {fileID: 0}
-  crabplast: {fileID: 1338293152497271818}
 --- !u!114 &8188747420945402909
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -690,3 +674,16 @@ PolygonCollider2D:
       - {x: -3.395, y: -3.51}
       - {x: -3.2749999, y: -2.86}
       - {x: -3.2549999, y: -2.71}
+--- !u!114 &9039869279259046780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1338293152497271818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf45164ea3764aed943aa8af814282df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementSpeed: 2

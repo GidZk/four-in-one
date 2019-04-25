@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 using Random = UnityEngine.Random;
@@ -7,23 +8,29 @@ using Random = UnityEngine.Random;
 public class Spawner : MonoBehaviour
 {
     public float secondsBetweenSpawn;
-
     public bool spawnDisabled;
-
     public List<GameObject> spawnable;
 
-    // public List<float> crabScale;
-
+    
+    //todo let the user set the scaling form unity
+    //public List<float> crabScale;
     //public List<float> sharkScale;
     //public List<float> stoneScale;
 
     private float elapsedTime;
+    private bool isSpawningLeft_Crabby;
+    private bool isSpawningLeft_Sharky;
+    
+    
 
     public static Spawner Instance { get; private set; }
 
     private void Awake()
     {
         Instance = this;
+        isSpawningLeft_Crabby = true;
+        isSpawningLeft_Sharky = true;
+        
     }
 
 
@@ -46,7 +53,7 @@ public class Spawner : MonoBehaviour
             {
                 SpawnCrabPlast(0.2f, 0.3f);
             }
-            else if (p > 0.8 && p <= 2.5)
+            else if (p > 0.8 && p <= 1.7f)
             {
                 SpawnStone(1, 2);
             }
@@ -63,8 +70,7 @@ public class Spawner : MonoBehaviour
         var prefab = Resources.Load<GameObject>("Spawnable/player");
         if (prefab == null)
             throw new Exception("Could not get player prefab");
-        GameObject go =
-            Instantiate(prefab);
+        GameObject go = Instantiate(prefab);
         if (go == null)
             throw new Exception("Did not spawn player");
         go.transform.position = Vector3.zero;
@@ -74,12 +80,18 @@ public class Spawner : MonoBehaviour
 
     private void SpawnShark(float minScaling, float MaxScaling)
     {
+        
         float scaling = Random.Range(minScaling, MaxScaling);
-
         GameObject go = LoadPrefab("spawnable/shark");
-        go.transform.position = new Vector3(44, Random.Range(-29f, 29f), 0);
-        go.transform.rotation = Quaternion.identity;
+
+        go.GetComponent<SharkMovement>().Direction = SetDirection(isSpawningLeft_Sharky);
+        go.transform.position = SetStartPosition(isSpawningLeft_Sharky);
+        go.transform.rotation = SetRotation(isSpawningLeft_Sharky);
         go.transform.localScale = new Vector3(scaling, scaling, 0.9f);
+        
+        Debug.Log("before : " + isSpawningLeft_Sharky);
+        isSpawningLeft_Sharky = !isSpawningLeft_Sharky;
+        Debug.Log("after : " + isSpawningLeft_Sharky);
         NetworkServer.Spawn(go);
     }
 
@@ -87,23 +99,30 @@ public class Spawner : MonoBehaviour
     {
         float scaling = Random.Range(minScaling, maxScaling);
         GameObject go = LoadPrefab("spawnable/crabplast");
-        go.transform.position = new Vector3(44, Random.Range(-29f, 29f), 0);
+        go.GetComponent<CrabMovement>().Direction = SetDirection(isSpawningLeft_Crabby);
+        go.transform.position = SetStartPosition(isSpawningLeft_Crabby);
         go.transform.rotation = Quaternion.Euler(new Vector3(0, 0, (180 * (Random.Range(0, 2)))));
         go.transform.localScale = new Vector3(scaling, scaling, 0.9f);
+        
+        isSpawningLeft_Crabby = !isSpawningLeft_Crabby;
 
         NetworkServer.Spawn(go);
     }
 
-    private void SpawnCrab(float minScaling, float MaxScaling)
+    private void SpawnCrab(float minScaling, float maxScaling)
     {
-        float scaling = Random.Range(minScaling, MaxScaling);
+        float scaling = Random.Range(minScaling, maxScaling);
 
         Debug.Log("Spawner:: Spawning Crab");
         GameObject go = LoadPrefab("spawnable/crab");
-        go.transform.position = new Vector3(44, Random.Range(-29f, 29f), 0);
+        go.GetComponent<CrabMovement>().Direction = SetDirection(isSpawningLeft_Crabby);
+        go.transform.position = SetStartPosition(isSpawningLeft_Crabby);
         go.transform.rotation = Quaternion.Euler(new Vector3(0, 0, (180 * (Random.Range(0, 2)))));
         go.transform.localScale = new Vector3(scaling, scaling, 0.9f);
 
+        isSpawningLeft_Crabby = !isSpawningLeft_Crabby;
+
+        
         NetworkServer.Spawn(go);
     }
 
@@ -111,12 +130,41 @@ public class Spawner : MonoBehaviour
     {
         float scaling = Random.Range(minScaling, maxScaling);
         GameObject go = LoadPrefab("spawnable/stone");
-        go.transform.position = new Vector3(44, Random.Range(-29f, 29f), 0);
+        go.transform.position = new Vector3(34,  SetYPosition(), 0);
         go.transform.rotation = Quaternion.Euler(new Vector3(0, 0, (Random.Range(0f, 90f))));
         go.transform.localScale = new Vector3(scaling, scaling, 0.9f);
 
         NetworkServer.Spawn(go);
     }
+
+    private Vector3 SetStartPosition(bool shouldSpawnLeft)
+    {
+        if (shouldSpawnLeft)    
+            return new Vector2(-34, SetYPosition());
+        
+         return new Vector3(34, SetYPosition());
+
+    }
+
+    // TODO set params to camera params hardcoded for now
+    private float SetYPosition()
+    {
+        return Random.Range(-17f, 17f);
+
+    }
+
+
+    private Vector2 SetDirection(bool shouldSpawnLeft)
+    {
+        return shouldSpawnLeft ? new Vector2(1, 1) : new Vector2(-1,1);
+    }
+
+
+   private Quaternion SetRotation(bool shouldSpawnLeft)
+    {
+        return shouldSpawnLeft ? Quaternion.Euler(0,0,180) : Quaternion.identity; 
+    }
+
 
 
     private GameObject LoadPrefab(String path)
