@@ -53,7 +53,7 @@ public class Spawner : MonoBehaviour
             {
                 SpawnCrabPlast(0.2f, 0.3f);
             }
-            else if (p > 0.8 && p <= 2.5)
+            else if (p > 0.8 && p <= 1.7f)
             {
                 SpawnStone(1, 2);
             }

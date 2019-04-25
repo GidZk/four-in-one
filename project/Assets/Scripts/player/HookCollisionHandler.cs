@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using player;
+using UnityEngine;
 
 public class HookCollisionHandler : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class HookCollisionHandler : MonoBehaviour
         {
             hasHooked = true;
             canHook = false;
+            
+            other.gameObject.GetComponent<CrabMovement>().IsHooked = true;
 
             var oGameObj = hooke = other.gameObject;
             var oRigidBody = oGameObj.GetComponent<Rigidbody2D>();
@@ -52,7 +55,7 @@ public class HookCollisionHandler : MonoBehaviour
             else
             {
                 // TODO might want to move this to Reel() in AimingController
-                var diff = hooke.transform.position - playerController.Instance.transform.position;
+                var diff = hooke.transform.position - PlayerController.Instance.transform.position;
                 var angle = Vector2.Angle(diff, Vector2.right);
                 if (diff.y < 0) angle = -angle;
                 _rb.MoveRotation(angle);

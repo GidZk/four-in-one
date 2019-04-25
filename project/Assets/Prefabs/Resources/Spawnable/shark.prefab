@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 4.2
-  yFieldOfView: 18
+  yFieldOfView: 16
 --- !u!114 &8188747420945402909
 MonoBehaviour:
   m_ObjectHideFlags: 0

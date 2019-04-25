@@ -131,6 +131,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f74a75482f52d6c41ae2065a3f6d9096, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  yBoundary: 14
+  xBoundary: 17
   _hInput: 0
   _vInput: 0
 --- !u!114 &2096999536881306290
