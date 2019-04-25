@@ -21,7 +21,14 @@ Here are some screenshots of the current status of the project
 </p>
 
 We are to test this with users one more time **(friday 26/04-19)**, and some modifications will be made for the final prototype/ product.
+### Debug mode
+If running on a debug build or within the Unity editor, there are additional debug functionalities. The game can be force started in a single-player mode by pressing the "force start" button once a team is chosen. There is also a "local client" option, which bypasses the network discovery and simply connects to local host.
 
+The game can be controlled via the keyboards as well:
+#### Keyboard Controls
+ * **(Up, Down, Left, Right)**  -> Control the submarine.
+ * **(Q,R)**                    -> Aim crosshair  
+ * **Space**                    -> Hold and release to launch plunge
 
 ## Built with
 * [Unity](https://unity.com/) **v.2018.3.x**.
