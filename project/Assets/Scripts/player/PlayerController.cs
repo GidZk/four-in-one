@@ -24,7 +24,6 @@ namespace player
 
         public static PlayerController Instance { get; private set; }
 
-
         // Start is called before the first frame update
 
 
