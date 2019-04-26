@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 ///  Behaviour used to move the submarine displaying progressed time
@@ -46,6 +47,10 @@ public class GameTimer : MonoBehaviour
         {
             if (NetworkController.Instance != null)
                 NetworkController.Instance.EndGame();
+            else
+            {
+                SceneManager.LoadScene(2);
+            }
         }
     }
 }
