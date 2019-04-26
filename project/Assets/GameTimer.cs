@@ -38,10 +38,17 @@ public class GameTimer : MonoBehaviour
             position.y,
             position.z);
 
+
         rt.SetPositionAndRotation(
             newPos,
             Quaternion.identity
         );
+        
+        if (elapsedTime / MaxTime > 0.7f)
+        {
+            var size = 1f + 0.25f * Mathf.Cos(elapsedTime * 3);
+            rt.localScale = new Vector3(size, size, 1);
+        }
 
         if (elapsedTime > MaxTime)
         {
