@@ -401,11 +401,17 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 
     private void OnClientRcvClearPuzzle(NetworkMessage netmsg)
     {
-        Debug.Log("Recieved ok to clear puzzle!");
+        Debug.Log("Received ok to clear puzzle!");
         var go = GameObject.FindWithTag("Puzzle");
         if (go == null)
             throw new Exception("Could not find puzzle");
         go.GetComponent<RemovePuzzle>().Clear();
+    }
+
+    private void OnClientRcvEndGame(NetworkMessage netmsg)
+    {
+        Debug.Log("Received end game");
+        SceneManager.LoadScene(2);
     }
 
     // ### Misc ###
@@ -433,6 +439,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         Client().RegisterHandler(Messages.MemberCount, OnClientRcvMembersJoined);
         Client().RegisterHandler(Messages.StartGame, OnClientRcvStartGame);
         Client().RegisterHandler(Messages.ClearPuzzle, OnClientRcvClearPuzzle);
+        Client().RegisterHandler(Messages.EndGame, OnClientRcvEndGame);
     }
 
     // Registers the message handling that is to be received on the host's side
@@ -442,7 +449,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         NetworkServer.RegisterHandler(Messages.PuzzleReady, OnServerRcvPuzzleReady);
     }
 
-    private void StartGame()
+    public void StartGame()
     {
         if (MemberCount <= 1 && IsServer())
         {
@@ -455,6 +462,11 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
 
         //spawn dude
+    }
+
+    public void EndGame()
+    {
+        NetworkServer.SendToAll(Messages.EndGame, new EmptyMessage());
     }
 
 

@@ -7,10 +7,11 @@ using UnityEngine.Networking;
 
 public class AimingController : NetworkBehaviour, InputListener
 {
-    private const float LaunchSpeedConstant = 30;
+    private const float LaunchSpeedConstant = 20;
     private const float YankConstant = 200;
     private const float MinRange = 0.8f;
     private const int CollectHookThreshold = 2;
+    private const float CrosshairDistFromPlayer = 2.5f;
 
     // Game objects related to the crosshair
     public GameObject crosshair;
@@ -122,10 +123,9 @@ public class AimingController : NetworkBehaviour, InputListener
     private void SetCrosshairPosition(Vector3 v)
     {
         var p = transform.position;
-        const float distFromPlayer = 5f;
         var pos = new Vector2(
-            p.x + v.x * distFromPlayer,
-            p.y + v.y * distFromPlayer);
+            p.x + v.x * CrosshairDistFromPlayer,
+            p.y + v.y * CrosshairDistFromPlayer);
 
         var angle = Vector2.Angle(v, Vector2.right);
         if (v.y < 0) angle = -angle;

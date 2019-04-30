@@ -31,7 +31,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1338293152497271818}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 21.818, y: -1.498, z: -0.1725561}
+  m_LocalPosition: {x: 21.818, y: -1.69, z: -0.1725561}
   m_LocalScale: {x: 2.1965508, y: 2.1965508, z: 0.9}
   m_Children: []
   m_Father: {fileID: 0}
@@ -72,7 +72,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 158971229
-  m_SortingLayer: 6
+  m_SortingLayer: -1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 7f699979c1416425e85ccd6e5d736fe1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -94,13 +94,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1338293152497271818}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 202a37ab4c7d67648b39e718a9997602, type: 3}
+  m_Script: {fileID: 11500000, guid: 7d829f0d43c6447a804d43d1216c1920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
-  shark: {fileID: 1338293152497271818}
-  stone: {fileID: 0}
-  crabplast: {fileID: 0}
+  movementSpeed: 2
+  yFieldOfView: 16
 --- !u!114 &8188747420945402909
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,7 +145,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TransformSyncMode: 1
-  m_SendInterval: 0.1
+  m_SendInterval: 0.04761905
   m_SyncRotationAxis: 7
   m_RotationSyncCompression: 0
   m_SyncSpin: 0
@@ -209,6 +207,6 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 2.81, y: 0.33}
+  m_Offset: {x: 0.1, y: 0}
+  m_Size: {x: 2.81, y: 0.66}
   m_Direction: 1
