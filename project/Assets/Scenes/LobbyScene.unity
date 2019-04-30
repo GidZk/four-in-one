@@ -1411,7 +1411,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04b3c3dc33144eedb7ceca7210b84829, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  secondsBetweenSpawn: 2
+  secondsBetweenSpawn: 4
   spawnDisabled: 0
   spawnable:
   - {fileID: 2096999536881306293, guid: b9226e47a633f464daa52cedc3367bc5, type: 3}
