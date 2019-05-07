@@ -2,7 +2,10 @@
 #DS_store recursively
 **/.DS_Store
 
+#ignore builds
 /builds
+
+
 
 **/.idea/**
 **/.idea.project/**
