@@ -105,7 +105,6 @@ namespace player
                 AddScore.scoreValue++;
 
                 //add time to the timebar when catching crab
-                Timer.timeLeft++;
                 Debug.Log("score = " + AddScore.scoreValue);
             }
         }

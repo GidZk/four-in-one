@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-// Simple behaviour used to spawn the player as soon as the scene is loaded
+/// Simple behaviour used to spawn the player as soon as the scene is loaded
 public class PlayerSpawner : MonoBehaviour
-{    
-    
-    private void Awake()
+{
+    private void Start()
     {
-        var nc = NetworkController.Instance;
-        if (nc.IsServer())
-            nc.spawnManager.SpawnPlayer();
+        Spawner.Instance.SpawnPlayer();
     }
 }

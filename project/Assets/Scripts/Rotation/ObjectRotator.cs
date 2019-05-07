@@ -17,7 +17,6 @@ public class ObjectRotator : MonoBehaviour
     [SerializeField] private float accumulatedAngle;
     [SerializeField] private float ratio;
     [SerializeField] private bool isMouseDown;
-    [SerializeField] private float RotationFactorConstant = 1 / 360f;
 
     private void Awake()
     {
@@ -105,7 +104,7 @@ public class ObjectRotator : MonoBehaviour
 
     private float CalculateRotationAngle(Vector3 objectToMouse)
     {
-        return (Mathf.Atan2((objectToMouse.y), objectToMouse.x) * Mathf.Rad2Deg) + 180;
+        return Mathf.Atan2((objectToMouse.y), objectToMouse.x) * Mathf.Rad2Deg + 180;
     }
 
     private void OnReset()

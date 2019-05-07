@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.NetworkSystem;
@@ -10,14 +11,21 @@ using Task = System.Threading.Tasks.Task;
 
 #pragma warning disable 618
 
+/// <summary>
+/// A currently very bloated behaviour that deals with the network communication
+///
+/// It also acts as a channel for user input to the player object
+///  - The local client is also communicating through this behaviour
+/// </summary>
 public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListener, InputListener, InputInterface
 {
-    // TODO delete dis
-    private GameObject playerRef;
-    private GameState gameState;
-
     public MyNetworkDiscovery discovery;
     public MyNetworkManager manager;
+    public Canvas selectCanvas;
+    public Canvas waitCanvas;
+    public MemberDisplayController memberDisplayController;
+    public List<GameObject> spawnable;
+
 
     /// Contains all recieved fromAdresses from hosting servers and their team
     private Dictionary<string, Team> broadcastTable;
@@ -25,10 +33,6 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     private HashSet<InputListener> inputListeners;
 
     // TODO move this away to some sort of UIController
-    public Canvas selectCanvas;
-    public Canvas waitCanvas;
-    public MemberDisplayController memberDisplayController;
-
     public bool UseLocalhost { get; private set; }
     public bool SingleGameDebug { get; set; }
     public int NetworkId { get; private set; }
@@ -61,7 +65,6 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         InitHostHandlers();
         InitAndRegisterSpawnable();
         DontDestroyOnLoad(this);
-        gameState = GameState.Lobby;
     }
 
 
@@ -69,13 +72,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     {
         EvaluateServerState();
 
-        if (gameState == GameState.RunningGame && IsServer())
-        {
-            // TODO wtf is this in network controller
-            spawnManager.SpawnNpc(3);
-        }
-
-
+        // Debug tool
         if (Input.GetKeyDown(KeyCode.D) && IsServer())
         {
             OnLobbyFilled();
@@ -102,12 +99,9 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     public bool IsClient() => Client() != null && Client().isConnected;
     public bool IsConnected() => IsClient();
 
-    // Scrapes the Assets/Prefabs/Resources/Spawnable folder for prefabs and registers them
     private void InitAndRegisterSpawnable()
     {
-        // returns the 3'rd child of a spawnmanager, which should always be spawnManager
-        spawnManager = GameObject.Find("NWController/SpawnManager").GetComponent<Spawner>();
-        foreach (var o in spawnManager.spawnable)
+        foreach (var o in spawnable)
         {
             if (o == null)
             {
@@ -118,24 +112,6 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
             Debug.Log($"Registering {o} as spawnable");
             ClientScene.RegisterPrefab(o);
         }
-
-//        // TODO fix dis
-//        var path = Application.dataPath + "/Prefabs/Resources/Spawnable";
-//        var files = Directory.GetFiles(path);
-//
-//        foreach (var file in files)
-//        {
-//            if (!file.EndsWith(".prefab")) return;
-//
-//            char[] chars = {'/', '\\'};
-//            var i = file.LastIndexOfAny(chars);
-//            var relative = "Spawnable/" + file.Substring(i + 1);
-//            var prefabPath = relative.Remove(relative.IndexOf('.'));
-//            var prefab = Resources.Load(prefabPath) as GameObject;
-//
-//            Log($"Registering {prefabPath} as spawnable", Color.green);
-//            ClientScene.RegisterPrefab(prefab);
-//        }
     }
 
     /**
@@ -411,7 +387,13 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     private void OnClientRcvEndGame(NetworkMessage netmsg)
     {
         Debug.Log("Received end game");
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene("ScoreScene", LoadSceneMode.Single);
+    }
+
+    private void OnClientRcvRestartGame(NetworkMessage netmsg)
+    {
+        Debug.Log("Received restart game");
+        SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
     }
 
     // ### Misc ###
@@ -432,14 +414,20 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
             t => NetworkServer.SendToAll(Messages.StartGame, new EmptyMessage()));
     }
 
-    // Registers the message handling that is to be received on  the clients' side
+    ///<summary>
+    /// Registers the message handling that is to be received on  the clients' side
+    ///
+    /// This needs to be done for each message type to be received on the client
+    /// </summary> 
     private void InitClientHandlers()
     {
-        Client().RegisterHandler(Messages.ClientId, OnClientRcvGiveClientId);
-        Client().RegisterHandler(Messages.MemberCount, OnClientRcvMembersJoined);
-        Client().RegisterHandler(Messages.StartGame, OnClientRcvStartGame);
-        Client().RegisterHandler(Messages.ClearPuzzle, OnClientRcvClearPuzzle);
-        Client().RegisterHandler(Messages.EndGame, OnClientRcvEndGame);
+        var c = Client();
+        c.RegisterHandler(Messages.ClientId, OnClientRcvGiveClientId);
+        c.RegisterHandler(Messages.MemberCount, OnClientRcvMembersJoined);
+        c.RegisterHandler(Messages.StartGame, OnClientRcvStartGame);
+        c.RegisterHandler(Messages.ClearPuzzle, OnClientRcvClearPuzzle);
+        c.RegisterHandler(Messages.EndGame, OnClientRcvEndGame);
+        c.RegisterHandler(Messages.RestartGame, OnClientRcvRestartGame);
     }
 
     // Registers the message handling that is to be received on the host's side
@@ -458,7 +446,6 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         }
 
         Debug.Log("NetworkController:: starting game --");
-        this.gameState = GameState.RunningGame;
         SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
 
         //spawn dude
@@ -485,7 +472,6 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
             l.OnVerticalMovementInput(value);
         }
     }
-
 
     // ### Input Management ###
 
@@ -540,6 +526,11 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     {
         Client().Send(Messages.PuzzleReady, new IntegerMessage(b ? 1 : 0));
     }
+
+    public void RestartGame()
+    {
+        NetworkServer.SendToAll(Messages.RestartGame, new EmptyMessage());
+    }
 }
 
 enum State
@@ -561,7 +552,8 @@ enum GameState
 public static class Util
 {
     /// <summary>
-    /// Returns the input string wrapped with "color"-tags 
+    /// Returns the input string wrapped with "color"-tags,
+    /// used for colored debug text
     /// </summary>
     /// <param name="s">a string</param> 
     /// <param name="c">a Color</param> 

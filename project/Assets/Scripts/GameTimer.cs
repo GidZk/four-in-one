@@ -18,7 +18,7 @@ public class GameTimer : MonoBehaviour
 
     private RectTransform rt;
 
-    private void Awake()
+    private void OnEnable()
     {
         _startTime = Time.time;
         _diff = endPos - startPos;
@@ -43,21 +43,19 @@ public class GameTimer : MonoBehaviour
             newPos,
             Quaternion.identity
         );
-        
+
         if (elapsedTime / MaxTime > 0.7f)
         {
             var size = 1f + 0.25f * Mathf.Cos(elapsedTime * 3);
             rt.localScale = new Vector3(size, size, 1);
         }
 
-        if (elapsedTime > MaxTime)
+        if (elapsedTime > MaxTime || Input.GetKey(KeyCode.Z))
         {
             if (NetworkController.Instance != null)
                 NetworkController.Instance.EndGame();
             else
-            {
                 SceneManager.LoadScene(2);
-            }
         }
     }
 }
