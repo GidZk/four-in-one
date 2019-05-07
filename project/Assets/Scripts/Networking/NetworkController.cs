@@ -34,13 +34,12 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
 
     // TODO move this away to some sort of UIController
     public bool UseLocalhost { get; private set; }
-    public bool SingleGameDebug { get; set; }
+    public bool SingleGameDebug { get; private set; }
     public int NetworkId { get; private set; }
-    private bool StartHost { get; set; }
+    public bool StartHost { get; private set; }
 
     private Team Team { get; set; }
     private int m_MemberCount;
-    public Spawner spawnManager;
 
     public static NetworkController Instance { get; private set; }
 
@@ -49,15 +48,13 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         Team = Team.None;
         if (Instance != null)
         {
-            Debug.Log(Util.C($"Multiple NetworkControllers!!!", Color.red));
-            throw new Exception();
+            Debug.Log(Util.C($"Multiple NetworkControllers!", Color.red));
         }
 
         Instance = this;
 
         discovery.Register(this);
         discovery.Initialize();
-        Debug.Log("Discovery as client in awake");
         discovery.StartAsClient();
         manager.Register(this);
         inputListeners = new HashSet<InputListener>();
@@ -99,6 +96,11 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     public bool IsClient() => Client() != null && Client().isConnected;
     public bool IsConnected() => IsClient();
 
+    /// <summary>
+    /// Registers the spawnable game objects
+    /// This is a requirement to use Unet and
+    /// must be done manually
+    /// </summary>
     private void InitAndRegisterSpawnable()
     {
         foreach (var o in spawnable)
@@ -114,10 +116,11 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         }
     }
 
-    /**
-     * Block managing state switch from client to host after a delay
-     * written in Update() because co-routines are weird with networking sometimes
-     */
+
+    /// <summary>
+    /// Block managing state switch from client to host after a delay
+    /// written in Update() because co-routines are weird with networking sometimes
+    /// </summary>
     private void EvaluateServerState()
     {
         if (StartHost &&
@@ -137,7 +140,6 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         }
     }
 
-    //The client object currently active
     public NetworkClient Client()
     {
         if (manager != null)
@@ -154,40 +156,11 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         Debug.Log($"localhost: {UseLocalhost}");
     }
 
-    public void OnReceivedBroadcast(string fromAddress, string data)
-    {
-        var otherTeam = TeamUtil.FromIdent(data.Substring(0, 2));
-        Debug.Log($"Broadcast from {fromAddress}, team: {otherTeam}");
-        if (broadcastTable.ContainsKey(fromAddress))
-        {
-            broadcastTable[fromAddress] = otherTeam;
-        }
-        else
-        {
-            broadcastTable.Add(fromAddress, otherTeam);
-        }
-
-        if (otherTeam != Team)
-            return;
-
-        ConnectTo(fromAddress);
-    }
-
-    private bool ConnectTo(string fromAddress)
-    {
-        var ipv4 = "localhost";
-        if (fromAddress != "localhost")
-            ipv4 = fromAddress.Substring(7);
-        manager.networkAddress = ipv4;
-        var client = manager.StartClient();
-        Debug.Log($"Attempting connect to {ipv4}");
-        return true;
-    }
-
-    /**
-     * Attempts to join the specified team
-     * If no host is found within 2 seconds, start hosting itself
-     * */
+    /// <summary>
+    /// Attempts to join the specified team
+    /// If no host is found within 2 seconds, start hosting itself
+    /// </summary>
+    /// <param name="team">the team to join</param>
     private void JoinTeam(Team team)
     {
         Debug.Log($"Starting to join team {team}");
@@ -228,6 +201,36 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         {
             Debug.Log(Util.C("Failed to init network discovery", Color.red));
         }
+    }
+
+    public void OnReceivedBroadcast(string fromAddress, string data)
+    {
+        var otherTeam = TeamUtil.FromIdent(data.Substring(0, 2));
+        Debug.Log($"Broadcast from {fromAddress}, team: {otherTeam}");
+        if (broadcastTable.ContainsKey(fromAddress))
+        {
+            broadcastTable[fromAddress] = otherTeam;
+        }
+        else
+        {
+            broadcastTable.Add(fromAddress, otherTeam);
+        }
+
+        if (otherTeam != Team)
+            return;
+
+        ConnectTo(fromAddress);
+    }
+
+    private bool ConnectTo(string fromAddress)
+    {
+        var ipv4 = "localhost";
+        if (fromAddress != "localhost")
+            ipv4 = fromAddress.Substring(7);
+        manager.networkAddress = ipv4;
+        var client = manager.StartClient();
+        Debug.Log($"Attempting connect to {ipv4}");
+        return true;
     }
 
     // ### Server triggers ###
