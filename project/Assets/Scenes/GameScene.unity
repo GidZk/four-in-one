@@ -239,7 +239,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 125000880}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -9.98, y: -7.49, z: 0}
+  m_LocalPosition: {x: -10.6, y: -8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2077730670}
@@ -279,7 +279,7 @@ Camera:
   far clip plane: 79.11
   field of view: 60
   orthographic: 1
-  orthographic size: 7.5122724
+  orthographic size: 7
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -473,7 +473,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 406239116}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.92, y: 7.44, z: 0}
+  m_LocalPosition: {x: 10.6, y: 8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2077730670}
@@ -513,7 +513,7 @@ Camera:
   far clip plane: 79.11
   field of view: 60
   orthographic: 1
-  orthographic size: 7.5731897
+  orthographic size: 7
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -614,7 +614,7 @@ Camera:
   far clip plane: 79.11
   field of view: 60
   orthographic: 1
-  orthographic size: 7.512189
+  orthographic size: 7
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -638,7 +638,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -9.8, y: 7.38, z: 0}
+  m_LocalPosition: {x: -10.6, y: 8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2077730670}
@@ -1243,7 +1243,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1020185890}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10.03, y: -7.28, z: 0}
+  m_LocalPosition: {x: 10.6, y: -8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2077730670}
@@ -1283,7 +1283,7 @@ Camera:
   far clip plane: 79.11
   field of view: 60
   orthographic: 1
-  orthographic size: 7.495592
+  orthographic size: 7
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
