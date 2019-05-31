@@ -70,7 +70,11 @@ public class RemovePuzzle : MonoBehaviour
         if (_clear) return;
         Debug.Log("Pointer down");
         targetAlpha = 1;
-        NetworkController.Instance.PuzzleReady(true);
+        var nc = NetworkController.Instance;
+        if (nc == null)
+            Clear();
+        else
+            nc.PuzzleReady(true);
         _hasOkd = true;
     }
 
