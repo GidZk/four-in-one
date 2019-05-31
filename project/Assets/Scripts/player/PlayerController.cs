@@ -6,12 +6,12 @@ namespace player
     public class PlayerController : MonoBehaviour, InputListener
     {
         // todo: refactor to get mesh size
-        public float yBoundary ;
+        public float yBoundary;
         public float xBoundary;
-        
+
         private Rigidbody2D rb;
         private Vector2 moveInput;
-        
+
 
         //private Vector2 moveVelocity;
         private float hInput = 0;
@@ -102,11 +102,11 @@ namespace player
                 //Add 1 point each time the starfish(object that gives points) collides
 
                 // with the object this script is attached to
-                AddScore.scoreValue++;
+                if (NetworkController.Instance.IsServer()) AddScore.IncScore(1);
 
                 //add time to the timebar when catching crab
                 Timer.timeLeft++;
-                Debug.Log("score = " + AddScore.scoreValue);
+                Debug.Log("score = " + AddScore.GetScore());
             }
         }
 
@@ -118,20 +118,21 @@ namespace player
                 transform.position = new Vector3(transform.position.x, yBoundary, transform.position.z);
                 Debug.Log("outside background");
             }
+
             if (transform.position.y < -yBoundary)
             {
                 transform.position = new Vector3(transform.position.x, -yBoundary, transform.position.z);
             }
+
             if (transform.position.x < -xBoundary)
             {
                 transform.position = new Vector3(-xBoundary, transform.position.y, transform.position.z);
             }
+
             if (transform.position.x > xBoundary)
             {
                 transform.position = new Vector3(xBoundary, transform.position.y, transform.position.z);
             }
-
         }
-
     }
 }

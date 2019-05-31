@@ -12,6 +12,7 @@ public static class Messages
     public const short PuzzleReady = Base + 4;
     public const short ClearPuzzle = Base + 5;
     public const short EndGame = Base + 6;
+    public const short ScoreChange = Base + 7;
 }
 
 public class ControlMessage : MessageBase

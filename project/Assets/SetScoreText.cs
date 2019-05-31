@@ -7,6 +7,6 @@ public class SetScoreText : MonoBehaviour
 {
     private void Awake()
     {
-        GetComponent<Text>().text = AddScore.scoreValue.ToString();
+        GetComponent<Text>().text = AddScore.GetScore().ToString();
     }
 }

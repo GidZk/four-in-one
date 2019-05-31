@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using player;
-using UnityEngine;
-using UnityEngine.Experimental.PlayerLoop;
-using UnityEngine.Networking;
+﻿using UnityEngine;
 using PlayerController = player.PlayerController;
 
 public class RemovePuzzle : MonoBehaviour
@@ -14,6 +8,7 @@ public class RemovePuzzle : MonoBehaviour
     private bool _hasOkd;
 
     private SpriteRenderer[] sprites;
+    public GameObject[] disableWhileActive;
     private bool _clear;
 
     public float CurrentAlpha
@@ -35,6 +30,11 @@ public class RemovePuzzle : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        foreach (var g in disableWhileActive)
+            g.SetActive(false);
+    }
 
     private void Awake()
     {
@@ -45,9 +45,13 @@ public class RemovePuzzle : MonoBehaviour
 
     private static void StartGame(bool start)
     {
-        if (!NetworkController.Instance.IsServer()) return;
-        var pc = PlayerController.Instance.gameObject;
-        if (pc != null) pc.SetActive(start);
+        if (NetworkController.Instance != null)
+        {
+            if (!NetworkController.Instance.IsServer()) return;
+        }
+
+        var pc = PlayerController.Instance;
+        if (pc != null) pc.gameObject.SetActive(start);
         var sp = Spawner.Instance;
         if (sp != null) sp.spawnDisabled = !start;
     }
@@ -86,11 +90,14 @@ public class RemovePuzzle : MonoBehaviour
         if (_clear && CurrentAlpha < 0.1f)
         {
             StartGame(true);
+            foreach (var g in disableWhileActive)
+                g.SetActive(true);
+
             Destroy(gameObject);
         }
     }
 
-    /// called with SendMessage in NetworkControll (TODO kill me)
+    /// called with SendMessage in NetworkController
     public void Clear()
     {
         _clear = true;

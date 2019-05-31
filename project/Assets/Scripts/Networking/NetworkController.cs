@@ -10,7 +10,8 @@ using Task = System.Threading.Tasks.Task;
 
 #pragma warning disable 618
 
-public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListener, InputListener, InputInterface
+public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListener, InputListener, InputInterface,
+    ScoreListener
 {
     // TODO delete dis
     private GameObject playerRef;
@@ -56,6 +57,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         Debug.Log("Discovery as client in awake");
         discovery.StartAsClient();
         manager.Register(this);
+        AddScore.Register(this);
         inputListeners = new HashSet<InputListener>();
         broadcastTable = new Dictionary<string, Team>();
         InitHostHandlers();
@@ -414,7 +416,15 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         SceneManager.LoadScene(2);
     }
 
+    private void OnClientRcvScoreChange(NetworkMessage netmsg)
+    {
+        Debug.Log("Recieved score change");
+        var n = netmsg.ReadMessage<IntegerMessage>().value;
+        AddScore.SetScore(n, true);
+    }
+
     // ### Misc ###
+
 
     private void OnLobbyFilled()
     {
@@ -433,6 +443,7 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     }
 
     // Registers the message handling that is to be received on  the clients' side
+
     private void InitClientHandlers()
     {
         Client().RegisterHandler(Messages.ClientId, OnClientRcvGiveClientId);
@@ -440,9 +451,11 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
         Client().RegisterHandler(Messages.StartGame, OnClientRcvStartGame);
         Client().RegisterHandler(Messages.ClearPuzzle, OnClientRcvClearPuzzle);
         Client().RegisterHandler(Messages.EndGame, OnClientRcvEndGame);
+        Client().RegisterHandler(Messages.ScoreChange, OnClientRcvScoreChange);
     }
 
     // Registers the message handling that is to be received on the host's side
+
     private void InitHostHandlers()
     {
         NetworkServer.RegisterHandler(Messages.Control, OnServerRcvControlMessage);
@@ -539,6 +552,14 @@ public class NetworkController : MonoBehaviour, BroadcastListener, ManagerListen
     public void PuzzleReady(bool b)
     {
         Client().Send(Messages.PuzzleReady, new IntegerMessage(b ? 1 : 0));
+    }
+
+    public void OnScoreChanged(int oldVal, int newVal)
+    {
+        if (IsServer())
+        {
+            NetworkServer.SendToAll(Messages.ScoreChange, new IntegerMessage(newVal));
+        }
     }
 }
 

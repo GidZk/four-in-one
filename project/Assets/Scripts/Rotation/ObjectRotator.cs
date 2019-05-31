@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 //TODO refine this code by extending this ojbect and move functionality
 public class ObjectRotator : MonoBehaviour
 {
-    private NetworkController nwController;
+    private NetworkController nc;
 
     public bool isTerminating;
     public bool isTouch;
@@ -21,8 +21,8 @@ public class ObjectRotator : MonoBehaviour
 
     private void Awake()
     {
-        nwController = NetworkController.Instance;
-        if (nwController.NetworkId != 1 && !nwController.SingleGameDebug)
+        nc = NetworkController.Instance;
+        if (nc != null && nc.NetworkId != 1 && !nc.SingleGameDebug)
         {
             gameObject.SetActive(false);
         }
@@ -56,7 +56,7 @@ public class ObjectRotator : MonoBehaviour
                 ratio = accumulatedAngle / (maxRotations * 360);
             }
 
-            nwController.OnCannonAngleInput(GetEulerAngles() * Mathf.Deg2Rad);
+            nc.OnCannonAngleInput(GetEulerAngles() * Mathf.Deg2Rad);
         }
     }
 
