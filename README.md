@@ -45,14 +45,14 @@ If further development is made with versions higher than v.2018.4.x, you will ne
 
 More information on deprecation of Unity on [UNet deprecation page](https://support.unity3d.com/hc/en-us/articles/360001252086-UNet-Deprecation-FAQ)
 
-## Deployment 
+## Build
 
 #### Standalone build Apple Ipad
 You need:
 * **4x Ipad** preferably Ipad Air 2, model A1566
-* **A licenced Mac computer** 
+* **A computer running macOS** 
   * **X-code** installed
-  * **Unity** (v.2018.4.x or earlier versions) 
+  * **Unity** (v.2018.4.x or earlier versions due to ) 
 
 In Unity project window click:
 
